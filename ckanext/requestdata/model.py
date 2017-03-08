@@ -93,7 +93,7 @@ def define_request_data_table():
                                Column('package_name', types.UnicodeText,
                                       nullable=False),
                                Column('state', types.UnicodeText,
-                                      nullable=False),
+                                      default='new'),
                                Column('data_shared', types.Boolean,
                                       default=False),
                                Column('created_at', types.DateTime,
