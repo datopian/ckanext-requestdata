@@ -1,10 +1,13 @@
 import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
 
+from ckanext.requestdata.model import setup as model_setup
+
 
 class RequestdataPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IConfigurer)
     plugins.implements(plugins.IRoutes, inherit=True)
+    plugins.implements(plugins.IConfigurable)
 
     # IConfigurer
 
@@ -23,3 +26,10 @@ class RequestdataPlugin(plugins.SingletonPlugin):
                     action='make_active')
 
         return map
+
+    # IConfigurable
+
+    def configure(self, config):
+
+        # Setup requestdata model
+        model_setup()
