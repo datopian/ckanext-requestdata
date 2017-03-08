@@ -36,7 +36,8 @@ class PackageController(BaseController):
         except NotAuthorized:
             abort(403, _('Unauthorized to update this dataset.'))
         except NotFound:
-            abort(404, _('The dataset {id} could not be found.').format(id=id))
+            abort(404, _('The dataset {id} could not be found.')
+                  .format(pkg_name=pkg_name))
 
-        url = h.url_for(controller='package', action='read', id=id)
+        url = h.url_for(controller='package', action='read', id=pkg_name)
         redirect(url)
