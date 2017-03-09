@@ -24,9 +24,6 @@ def request_create(context, data_dict):
     :param package_name: The name of the package the data belongs to.
     :type package_name: string
 
-    :param data_shared: Whether data is shared or not.
-    :type data_shared: boolean
-
     :returns: the newly created request data
     :rtype: dictionary
 
@@ -45,15 +42,13 @@ def request_create(context, data_dict):
     email_address = data.get('email_address')
     message_content = data.get('message_content')
     package_name = data.get('package_name')
-    data_shared = data.get('data_shared')
 
     data = {
         'sender_name': sender_name,
         'organization': organization,
         'email_address': email_address,
         'message_content': message_content,
-        'package_name': package_name,
-        'data_shared': data_shared
+        'package_name': package_name
     }
 
     requestdata = ckanextRequestdata(**data)
