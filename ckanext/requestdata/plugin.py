@@ -20,7 +20,7 @@ class RequestdataPlugin(plugins.SingletonPlugin):
         toolkit.add_public_directory(config_, 'public')
         toolkit.add_resource('fanstatic', 'requestdata')
 
-    # IMapper
+    # IRoutes
 
     def before_map(self, map):
         controller =\
