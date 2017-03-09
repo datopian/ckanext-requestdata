@@ -17,3 +17,10 @@ def request_create_schema():
         'message_content': [not_empty, unicode],
         'package_name': [not_empty, package_name_exists]
     }
+
+
+def request_show_schema():
+    return {
+        'id': [not_empty, unicode],
+        'package_name': [not_empty, package_name_exists]
+    }

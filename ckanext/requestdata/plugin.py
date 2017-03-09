@@ -54,5 +54,6 @@ class RequestdataPlugin(plugins.SingletonPlugin):
 
     def get_auth_functions(self):
         return {
-            'requestdata_request_create': auth.request_create
+            'requestdata_request_create': auth.request_create,
+            'requestdata_request_show': auth.request_show
         }

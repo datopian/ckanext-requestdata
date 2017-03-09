@@ -1,6 +1,7 @@
 from ckan.plugins import toolkit
-from ckan.logic import check_access
+from ckan.logic import check_access, NotFound
 import ckan.lib.navl.dictization_functions as df
+from ckan.common import request
 
 from ckanext.requestdata.logic import schema
 from ckanext.requestdata.model import ckanextRequestdata
@@ -59,8 +60,42 @@ def request_create(context, data_dict):
     return out
 
 
+@toolkit.side_effect_free
 def request_show(context, data_dict):
-    pass
+    '''Return the metadata of a requestdata.
+
+    :param id: The id of a requestdata.
+    :type id: string
+
+    :rtype: dictionary
+
+    '''
+
+    if request.method != 'GET':
+        return {
+            'error': {
+                'message': 'Please use HTTP method GET for this action.'
+            }
+        }
+
+    data, errors = df.validate(data_dict, schema.request_show_schema(),
+                               context)
+
+    if errors:
+        raise toolkit.ValidationError(errors)
+
+    check_access('requestdata_request_show', context, data_dict)
+
+    id = data.get('id')
+
+    requestdata = ckanextRequestdata.get(key='id', value=id)
+
+    if requestdata is None:
+        raise NotFound
+
+    out = requestdata.as_dict()
+
+    return out
 
 
 def request_list(self):
