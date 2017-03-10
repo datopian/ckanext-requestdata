@@ -1,7 +1,6 @@
 {% ckan_extends %}
 
 {% block content_primary_nav %}
-  {{ h.build_nav_icon('user_datasets', _('Datasets'), id=user.name) }}
-  {{ h.build_nav_icon('user_activity_stream', _('Activity Stream'), id=user.name) }}
-  {# {{ h.build_nav_icon('requestdata_my_requests', _('My Requested Data')) }} #}
+  {{ super() }}
+  {{ h.build_nav_icon('requestdata_my_requests', _('My Requested Data'), id=user.name) }}
 {% endblock %}
