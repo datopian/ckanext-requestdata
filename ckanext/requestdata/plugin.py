@@ -4,6 +4,7 @@ import ckan.plugins.toolkit as toolkit
 from ckanext.requestdata.model import setup as model_setup
 from ckanext.requestdata.logic import actions
 from ckanext.requestdata.logic import auth
+from ckanext.requestdata import helpers
 
 
 class RequestdataPlugin(plugins.SingletonPlugin):
@@ -12,6 +13,7 @@ class RequestdataPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IConfigurable)
     plugins.implements(plugins.IActions)
     plugins.implements(plugins.IAuthFunctions)
+    plugins.implements(plugins.ITemplateHelpers)
 
     # IConfigurer
 
@@ -23,11 +25,19 @@ class RequestdataPlugin(plugins.SingletonPlugin):
     # IRoutes
 
     def before_map(self, map):
-        controller =\
+        package_controller =\
             'ckanext.requestdata.controllers.package:PackageController'
+        user_controller =\
+            'ckanext.requestdata.controllers.user:UserController'
 
-        map.connect('/dataset/make_active/{pkg_name}', controller=controller,
+        map.connect('/dataset/make_active/{pkg_name}',
+                    controller=package_controller,
                     action='make_active')
+
+        map.connect('requestdata_my_requests',
+                    '/user/my_requested_data/{id}',
+                    controller=user_controller,
+                    action='my_requested_data', ckan_icon='list')
 
         return map
 
@@ -57,4 +67,12 @@ class RequestdataPlugin(plugins.SingletonPlugin):
             'requestdata_request_create': auth.request_create,
             'requestdata_request_show': auth.request_show,
             'requestdata_request_list': auth.request_list
+        }
+
+    # ITemplateHelpers
+
+    def get_helpers(self):
+        return {
+            'requestdata_time_ago_from_datetime':
+                helpers.time_ago_from_datetime
         }
