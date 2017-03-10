@@ -96,7 +96,7 @@ def define_request_data_table():
                                Column('data_shared', types.Boolean,
                                       default=False),
                                Column('created_at', types.DateTime,
-                                      default=datetime.datetime.utcnow),
+                                      default=datetime.datetime.now),
                                Index('ckanext_requestdata_id_idx', 'id'))
 
     mapper(
