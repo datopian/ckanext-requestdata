@@ -57,11 +57,9 @@ class ckanextRequestdata(DomainObject):
         return query
 
     @classmethod
-    def search(self, limit, order='created_at', **kwds):
+    def search(self, order='created_at desc', **kwds):
         '''Finds entities in the table that satisfy certain criteria.
 
-        :param limit: Number of records to return.
-        :type limit: number
         :param order: Order rows by specified column.
         :type order: string
 
@@ -70,7 +68,6 @@ class ckanextRequestdata(DomainObject):
         query = Session.query(self).autoflush(False)
         query = query.filter_by(**kwds)
         query = query.order_by(order)
-        query = query.limit(limit)
 
         return query.all()
 
@@ -91,6 +88,8 @@ def define_request_data_table():
                                Column('message_content', types.UnicodeText,
                                       nullable=False),
                                Column('package_name', types.UnicodeText,
+                                      nullable=False),
+                               Column('package_creator_id', types.UnicodeText,
                                       nullable=False),
                                Column('state', types.UnicodeText,
                                       default='new'),
