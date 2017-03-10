@@ -1,0 +1,15 @@
+<div class="my-requested-data-container__content-item">
+  <p>{{ item.sender_name }} from the organization <b>{{ item.organization }}</b> requests new data.</p>
+
+  <blockquote class="my-requested-data-container__message">
+    <p>{{ item.message_content }}</p>
+  </blockquote>
+
+  <p class="my-requested-data-container__date" title="{{ h.render_datetime(item.created_at, with_hours=True) }}">{{ h.requestdata_time_ago_from_datetime(item.created_at) }}</p>
+
+  <div class="my-requested-data-container__actions">
+    <button class="btn btn-success my-requested-data-container__actions--reply">Reply</button>
+    <br>
+    <button class="btn btn-danger my-requested-data-container__actions--reject">Reject</button>
+  </div>
+</div>
