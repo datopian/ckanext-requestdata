@@ -1,0 +1,10 @@
+{% extends 'user/read.html' %}
+
+{% block subtitle %}{{ _('My Requested Data') }} - {{ super() }}{% endblock %}
+
+{% block primary_content_inner %}
+  {% snippet 'requestdata/snippets/section_base.html', type='new', title='New', requests=requests_new %}
+  {% snippet 'requestdata/snippets/section_base.html', type='open', title='Open', requests=requests_open %}
+  {% snippet 'requestdata/snippets/section_base.html', type='archive', title='Archive', requests=requests_archive %}
+{% endblock %}
+
