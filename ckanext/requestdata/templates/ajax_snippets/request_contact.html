@@ -1,0 +1,22 @@
+{% import 'macros/form.html' as form %}
+
+<div class="modal popup">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Use the form to ask a question or provide comments about
+                this dataset to the contributor.</h2>
+        </div>
+        <div class="modal-body">
+            <form class="form-horizontal col-sm-12" id="request-data-form">
+              {{ form.input('name', id='field-name', label=_('Name'), placeholder=_('eg. Your name'), value='', error='', classes=['control-full'], is_required=true) }}
+              {{ form.input('organization', id='field-organization', label=_('Organization'), placeholder=_('Organization name'), value='', error='', classes=['control-full'], is_required=true) }}
+              {{ form.input('email', id='field-email', label=_('Email'), placeholder=_('Your email'), value='', error='', classes=['control-full'], is_required=true) }}
+              {{ form.markdown('comments', id='field-comments', label=_('Comments'), placeholder=_('eg. Message content'), value='', error=''  ) }}
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-cancel">Cancel</button>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+    </div>
+</div>
