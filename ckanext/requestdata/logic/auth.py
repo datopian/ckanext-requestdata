@@ -22,6 +22,10 @@ def request_show(context, data_dict):
         return {'success': False, 'msg': message}
 
 
+def request_list(context, data_dict):
+    return {'success': True}
+
+
 def _user_has_access_to_request(context, data_dict):
     current_user_id = context['auth_user_obj'].id
 

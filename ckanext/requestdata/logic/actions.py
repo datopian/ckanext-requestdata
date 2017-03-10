@@ -44,12 +44,16 @@ def request_create(context, data_dict):
     message_content = data.get('message_content')
     package_name = data.get('package_name')
 
+    package = toolkit.get_action('package_show')(context, {'id': package_name})
+    package_creator_id = package['creator_user_id']
+
     data = {
         'sender_name': sender_name,
         'organization': organization,
         'email_address': email_address,
         'message_content': message_content,
-        'package_name': package_name
+        'package_name': package_name,
+        'package_creator_id': package_creator_id
     }
 
     requestdata = ckanextRequestdata(**data)
@@ -71,12 +75,18 @@ def request_show(context, data_dict):
 
     '''
 
-    if request.method != 'GET':
-        return {
-            'error': {
-                'message': 'Please use HTTP method GET for this action.'
+    # This code is in a try/except clause because when running the tests it
+    # gives the error "TypeError: No object (name: request) has been
+    # registered for this thread"
+    try:
+        if request.method != 'GET':
+            return {
+                'error': {
+                    'message': 'Please use HTTP method GET for this action.'
+                }
             }
-        }
+    except TypeError:
+        pass
 
     data, errors = df.validate(data_dict, schema.request_show_schema(),
                                context)
@@ -91,15 +101,53 @@ def request_show(context, data_dict):
     requestdata = ckanextRequestdata.get(key='id', value=id)
 
     if requestdata is None:
-        raise NotFound
+        raise NotFound('Request with provided \'id\' cannot be found')
 
     out = requestdata.as_dict()
 
     return out
 
 
-def request_list(self):
-    pass
+@toolkit.side_effect_free
+def request_list(context, data_dict):
+    '''Returns a list of requests.
+
+    :param id: The id of a requestdata.
+    :type id: string
+
+    :rtype: list of dictionaries
+
+    '''
+
+    # This code is in a try/except clause because when running the tests it
+    # gives the error "TypeError: No object (name: request) has been
+    # registered for this thread"
+    try:
+        if request.method != 'GET':
+            return {
+                'error': {
+                    'message': 'Please use HTTP method GET for this action.'
+                }
+            }
+    except TypeError:
+        pass
+
+    check_access('requestdata_request_list', context, data_dict)
+
+    user_id = context['auth_user_obj'].id
+
+    data = {
+        'package_creator_id': user_id
+    }
+
+    requests = ckanextRequestdata.search(**data)
+
+    out = []
+
+    for item in requests:
+        out.append(item.as_dict())
+
+    return out
 
 
 def request_patch(self):
