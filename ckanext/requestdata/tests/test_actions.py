@@ -22,7 +22,7 @@ class ActionBase(object):
 
 class TestActions(ActionBase):
     def test_create_requestdata_valid(self):
-        factories.Dataset(name='test_dataset')
+        package = factories.Dataset(name='test_dataset')
         user = factories.User()
         context = {'user': user['name']}
         data_dict = {
@@ -41,6 +41,10 @@ class TestActions(ActionBase):
         assert result['message_content'] == data_dict['message_content']
         assert result['organization'] == data_dict['organization']
         assert result['email_address'] == data_dict['email_address']
+        assert result['package_creator_id'] == package['creator_user_id']
+        assert result['sender_user_id'] == user['id']
+        assert result['state'] == 'new'
+        assert result['data_shared'] is False
 
     def test_create_requestdata_missing_values_raises_error(self):
         with assert_raises(logic.ValidationError) as cm:
@@ -96,7 +100,9 @@ class TestActions(ActionBase):
             ['Not found: non_existing_package']
 
     def test_show_requestdata_valid(self):
-        factories.Dataset(name='test_dataset')
+        package = factories.Dataset(name='test_dataset')
+        user = factories.User()
+        context = {'user': user['name']}
         data_dict = {
             'package_name': 'test_dataset',
             'sender_name': 'John Doe',
@@ -105,7 +111,8 @@ class TestActions(ActionBase):
             'email_address': 'test@test.com',
         }
 
-        result = helpers.call_action('requestdata_request_create', **data_dict)
+        result = helpers.call_action('requestdata_request_create',
+                                     context, **data_dict)
 
         requestdata_id = result['id']
 
@@ -124,6 +131,8 @@ class TestActions(ActionBase):
         assert result['email_address'] == data_dict['email_address']
         assert result['data_shared'] is False
         assert result['state'] == 'new'
+        assert result['package_creator_id'] == package['creator_user_id']
+        assert result['sender_user_id'] == user['id']
 
     def test_show_requestdata_missing_values(self):
         with assert_raises(logic.ValidationError) as cm:
