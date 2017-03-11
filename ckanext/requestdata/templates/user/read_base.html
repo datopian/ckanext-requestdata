@@ -2,5 +2,8 @@
 
 {% block content_primary_nav %}
   {{ super() }}
-  {{ h.build_nav_icon('requestdata_my_requests', _('My Requested Data'), id=user.name) }}
+
+  {% if c.is_myself %}
+    {{ h.build_nav_icon('requestdata_my_requests', _('My Requested Data'), id=user.name) }}
+  {% endif %}
 {% endblock %}
