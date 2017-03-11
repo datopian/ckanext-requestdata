@@ -31,5 +31,4 @@ echo "Installing ckanext-orgdashboards and its requirements..."
 python setup.py develop
 pip install -r requirements.txt
 
-
 echo "travis-install-dependencies is done."
