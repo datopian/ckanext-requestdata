@@ -51,6 +51,7 @@ this.ckan.module('request-data', function ($) {
     // it the rendered HTML.
     _onReceiveSnippet: function(html) {
       this.sandbox.body.append(this.createModal(html));
+      this.modal.modal('show');
       // Replace the popover with a new one that has the rendered HTML from the
       // snippet as its contents.
       this.el.popover('destroy');
@@ -79,7 +80,9 @@ this.ckan.module('request-data', function ($) {
 
     /* Event handler for the cancel event */
     _onConfirmCancel: function (event) {
-
+        this.modal.modal('hide');
+        this.el.popover('destroy');
+        this._snippetReceived = false;
     }
   };
 });
