@@ -81,6 +81,8 @@ def define_request_data_table():
                                       default=make_uuid),
                                Column('sender_name', types.UnicodeText,
                                       nullable=False),
+                               Column('sender_user_id', types.UnicodeText,
+                                      nullable=False),
                                Column('organization', types.UnicodeText,
                                       nullable=False),
                                Column('email_address', types.UnicodeText,
