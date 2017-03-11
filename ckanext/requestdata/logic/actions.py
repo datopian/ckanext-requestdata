@@ -47,8 +47,12 @@ def request_create(context, data_dict):
     package = toolkit.get_action('package_show')(context, {'id': package_name})
     package_creator_id = package['creator_user_id']
 
+    model = context['model']
+    sender_user_id = model.User.get(context['user']).id
+
     data = {
         'sender_name': sender_name,
+        'sender_user_id': sender_user_id,
         'organization': organization,
         'email_address': email_address,
         'message_content': message_content,
