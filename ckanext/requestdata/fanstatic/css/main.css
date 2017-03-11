@@ -40,3 +40,8 @@
   margin-bottom: 0px;
   font-size: 12px;
 }
+
+.my-requested-data-container__content-item .gravatar {
+  border-radius: 100px;
+  margin-right: 5px;
+}
