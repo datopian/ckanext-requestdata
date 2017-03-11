@@ -25,10 +25,13 @@ class RequestdataPlugin(plugins.SingletonPlugin):
     # IRoutes
 
     def before_map(self, map):
+
         package_controller =\
             'ckanext.requestdata.controllers.package:PackageController'
         user_controller =\
             'ckanext.requestdata.controllers.user:UserController'
+        request_data_controller = \
+            'ckanext.requestdata.controllers.request_data:RequestDataController'
 
         map.connect('/dataset/make_active/{pkg_name}',
                     controller=package_controller,
@@ -38,6 +41,9 @@ class RequestdataPlugin(plugins.SingletonPlugin):
                     '/user/my_requested_data/{id}',
                     controller=user_controller,
                     action='my_requested_data', ckan_icon='list')
+
+        map.connect('/dataset/send_request', controller=request_data_controller,
+                    action='send_request')
 
         return map
 
