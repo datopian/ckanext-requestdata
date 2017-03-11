@@ -44,6 +44,11 @@ class UserController(BaseController):
         except NotAuthorized:
             abort(403, _('Not authorized to see this page.'))
 
+        c.is_myself = id == c.user
+
+        if not c.is_myself:
+            abort(403, _('Not authorized to see this page.'))
+
         requests_new = []
         requests_open = []
         requests_archive = []
@@ -81,5 +86,4 @@ class UserController(BaseController):
             abort(403, _('Not authorized to see this page'))
 
         c.user_dict = user_dict
-        c.is_myself = user_dict['name'] == c.user
         c.about_formatted = h.render_markdown(user_dict['about'])
