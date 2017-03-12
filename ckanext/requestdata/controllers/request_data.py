@@ -1,8 +1,8 @@
 from ckan.lib import base
 from ckan.common import c, request, _
 from ckan import logic
+from ckanext.requestdata import emailer
 import ckan.model as model
-import ckan.lib.helpers as h
 import ckan.plugins as p
 import json
 
@@ -30,6 +30,11 @@ class RequestDataController(BaseController):
         try:
             if p.toolkit.request.method == 'POST':
                 data_dict = json.loads(p.toolkit.request.body)
+                content = data_dict["message_content"]
+                sender = data_dict['email_address']
+
+                response_message = emailer.send_email(content, sender)
+                print response_message
                 get_action('requestdata_request_create')(context, data_dict)
         except NotAuthorized:
             abort(403, _('Unauthorized to update this dataset.'))
