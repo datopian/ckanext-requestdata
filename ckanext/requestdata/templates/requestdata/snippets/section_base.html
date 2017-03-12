@@ -1,10 +1,23 @@
+{#
+
+Creates base layout for a section.
+
+state - The state in which a request belongs to. Can be new|open|archive.
+title - The title of the section.
+requests - The requests that need to be shown.
+
+Example usage:
+  {% snippet 'requestdata/snippets/section_base.html', state='new', title='New', requests=requests_new %}
+
+#}
+
 <section class="my-requested-data-container">
   <h3>{{ title }}</h3>
 
   {% if requests | length > 0 %}
     <div class="my-requested-data-container__content">
       {% for item in requests %}
-        {% snippet 'requestdata/snippets/section_item_' + type + '.html', item=item %}
+        {% snippet 'requestdata/snippets/section_item_' + state + '.html', item=item %}
       {% endfor %}
     </div>
   {% else %}
