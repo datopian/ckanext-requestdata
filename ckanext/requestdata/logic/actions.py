@@ -22,8 +22,8 @@ def request_create(context, data_dict):
     :param message_content: The content of the message.
     :type message_content: string
 
-    :param package_name: The name of the package the data belongs to.
-    :type package_name: string
+    :param package_id: The id of the package the data belongs to.
+    :type package_id: string
 
     :returns: the newly created request data
     :rtype: dictionary
@@ -42,9 +42,9 @@ def request_create(context, data_dict):
     organization = data.get('organization')
     email_address = data.get('email_address')
     message_content = data.get('message_content')
-    package_name = data.get('package_name')
+    package_id = data.get('package_id')
 
-    package = toolkit.get_action('package_show')(context, {'id': package_name})
+    package = toolkit.get_action('package_show')(context, {'id': package_id})
     package_creator_id = package['creator_user_id']
 
     model = context['model']
@@ -56,7 +56,7 @@ def request_create(context, data_dict):
         'organization': organization,
         'email_address': email_address,
         'message_content': message_content,
-        'package_name': package_name,
+        'package_id': package_id,
         'package_creator_id': package_creator_id
     }
 

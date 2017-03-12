@@ -29,7 +29,7 @@ def request_list(context, data_dict):
 def _user_has_access_to_request(context, data_dict):
     current_user_id = context['auth_user_obj'].id
 
-    payload = {'id': data_dict['package_name']}
+    payload = {'id': data_dict['package_id']}
     package = get_action('package_show')(context, payload)
     creator_user_id = package['creator_user_id']
 

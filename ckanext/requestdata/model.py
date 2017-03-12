@@ -89,7 +89,7 @@ def define_request_data_table():
                                       nullable=False),
                                Column('message_content', types.UnicodeText,
                                       nullable=False),
-                               Column('package_name', types.UnicodeText,
+                               Column('package_id', types.UnicodeText,
                                       nullable=False),
                                Column('package_creator_id', types.UnicodeText,
                                       nullable=False),

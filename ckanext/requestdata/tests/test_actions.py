@@ -26,7 +26,7 @@ class TestActions(ActionBase):
         user = factories.User()
         context = {'user': user['name']}
         data_dict = {
-            'package_name': 'test_dataset',
+            'package_id': package['id'],
             'sender_name': 'John Doe',
             'message_content': 'I want to add additional data.',
             'organization': 'Google',
@@ -36,7 +36,7 @@ class TestActions(ActionBase):
         result = helpers.call_action('requestdata_request_create',
                                      context=context, **data_dict)
 
-        assert result['package_name'] == data_dict['package_name']
+        assert result['package_id'] == data_dict['package_id']
         assert result['sender_name'] == data_dict['sender_name']
         assert result['message_content'] == data_dict['message_content']
         assert result['organization'] == data_dict['organization']
@@ -58,7 +58,7 @@ class TestActions(ActionBase):
         assert ex.error_dict['organization'] == ['Missing value']
         assert ex.error_dict['sender_name'] == ['Missing value']
         assert ex.error_dict['email_address'] == ['Missing value']
-        assert ex.error_dict['package_name'] == ['Missing value']
+        assert ex.error_dict['package_id'] == ['Missing value']
 
     @raises(logic.NotAuthorized)
     def test_create_requestdata_raises_auth_error(self):
@@ -67,7 +67,7 @@ class TestActions(ActionBase):
 
     def test_create_requestdata_invalid_email(self):
         data_dict = {
-            'package_name': 'test_dataset',
+            'package_id': 'some-id',
             'sender_name': 'John Doe',
             'message_content': 'I want to add additional data.',
             'organization': 'Google',
@@ -84,7 +84,7 @@ class TestActions(ActionBase):
 
     def test_create_requestdata_invalid_package(self):
         data_dict = {
-            'package_name': 'non_existing_package',
+            'package_id': 'non_existing_package_id',
             'sender_name': 'John Doe',
             'message_content': 'I want to add additional data.',
             'organization': 'Google',
@@ -96,15 +96,15 @@ class TestActions(ActionBase):
 
         ex = cm.exception
 
-        assert ex.error_dict['package_name'] ==\
-            ['Not found: non_existing_package']
+        assert ex.error_dict['package_id'] ==\
+            ['Not found: Dataset']
 
     def test_show_requestdata_valid(self):
         package = factories.Dataset(name='test_dataset')
         user = factories.User()
         context = {'user': user['name']}
         data_dict = {
-            'package_name': 'test_dataset',
+            'package_id': package['id'],
             'sender_name': 'John Doe',
             'message_content': 'I want to add additional data.',
             'organization': 'Google',
@@ -118,13 +118,13 @@ class TestActions(ActionBase):
 
         data_dict_show = {
             'id': requestdata_id,
-            'package_name': data_dict['package_name']
+            'package_id': data_dict['package_id']
         }
 
         result = helpers.call_action('requestdata_request_show',
                                      **data_dict_show)
 
-        assert result['package_name'] == data_dict['package_name']
+        assert result['package_id'] == data_dict['package_id']
         assert result['sender_name'] == data_dict['sender_name']
         assert result['message_content'] == data_dict['message_content']
         assert result['organization'] == data_dict['organization']
@@ -141,11 +141,11 @@ class TestActions(ActionBase):
         ex = cm.exception
 
         assert ex.error_dict['id'] == ['Missing value']
-        assert ex.error_dict['package_name'] == ['Missing value']
+        assert ex.error_dict['package_id'] == ['Missing value']
 
     def test_show_requestdata_invalid_package(self):
         data_dict = {
-            'package_name': 'non_existing_package'
+            'package_id': 'non_existing_package_id'
         }
 
         with assert_raises(logic.ValidationError) as cm:
@@ -153,15 +153,15 @@ class TestActions(ActionBase):
 
         ex = cm.exception
 
-        assert ex.error_dict['package_name'] ==\
-            ['Not found: non_existing_package']
+        assert ex.error_dict['package_id'] ==\
+            ['Not found: Dataset']
 
     def test_show_requestdata_request_not_found(self):
-        factories.Dataset(name='test_dataset')
+        package = factories.Dataset(name='test_dataset')
 
         data_dict = {
             'id': 'non_existing_id',
-            'package_name': 'test_dataset'
+            'package_id': package['id']
         }
 
         with assert_raises(logic.NotFound) as cm:
@@ -173,13 +173,13 @@ class TestActions(ActionBase):
 
     @raises(logic.NotAuthorized)
     def test_show_requestdata_raises_auth_error(self):
-        factories.Dataset(name='test_dataset')
+        package = factories.Dataset(name='test_dataset')
 
         context = {'ignore_auth': False}
 
         data_dict = {
             'id': 'non_existing_id',
-            'package_name': 'test_dataset'
+            'package_id': package['id']
         }
 
         helpers.call_action('requestdata_request_show', context=context,
