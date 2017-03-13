@@ -44,6 +44,11 @@ class RequestdataPlugin(plugins.SingletonPlugin):
                     controller=user_controller,
                     action='my_requested_data', ckan_icon='list')
 
+        map.connect('requestdata_reply_request',
+                    '/user/my_requested_data/{username}/reply',
+                    controller=user_controller,
+                    action='reply_request')
+
         map.connect('/dataset/send_request', controller=request_data_controller,
                     action='send_request')
 
@@ -77,7 +82,8 @@ class RequestdataPlugin(plugins.SingletonPlugin):
         return {
             'requestdata_request_create': auth.request_create,
             'requestdata_request_show': auth.request_show,
-            'requestdata_request_list': auth.request_list
+            'requestdata_request_list': auth.request_list,
+            'requestdata_request_patch': auth.request_patch
         }
 
     # ITemplateHelpers
