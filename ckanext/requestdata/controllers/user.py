@@ -7,6 +7,8 @@ from ckan.common import c, _
 from ckan import authz
 import ckan.lib.helpers as h
 
+from ckanext.requestdata.emailer import send_email
+
 get_action = logic.get_action
 NotFound = logic.NotFound
 NotAuthorized = logic.NotAuthorized
@@ -116,6 +118,11 @@ class UserController(BaseController):
 
             return json.dumps(payload)
 
+        to = data['send_to']
+        from_ = c.userobj.email
+
+        data.pop('send_to')
+
         try:
             _get_action('requestdata_request_patch', data)
         except NotAuthorized:
@@ -125,6 +132,18 @@ class UserController(BaseController):
                 'success': False,
                 'error': {
                     'message': 'An error occurred while sending the reply.'
+                }
+            }
+
+            return json.dumps(error)
+
+        response = send_email(message_content, to, from_)
+
+        if response['success'] is False:
+            error = {
+                'success': False,
+                'error': {
+                    'message': response['message']
                 }
             }
 
