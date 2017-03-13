@@ -1,5 +1,6 @@
 {% import 'macros/form.html' as form %}
-{% resource 'requestdata/request-data.js' %}
+
+{% resource 'requestdata/modal-form.js' %}
 
 <section id="dataset-resources" class="resources">
   <h3>{{ _('Data and Resources') }}</h3>
@@ -18,7 +19,7 @@
            {% set template = '<div class="modal"><div class="modal-body">'+ sender_name +'</div></div>' %}
           {% trans url=h.url_for(controller='package', action='new_resource', id=pkg.name) %}
               <p class="empty">Unfortunately the actual data isn't available right now. If you are interested to receive it you can request data</p>
-              <a href="#" class="btn pull-right" data-module="request-data" >Request data resource</a>
+              <a href="#" class="btn pull-right" data-module="modal-form" data-module-template_file="request_contact.html">Request data resource</a>
           {% endtrans %}
       {% else %}
           <p class="empty">{{ _('This dataset has no data') }}</p>
