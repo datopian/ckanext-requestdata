@@ -1,3 +1,5 @@
+import json
+
 from ckan.lib import base
 from ckan import logic, model
 from ckan.plugins import toolkit
@@ -8,6 +10,7 @@ import ckan.lib.helpers as h
 get_action = logic.get_action
 NotFound = logic.NotFound
 NotAuthorized = logic.NotAuthorized
+ValidationError = logic.ValidationError
 
 abort = base.abort
 BaseController = base.BaseController
@@ -87,3 +90,48 @@ class UserController(BaseController):
 
         c.user_dict = user_dict
         c.about_formatted = h.render_markdown(user_dict['about'])
+
+    def reply_request(self, username):
+        '''Handles sending email to the person who created the request, as well
+        as updating the state of the request to 'open'.
+
+        :param username: The user's name.
+        :type username: string
+
+        :rtype: json
+
+        '''
+
+        data = dict(toolkit.request.POST)
+
+        message_content = data.get('message_content')
+
+        if message_content is None or message_content == '':
+            payload = {
+                'success': False,
+                'error': {
+                    'message_content': 'Missing value'
+                }
+            }
+
+            return json.dumps(payload)
+
+        try:
+            _get_action('requestdata_request_patch', data)
+        except NotAuthorized:
+            abort(403, _('Not authorized to use this action.'))
+        except ValidationError:
+            error = {
+                'success': False,
+                'error': {
+                    'message': 'An error occurred while sending the reply.'
+                }
+            }
+
+            return json.dumps(error)
+
+        success = {
+            'success': True
+        }
+
+        return json.dumps(success)
