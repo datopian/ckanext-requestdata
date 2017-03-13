@@ -49,7 +49,7 @@ class RequestdataPlugin(plugins.SingletonPlugin):
                     controller=user_controller,
                     action='reply_request')
 
-        map.connect('/dataset/send_request', controller=request_data_controller,
+        map.connect('requestdata_send_request','/dataset/send_request', controller=request_data_controller,
                     action='send_request')
 
         map.connect('ckanadmin_email','/ckan-admin/email', controller=admin_controller,

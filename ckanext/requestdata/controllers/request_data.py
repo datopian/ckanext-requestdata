@@ -2,6 +2,7 @@ from ckan.lib import base
 from ckan.common import c, _
 from ckan import logic
 from ckanext.requestdata import emailer
+from ckan.plugins import toolkit
 import ckan.model as model
 import ckan.plugins as p
 import json
@@ -29,14 +30,14 @@ class RequestDataController(BaseController):
 
         try:
             if p.toolkit.request.method == 'POST':
-                data_dict = json.loads(p.toolkit.request.body)
-                content = data_dict["message_content"]
-                to = data_dict['email_address']
+                data = dict(toolkit.request.POST)
+                content = data["message_content"]
+                to = data['email_address']
                 user = context['auth_user_obj']
                 mail_subject = "Request data"
                 user_email = user.email
-
-                get_action('requestdata_request_create')(context, data_dict)
+                get_action('requestdata_request_create')(context, data)
+                print "Super"
         except NotAuthorized:
             abort(403, _('Unauthorized to update this dataset.'))
         except ValidationError:
@@ -51,4 +52,4 @@ class RequestDataController(BaseController):
 
         response_message = emailer.send_email(content, to, user_email, mail_subject)
 
-        return response_message
+        return json.dumps(response_message)
