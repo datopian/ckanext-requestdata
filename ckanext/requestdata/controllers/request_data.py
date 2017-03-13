@@ -37,7 +37,6 @@ class RequestDataController(BaseController):
                 mail_subject = "Request data"
                 user_email = user.email
                 get_action('requestdata_request_create')(context, data)
-                print "Super"
         except NotAuthorized:
             abort(403, _('Unauthorized to update this dataset.'))
         except ValidationError:
