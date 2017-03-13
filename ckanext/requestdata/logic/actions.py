@@ -154,8 +154,61 @@ def request_list(context, data_dict):
     return out
 
 
-def request_patch(self):
-    pass
+def request_patch(context, data_dict):
+    '''Patch a request.
+
+    :param id: The id of a request.
+    :type id: string
+
+    :returns: A patched request
+    :rtype: dictionary
+
+    '''
+
+    request_patch_schema = schema.request_patch_schema()
+    fields = request_patch_schema.keys()
+
+    # Exclude fields from the schema that are not in data_dict
+    for field in fields:
+        if field not in data_dict.keys() and\
+           (field != 'id' and field != 'package_id'):
+            request_patch_schema.pop(field)
+
+    print 'request_patch_schema', request_patch_schema
+
+    data, errors = df.validate(data_dict, request_patch_schema, context)
+
+    if errors:
+        raise toolkit.ValidationError(errors)
+
+    check_access('requestdata_request_patch', context, data_dict)
+
+    id = data.get('id')
+    package_id = data.get('package_id')
+
+    payload = {
+        'id': id,
+        'package_id': package_id
+    }
+
+    request = ckanextRequestdata.get(**payload)
+
+    if request is None:
+        raise NotFound
+
+    request_patch_schema.pop('id')
+    request_patch_schema.pop('package_id')
+
+    fields = request_patch_schema.keys()
+
+    for field in fields:
+        setattr(request, field, data.get(field))
+
+    request.save()
+
+    out = request.as_dict()
+
+    return out
 
 
 def request_update(self):
