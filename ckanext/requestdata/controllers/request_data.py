@@ -9,7 +9,7 @@ import json
 get_action = logic.get_action
 NotFound = logic.NotFound
 NotAuthorized = logic.NotAuthorized
-
+ValidationError = logic.ValidationError
 abort = base.abort
 BaseController = base.BaseController
 
@@ -39,8 +39,15 @@ class RequestDataController(BaseController):
                 get_action('requestdata_request_create')(context, data_dict)
         except NotAuthorized:
             abort(403, _('Unauthorized to update this dataset.'))
-        except Exception, e:
-            return e
+        except ValidationError:
+            error = {
+                'success': False,
+                'error': {
+                    'message': 'An error occurred while requesting the data.'
+                }
+            }
+
+            return json.dumps(error)
 
         response_message = emailer.send_email(content, to, user_email, mail_subject)
 
