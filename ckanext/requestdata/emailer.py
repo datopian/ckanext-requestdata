@@ -39,8 +39,15 @@ def send_email(content, to, from_, subject):
         s.sendmail(from_, to, msg.as_string())
         s.quit()
 
-        return 'Email message was successfully sent.'
+        response_dict = {
+            'Success' : True,
+            'Message' : 'Email message was successfully sent.'
+        }
+        return response_dict
     except socket_error:
         log.critical('Could not connect to email server. Have you configured the SMTP settings?')
-
-        return 'An error occured while sending the email. Try again.'
+        error_dict = {
+            'Success': False,
+            'Message' : 'An error occured while sending the email. Try again.'
+        }
+        return error_dict

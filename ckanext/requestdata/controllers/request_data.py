@@ -35,9 +35,13 @@ class RequestDataController(BaseController):
                 user = context['auth_user_obj']
                 mail_subject = "Request data"
                 user_email = user.email
-                response_message = emailer.send_email(content, to, user_email, mail_subject)
+
                 get_action('requestdata_request_create')(context, data_dict)
         except NotAuthorized:
             abort(403, _('Unauthorized to update this dataset.'))
         except Exception, e:
             return e
+
+        response_message = emailer.send_email(content, to, user_email, mail_subject)
+
+        return response_message
