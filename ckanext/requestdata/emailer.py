@@ -40,14 +40,14 @@ def send_email(content, to, from_, subject):
         s.quit()
 
         response_dict = {
-            'Success' : True,
-            'Message' : 'Email message was successfully sent.'
+            'success' : True,
+            'message' : 'Email message was successfully sent.'
         }
         return response_dict
     except socket_error:
         log.critical('Could not connect to email server. Have you configured the SMTP settings?')
         error_dict = {
-            'Success': False,
-            'Message' : 'An error occured while sending the email. Try again.'
+            'success': False,
+            'message' : 'An error occured while sending the email. Try again.'
         }
         return error_dict
