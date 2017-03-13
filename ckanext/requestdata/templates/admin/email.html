@@ -3,6 +3,20 @@
 {% import 'macros/form.html' as form %}
 
 {% block primary_content_inner %}
+   <p>Email stuffs goes here</p>
 
-   <h1>Test</h1>
+{% endblock %}
+
+{% block secondary_content %}
+  <div class="module module-narrow module-shallow">
+    <h2 class="module-heading">
+      <i class="icon-info-sign"></i>
+      {{ _('CKAN email options') }}
+    </h2>
+    <div class="module-content">
+      {% block admin_form_help %}
+        <p><strong>Email:</strong> We will add info for these page here</a>.</p>
+      {% endblock %}
+    </div>
+  </div>
 {% endblock %}

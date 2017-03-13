@@ -1,8 +1,6 @@
 from ckan.lib import base
-from ckan.common import c, _
 from ckan import logic
-import ckan.model as model
-import ckan.lib.helpers as h
+from ckan.plugins import toolkit
 
 get_action = logic.get_action
 NotFound = logic.NotFound
@@ -22,4 +20,4 @@ class AdminController(BaseController):
         :type
 
         '''
-        return "Email"
+        return toolkit.render('admin/email.html')

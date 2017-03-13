@@ -3,17 +3,16 @@ import smtplib
 from socket import error as socket_error
 from email.mime.text import MIMEText
 
-
+from pylons import config
 
 
 log = logging.getLogger(__name__)
 
-FROM = ""
-SMTP_SERVER = ""
-SMTP_USER = ""
-SMTP_PASSWORD = ""
+SMTP_SERVER = config.get('ckanext.requestdata.smtp.server', '')
+SMTP_USER = config.get('ckanext.requestdata.smtp.user', '')
+SMTP_PASSWORD = config.get('ckanext.requestdata.smtp.password', '')
 
-def send_email(content, to, from_=FROM):
+def send_email(content, to, from_):
 
     msg = MIMEText(content,'plain','UTF-8')
 

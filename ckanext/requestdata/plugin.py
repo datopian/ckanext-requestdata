@@ -48,7 +48,7 @@ class RequestdataPlugin(plugins.SingletonPlugin):
                     action='send_request')
 
         map.connect('ckanadmin_email','/ckan-admin/email', controller=admin_controller,
-                    action='email',ckan_icon='email')
+                    action='email', ckan_icon='envelope-alt')
 
         return map
 
