@@ -1,5 +1,5 @@
 from ckan.lib import base
-from ckan.common import c, request, _
+from ckan.common import c, _
 from ckan import logic
 from ckanext.requestdata import emailer
 import ckan.model as model
@@ -33,10 +33,9 @@ class RequestDataController(BaseController):
                 content = data_dict["message_content"]
                 to = data_dict['email_address']
                 user = context['auth_user_obj']
+                mail_subject = "Request data"
                 user_email = user.email
-
-                response_message = emailer.send_email(content, to, user_email)
-
+                response_message = emailer.send_email(content, to, user_email, mail_subject)
                 get_action('requestdata_request_create')(context, data_dict)
         except NotAuthorized:
             abort(403, _('Unauthorized to update this dataset.'))
