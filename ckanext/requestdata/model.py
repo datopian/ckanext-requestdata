@@ -39,17 +39,10 @@ def setup():
 
 class ckanextRequestdata(DomainObject):
     @classmethod
-    def get(self, key, value):
+    def get(self, **kwds):
         '''Finds a single entity in the table.
 
-        :param key: Name of the column.
-        :type key: string
-        :param value: Value of the column.
-        :type value: string
-
         '''
-
-        kwds = {key: value}
 
         query = Session.query(self).autoflush(False)
         query = query.filter_by(**kwds).first()
