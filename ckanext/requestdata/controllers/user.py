@@ -118,11 +118,6 @@ class UserController(BaseController):
 
             return json.dumps(payload)
 
-        to = data['send_to']
-        from_ = c.userobj.email
-
-        data.pop('send_to')
-
         try:
             _get_action('requestdata_request_patch', data)
         except NotAuthorized:
@@ -137,7 +132,11 @@ class UserController(BaseController):
 
             return json.dumps(error)
 
-        response = send_email(message_content, to, from_)
+        to = data['send_to']
+        from_ = c.userobj.email
+        subject = 'CKAN Request Data'
+
+        response = send_email(message_content, to, from_, subject)
 
         if response['success'] is False:
             error = {
