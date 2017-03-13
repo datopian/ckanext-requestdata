@@ -26,7 +26,7 @@ Example usage:
   <p class="my-requested-data-container__date" title="{{ h.render_datetime(item.created_at, with_hours=True) }}">{{ h.requestdata_time_ago_from_datetime(item.created_at) }}</p>
 
   {% set reply_action = h.url_for('requestdata_reply_request', username=c.userobj.name) %}
-  {% set reply_post_data = h.dump_json({'package_id': item.package_id, 'state': 'open'}) %}
+  {% set reply_post_data = h.dump_json({'id': item.id, 'package_id': item.package_id, 'state': 'open', 'send_to': item.email_address}) %}
 
   <div class="my-requested-data-container__actions">
     <button class="btn btn-success my-requested-data-container__actions--reply"
