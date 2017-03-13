@@ -11,12 +11,13 @@ Example usage:
 
 {% resource 'requestdata/modal-form.js' %}
 
-{% set sender_profile = h.url_for(controller='user', action='read', id=item.sender_user_id) %}
+{# {% set sender_profile = h.url_for(controller='user', action='read', id=item.sender_user_id) %} #}
+{% set package_url = h.url_for(controller='package', action='read', id=item.package_id) %}
 
 <div class="my-requested-data-container__content-item">
-  <p>
-    {{ h.gravatar((c.userobj.email_hash if c and c.userobj else ''), size=28) }}
-    <a href="{{ sender_profile }}" title="{{ _('View profile') }}">{{ item.sender_name }}</a> from the organization <b>{{ item.organization }}</b> requests new data.
+  <p class="my-requested-data-container__content-item-info">
+    {# {{ h.gravatar((c.userobj.email_hash if c and c.userobj else ''), size=28) }} #}
+    <a href="{{ sender_profile }}" title="{{ _('View profile') }}">{{ item.sender_name }}</a> from the organization <b>{{ item.organization }}</b> requests new data for dataset <a href="{{ package_url }}" title="{{ _('View dataset') }}">{{ h.requestdata_get_package_title(item.package_id) }}</a>.
   </p>
 
   <blockquote class="my-requested-data-container__message">
