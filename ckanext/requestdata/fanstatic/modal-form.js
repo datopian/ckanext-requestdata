@@ -93,8 +93,8 @@ this.ckan.module('modal-form', function ($) {
             }
           }.bind(this))
           .error(function(error) {
-            this._showFormError(error)
-          })
+            this._showFormError(error.statusText)
+          }.bind(this))
       }
 
     },
