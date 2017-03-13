@@ -91,5 +91,7 @@ class RequestdataPlugin(plugins.SingletonPlugin):
     def get_helpers(self):
         return {
             'requestdata_time_ago_from_datetime':
-                helpers.time_ago_from_datetime
+                helpers.time_ago_from_datetime,
+            'requestdata_get_package_title':
+                helpers.get_package_title
         }
