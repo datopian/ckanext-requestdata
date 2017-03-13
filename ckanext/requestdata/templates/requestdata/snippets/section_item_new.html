@@ -9,6 +9,8 @@ Example usage:
 
 #}
 
+{% resource 'requestdata/modal-form.js' %}
+
 {% set sender_profile = h.url_for(controller='user', action='read', id=item.sender_user_id) %}
 
 <div class="my-requested-data-container__content-item">
@@ -23,8 +25,15 @@ Example usage:
 
   <p class="my-requested-data-container__date" title="{{ h.render_datetime(item.created_at, with_hours=True) }}">{{ h.requestdata_time_ago_from_datetime(item.created_at) }}</p>
 
+  {% set reply_action = h.url_for('requestdata_reply_request', username=c.userobj.name) %}
+  {% set reply_post_data = h.dump_json({'package_id': item.package_id, 'state': 'open'}) %}
+
   <div class="my-requested-data-container__actions">
-    <button class="btn btn-success my-requested-data-container__actions--reply">Reply</button>
+    <button class="btn btn-success my-requested-data-container__actions--reply"
+            data-module="modal-form"
+            data-module-template_file="reply_request_form.html"
+            data-module-submit_action="{{ reply_action }}"
+            data-module-post_data="{{ reply_post_data }}">Reply</button>
     <br>
     <button class="btn btn-danger my-requested-data-container__actions--reject">Reject</button>
   </div>
