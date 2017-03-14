@@ -37,6 +37,10 @@ this.ckan.module('modal-form', function($) {
             } else if (this.modal) {
                 this.modal.modal('show');
             }
+            var sucess_msg = document.getElementsByClassName('alert-success');
+            if(sucess_msg.length != 0){
+                sucess_msg.parentElement.removeChild(sucess_msg);
+            }
         },
         _onReceiveSnippet: function(html) {
             this.sandbox.body.append(this.createModal(html));
