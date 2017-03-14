@@ -92,8 +92,10 @@ this.ckan.module('modal-form', function($) {
                     .done(function(data) {
                         data = JSON.parse(data)
 
-                        if (data.error && data.error.message) {
-                            this._showFormError(data.error.message)
+                        if (data.error && data.error.fields) {
+                            for(var key in data.error.fields){
+                                this._showFormError(data.error.fields[key]);
+                            }
                         } else if (data.success) {
                             this._showSuccessMsg(data.message);
                         }
