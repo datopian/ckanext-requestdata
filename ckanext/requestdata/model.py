@@ -92,6 +92,8 @@ def define_request_data_table():
                                       default=False),
                                Column('created_at', types.DateTime,
                                       default=datetime.datetime.now),
+                               Column('modified_at', types.DateTime,
+                                      default=datetime.datetime.now),
                                Index('ckanext_requestdata_id_idx', 'id'))
 
     mapper(
