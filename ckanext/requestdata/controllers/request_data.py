@@ -38,11 +38,11 @@ class RequestDataController(BaseController):
                 get_action('requestdata_request_create')(context, data)
         except NotAuthorized:
             abort(403, _('Unauthorized to update this dataset.'))
-        except ValidationError:
+        except ValidationError as e:
             error = {
                 'success': False,
                 'error': {
-                    'message': 'An error occurred while requesting the data.'
+                    'message': str(e)
                 }
             }
 
