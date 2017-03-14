@@ -21,3 +21,12 @@ class AdminController(BaseController):
 
         '''
         return toolkit.render('admin/email.html')
+
+    def requests_data(self):
+        '''
+        Return all of the data requests in admin panel
+
+        :return:
+        '''
+
+        return toolkit.render('admin/all_requests_data.html')
