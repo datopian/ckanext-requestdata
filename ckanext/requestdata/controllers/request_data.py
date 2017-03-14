@@ -25,16 +25,15 @@ class RequestDataController(BaseController):
 
         :rtype: json
         '''
-        print "Entered"
         context = {'model': model, 'session': model.Session,
                    'user': c.user, 'auth_user_obj': c.userobj}
 
         try:
             if p.toolkit.request.method == 'POST':
                 data = dict(toolkit.request.POST)
-                content = data["message_content"]
+                content = data['message_content']
                 to = data['email_address']
-                mail_subject = "Request data"
+                mail_subject = 'Request data'
                 get_action('requestdata_request_create')(context, data)
         except NotAuthorized:
             abort(403, _('Unauthorized to update this dataset.'))
@@ -42,7 +41,7 @@ class RequestDataController(BaseController):
             error = {
                 'success': False,
                 'error': {
-                    'message': str(e)
+                     'fields': e.error_dict
                 }
             }
 
