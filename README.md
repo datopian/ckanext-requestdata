@@ -20,9 +20,10 @@ pip install -r requirements.txt
 
 These are the required configuration options used by the extension:
 ```
-ckanext.requestdata.smtp.server=YOUR_SMTP_SERVER
-ckanext.requestdata.smtp.user=YOUR_SMTP_USERNAME
-ckanext.requestdata.smtp.password=YOUR_SMTP_PASSWORD
+smtp.server=YOUR_SMTP_SERVER
+smtp.user=YOUR_SMTP_USERNAME
+smtp.password=YOUR_SMTP_PASSWORD
+smtp.mail_from =SENDER_MAIL
 ```
 
 ## Running the Tests
