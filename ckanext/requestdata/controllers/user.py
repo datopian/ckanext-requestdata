@@ -149,7 +149,8 @@ class UserController(BaseController):
             return json.dumps(error)
 
         success = {
-            'success': True
+            'success': True,
+            'message': 'Message was sent successfully'
         }
 
         return json.dumps(success)
