@@ -50,7 +50,7 @@ class ckanextRequestdata(DomainObject):
         return query
 
     @classmethod
-    def search(self, order='created_at desc', **kwds):
+    def search(self, order='modified_at desc', **kwds):
         '''Finds entities in the table that satisfy certain criteria.
 
         :param order: Order rows by specified column.
