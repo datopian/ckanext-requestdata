@@ -37,9 +37,11 @@ this.ckan.module('modal-form', function($) {
             } else if (this.modal) {
                 this.modal.modal('show');
             }
-            var sucess_msg = document.getElementsByClassName('alert-success');
-            if(sucess_msg.length != 0){
-                sucess_msg.parentElement.removeChild(sucess_msg);
+
+            var success_msg = document.querySelector('#request-success-container');
+
+            if (success_msg) {
+                success_msg.parentElement.removeChild(success_msg);
             }
         },
         _onReceiveSnippet: function(html) {
@@ -138,6 +140,7 @@ this.ckan.module('modal-form', function($) {
             //  $("#result").addClass("alert alert-success alert-dismissable fade in");
             var div = document.createElement('div');
             div.className = "alert alert-success alert-dismissable fade in";
+            div.id = 'request-success-container'
             div.textContent = msg;
             var currentDiv = document.getElementsByClassName("module-content");
             // ckan main module content is 1 in the array
