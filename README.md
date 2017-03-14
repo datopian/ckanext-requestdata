@@ -33,7 +33,7 @@ development dependencies in CKAN, which can be done by running the following
 command in the CKAN's `src` directory:
 
 ```
-python install -r dev-requirements.txt
+pip install -r dev-requirements.txt
 ```
 
 After that just type this command to actually run the tests in the extension.
