@@ -14,6 +14,12 @@
         {% endblock %}
       </ul>
     {% else %}
+           {% if c.userobj %}
+             {% set is_logged_in = 'true' %}
+           {% else %}
+             {% set is_logged_in = 'false' %}
+           {% endif %}
+           {% set redirect_url = h.url_for(controller='user', action='login') %}
            {% set requestdata_action = h.url_for('requestdata_send_request') %}
            {% set request_post_data = h.dump_json({'package_id':pkg.id}) %}
            {% trans url=h.url_for(controller='package', action='new_resource', id=pkg.name) %}
@@ -23,6 +29,8 @@
                  data-module-template_file="request_contact.html"
                  data-module-submit_action="{{ requestdata_action }}"
                  data-module-post_data="{{ request_post_data }}"
+                 data-module-is_logged_in="{{ is_logged_in }}"
+                 data-module-redirect_url="{{ redirect_url }}"
               >Request data resource</a>
           {% endtrans %}
     {% endif %}

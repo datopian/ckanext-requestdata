@@ -31,6 +31,12 @@ this.ckan.module('modal-form', function($) {
         // Whether or not the rendered snippet has already been received from CKAN.
         _snippetReceived: false,
         _onClick: function(event) {
+            var base_url = ckan.sandbox().client.endpoint;
+
+            if (!this.options.is_logged_in) {
+              location.href = base_url + this.options.redirect_url
+              return;
+            }
             if (!this._snippetReceived) {
                 this.sandbox.client.getTemplate(this.options.template_file, {}, this._onReceiveSnippet);
                 this._snippetReceived = true;
