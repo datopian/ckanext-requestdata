@@ -16,7 +16,7 @@ Example usage:
 <div class="my-requested-data-container__content-item">
   <p class="my-requested-data-container__content-item-info">You contacted with <a href="{{ sender_profile }}" title="{{ _('View profile') }}">{{ item.sender_name }}</a> for a new data request for dataset <a href="{{ package_url }}" title="{{ _('View dataset') }}">{{ h.requestdata_get_package_title(item.package_id) }}</a>. Was data shared?</p>
 
-  <p class="my-requested-data-container__date" title="{{ h.render_datetime(item.created_at, with_hours=True) }}">{{ h.requestdata_time_ago_from_datetime(item.created_at) }}</p>
+  <p class="my-requested-data-container__date" title="{{ h.render_datetime(item.modified_at, with_hours=True) }}">{{ h.requestdata_time_ago_from_datetime(item.modified_at) }}</p>
 
   <div class="my-requested-data-container__actions">
     <button class="btn btn-success my-requested-data-container__actions--data-shared">Yes</button>
