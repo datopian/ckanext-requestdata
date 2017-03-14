@@ -122,11 +122,11 @@ class UserController(BaseController):
             _get_action('requestdata_request_patch', data)
         except NotAuthorized:
             abort(403, _('Not authorized to use this action.'))
-        except ValidationError:
+        except ValidationError as e:
             error = {
                 'success': False,
                 'error': {
-                    'message': 'An error occurred while sending the reply.'
+                    'fields': e.error_dict
                 }
             }
 
@@ -141,7 +141,9 @@ class UserController(BaseController):
             error = {
                 'success': False,
                 'error': {
-                    'message': response['message']
+                    'fields': {
+                        'email': response['message']
+                    }
                 }
             }
 
