@@ -8,17 +8,18 @@ from pylons import config
 
 log = logging.getLogger(__name__)
 
-SMTP_SERVER = config.get('ckanext.requestdata.smtp.server', '')
-SMTP_USER = config.get('ckanext.requestdata.smtp.user', '')
-SMTP_PASSWORD = config.get('ckanext.requestdata.smtp.password', '')
+SMTP_SERVER = config.get('smtp.server', '')
+SMTP_USER = config.get('smtp.user', '')
+SMTP_PASSWORD = config.get('smtp.password', '')
+SMTP_FROM = config.get('smtp.mail_from')
 
-def send_email(content, to, from_, subject):
+def send_email(content, to, subject):
     '''Sends email
        :param content: The body content for the mail.
        :type string:
        :param to: To whom will be mail sent
        :type string:
-       :param from_: The sender of mail.
+       :param subject: The subject of mail.
        :type string:
 
 
@@ -26,7 +27,7 @@ def send_email(content, to, from_, subject):
 
        '''
     msg = MIMEText(content,'plain','UTF-8')
-
+    from_ = SMTP_FROM
     if isinstance(to, basestring):
         to = [to]
     msg['Subject'] = subject
