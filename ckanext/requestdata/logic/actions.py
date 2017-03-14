@@ -1,3 +1,5 @@
+import datetime
+
 from ckan.plugins import toolkit
 from ckan.logic import check_access, NotFound
 import ckan.lib.navl.dictization_functions as df
@@ -174,8 +176,6 @@ def request_patch(context, data_dict):
            (field != 'id' and field != 'package_id'):
             request_patch_schema.pop(field)
 
-    print 'request_patch_schema', request_patch_schema
-
     data, errors = df.validate(data_dict, request_patch_schema, context)
 
     if errors:
@@ -203,6 +203,8 @@ def request_patch(context, data_dict):
 
     for field in fields:
         setattr(request, field, data.get(field))
+
+    request.modified_at = datetime.datetime.now()
 
     request.save()
 
