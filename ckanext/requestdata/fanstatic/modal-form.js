@@ -31,15 +31,23 @@ this.ckan.module('modal-form', function($) {
         // Whether or not the rendered snippet has already been received from CKAN.
         _snippetReceived: false,
         _onClick: function(event) {
+            var base_url = ckan.sandbox().client.endpoint;
+
+            if (!this.options.is_logged_in) {
+              location.href = base_url + this.options.redirect_url
+              return;
+            }
             if (!this._snippetReceived) {
                 this.sandbox.client.getTemplate(this.options.template_file, {}, this._onReceiveSnippet);
                 this._snippetReceived = true;
             } else if (this.modal) {
                 this.modal.modal('show');
             }
-            var sucess_msg = document.getElementsByClassName('alert-success');
-            if(sucess_msg.length != 0){
-                sucess_msg.parentElement.removeChild(sucess_msg);
+
+            var success_msg = document.querySelector('#request-success-container');
+
+            if (success_msg) {
+                success_msg.parentElement.removeChild(success_msg);
             }
         },
         _onReceiveSnippet: function(html) {
@@ -140,6 +148,7 @@ this.ckan.module('modal-form', function($) {
             //  $("#result").addClass("alert alert-success alert-dismissable fade in");
             var div = document.createElement('div');
             div.className = "alert alert-success alert-dismissable fade in";
+            div.id = 'request-success-container'
             div.textContent = msg;
             var currentDiv = document.getElementsByClassName("module-content");
             // ckan main module content is 1 in the array
