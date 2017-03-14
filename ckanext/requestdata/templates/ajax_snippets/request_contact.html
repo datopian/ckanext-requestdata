@@ -8,6 +8,7 @@
         </div>
         <div class="modal-body">
             <form class="form-horizontal col-sm-12" id="request-data-form">
+              <div class="alert alert-error hide"></div>
               {{ form.input('sender_name', id='field-name', label=_('Name'), placeholder=_('eg. Your name'), value='', error='', classes=['control-full'], is_required=true,attrs={'required': 'required', 'class': 'form-element'}) }}
               {{ form.input('organization', id='field-organization', label=_('Organization'), placeholder=_('Organization name'), value='', error='', classes=['control-full'], is_required=true,attrs={'required': 'required', 'class': 'form-element'}) }}
               {{ form.input('email_address', id='field-email', label=_('Email'), placeholder=_('Your email'), value='', error='', classes=['control-full'], is_required=true,attrs={'required': 'required', 'class': 'form-element'}) }}
