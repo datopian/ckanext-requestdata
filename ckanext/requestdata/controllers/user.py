@@ -133,10 +133,9 @@ class UserController(BaseController):
             return json.dumps(error)
 
         to = data['send_to']
-        from_ = c.userobj.email
         subject = 'CKAN Request Data'
 
-        response = send_email(message_content, to, from_, subject)
+        response = send_email(message_content, to, subject)
 
         if response['success'] is False:
             error = {
