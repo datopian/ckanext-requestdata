@@ -23,6 +23,7 @@ class RequestDataController(BaseController):
         :param data: Contact form data.
         :type data: object
 
+        :rtype: json
         '''
         print "Entered"
         context = {'model': model, 'session': model.Session,
@@ -33,9 +34,7 @@ class RequestDataController(BaseController):
                 data = dict(toolkit.request.POST)
                 content = data["message_content"]
                 to = data['email_address']
-                user = context['auth_user_obj']
                 mail_subject = "Request data"
-                user_email = user.email
                 get_action('requestdata_request_create')(context, data)
         except NotAuthorized:
             abort(403, _('Unauthorized to update this dataset.'))
@@ -49,6 +48,6 @@ class RequestDataController(BaseController):
 
             return json.dumps(error)
 
-        response_message = emailer.send_email(content, to, user_email, mail_subject)
+        response_message = emailer.send_email(content, to, mail_subject)
 
         return json.dumps(response_message)
