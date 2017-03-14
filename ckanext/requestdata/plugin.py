@@ -44,10 +44,17 @@ class RequestdataPlugin(plugins.SingletonPlugin):
                     controller=user_controller,
                     action='my_requested_data', ckan_icon='list')
 
-        map.connect('requestdata_reply_request',
-                    '/user/my_requested_data/{username}/reply',
+        map.connect('requestdata_handle_new_request_action',
+                    '/user/my_requested_data/{username}/' +
+                    '{request_action:reply|reject}',
                     controller=user_controller,
-                    action='reply_request')
+                    action='handle_new_request_action')
+
+        map.connect('requestdata_handle_open_request_action',
+                    '/user/my_requested_data/{username}/' +
+                    '{request_action:shared|notshared}',
+                    controller=user_controller,
+                    action='handle_open_request_action')
 
         map.connect('requestdata_send_request','/dataset/send_request', controller=request_data_controller,
                     action='send_request')
