@@ -26,14 +26,18 @@ Example usage:
 
   <p class="my-requested-data-container__date" title="{{ h.render_datetime(item.created_at, with_hours=True) }}">{{ h.requestdata_time_ago_from_datetime(item.created_at) }}</p>
 
-  {% set reply_action = h.url_for('requestdata_reply_request', username=c.userobj.name) %}
+  {% set reply_action = h.url_for('requestdata_handle_new_request_action', username=c.userobj.name, request_action='reply') %}
   {% set reply_post_data = h.dump_json({'id': item.id, 'package_id': item.package_id, 'state': 'open', 'send_to': item.email_address}) %}
+
+  {% set reject_action = h.url_for('requestdata_handle_new_request_action', username=c.userobj.name, request_action='reject') %}
+  {% set reject_post_data = h.dump_json({'id': item.id, 'package_id': item.package_id, 'state': 'archive', 'send_to': item.email_address}) %}
 
   {% if c.userobj %}
     {% set is_logged_in = 'true' %}
   {% else %}
     {% set is_logged_in = 'false' %}
   {% endif %}
+
   {% set redirect_url = h.url_for(controller='user', action='login') %}
 
   <div class="my-requested-data-container__actions">
@@ -45,6 +49,12 @@ Example usage:
             data-module-is_logged_in="{{ is_logged_in }}"
             data-module-redirect_url="{{ redirect_url }}">Reply</button>
     <br>
-    <button class="btn btn-danger my-requested-data-container__actions--reject">Reject</button>
+    <button class="btn btn-danger my-requested-data-container__actions--reject"
+            data-module="modal-form"
+            data-module-template_file="reject_request_form.html"
+            data-module-submit_action="{{ reject_action }}"
+            data-module-post_data="{{ reject_post_data }}"
+            data-module-is_logged_in="{{ is_logged_in }}"
+            data-module-redirect_url="{{ redirect_url }}">Reject</button>
   </div>
 </div>

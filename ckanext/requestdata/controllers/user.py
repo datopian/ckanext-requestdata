@@ -93,12 +93,16 @@ class UserController(BaseController):
         c.user_dict = user_dict
         c.about_formatted = h.render_markdown(user_dict['about'])
 
-    def reply_request(self, username):
+    def handle_new_request_action(self, username, request_action):
         '''Handles sending email to the person who created the request, as well
-        as updating the state of the request to 'open'.
+        as updating the state of the request depending on the data sent.
 
         :param username: The user's name.
         :type username: string
+
+        :param request_action: The current action. Can be either reply or
+        reject
+        :type request_action: string
 
         :rtype: json
 
@@ -152,6 +156,49 @@ class UserController(BaseController):
         success = {
             'success': True,
             'message': 'Message was sent successfully'
+        }
+
+        return json.dumps(success)
+
+    def handle_open_request_action(self, username, request_action):
+        '''Handles updating the state of the request depending on the data
+        sent.
+
+        :param username: The user's name.
+        :type username: string
+
+        :param request_action: The current action. Can be either shared or
+        notshared
+        :type request_action: string
+
+        :rtype: json
+
+        '''
+
+        data = dict(toolkit.request.POST)
+
+        if data['data_shared'] == 'true':
+            data['data_shared'] = True
+        elif data['data_shared'] == 'false':
+            data['data_shared'] = False
+
+        try:
+            _get_action('requestdata_request_patch', data)
+        except NotAuthorized:
+            abort(403, _('Not authorized to use this action.'))
+        except ValidationError as e:
+            error = {
+                'success': False,
+                'error': {
+                    'fields': e.error_dict
+                }
+            }
+
+            return json.dumps(error)
+
+        success = {
+            'success': True,
+            'message': 'Request\'s state successfully updated.'
         }
 
         return json.dumps(success)

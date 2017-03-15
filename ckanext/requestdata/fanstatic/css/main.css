@@ -54,3 +54,16 @@
 .my-requested-data-container__content-item-info-separator {
   color: #6f6b6b;
 }
+
+.request-message-alert {
+  position: fixed;
+  top: 25px;
+  right: 25px;
+  z-index: 10;
+}
+
+.my-requested-data-container__actions--data-shared .icon-thumbs-up,
+.my-requested-data-container__actions--data-notshared .icon-thumbs-down {
+  margin-left: 8px;
+  font-size: 18px;
+}
