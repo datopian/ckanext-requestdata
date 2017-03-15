@@ -22,6 +22,18 @@ class RequestdataPlugin(plugins.SingletonPlugin):
         toolkit.add_public_directory(config_, 'public')
         toolkit.add_resource('fanstatic', 'requestdata')
 
+    def update_config_schema(self, schema):
+        ignore_missing = toolkit.get_validator('ignore_missing')
+
+        email_body = {}
+        email_body.update({'email_header': [ignore_missing, unicode],
+                           'email_body': [ignore_missing, unicode],
+                           'email_footer': [ignore_missing, unicode]})
+
+        schema.update(email_body)
+
+        return schema
+
     # IRoutes
 
     def before_map(self, map):
