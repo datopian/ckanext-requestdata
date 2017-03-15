@@ -3,6 +3,12 @@ from ckan.common import c, _
 from ckan import logic
 from ckanext.requestdata import emailer
 from ckan.plugins import toolkit
+try:
+    # CKAN 2.7 and later
+    from ckan.common import config
+except ImportError:
+    # CKAN 2.6 and earlier
+    from pylons import config
 import ckan.model as model
 import ckan.plugins as p
 import json
@@ -14,6 +20,19 @@ ValidationError = logic.ValidationError
 abort = base.abort
 BaseController = base.BaseController
 
+def _get_email_congiuration():
+    '''
+     Get admin schema from database
+    :return:
+    '''
+    schema = logic.schema.update_configuration_schema()
+    email_config = {}
+    for key in schema:
+        ##get only email configuration
+        if "email" in key:
+            email_config[key] = config.get(key)
+    vars = {'data': email_config, 'errors': {}}
+    return vars
 
 class RequestDataController(BaseController):
 
