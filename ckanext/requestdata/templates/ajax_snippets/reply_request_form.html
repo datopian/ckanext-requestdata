@@ -8,7 +8,7 @@
     <div class="modal-body">
       <form class="form-horizontal col-sm-12">
         <div class="alert alert-error hide"></div>
-        {{ form.markdown('message_content', label=_('Message content'), is_required=true, attrs={'required': 'required', 'class': 'form-element'}) }}
+        {{ form.textarea('message_content', label=_('Message content'), is_required=true, attrs={'required': 'required', 'class': 'form-element'}) }}
       </form>
     </div>
     <div class="modal-footer">
