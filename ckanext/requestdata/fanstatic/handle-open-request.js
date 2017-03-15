@@ -40,14 +40,20 @@ this.ckan.module('handle-open-request', function($) {
     initialize: function() {
       $.proxyAll(this, /_on/)
 
+      this.buttonClicked = false
+
       this.el.on('click', this._onClick)
     },
     _onClick: function(event) {
-      this.el.attr('disabled', 'disabled')
+      if (this.buttonClicked) return
 
       var base_url = ckan.sandbox().client.endpoint
       var url = base_url + this.options.action || ''
       var payload = this.options.post_data || {}
+
+      this.el.attr('disabled', 'disabled')
+
+      this.buttonClicked = true;
 
       $.post(url, payload, 'json')
         .done(function(data) {
@@ -64,19 +70,24 @@ this.ckan.module('handle-open-request', function($) {
             }
 
             this.el.html('<i class="' + className + '"></i>')
+            this._disableActionButtons(payload.data_shared)
           } else if (data.error && data.error.fields) {
             for (var key in data.error.fields) {
               message += key + ': ' + data.error.fields[key] + '<br>'
             }
 
             _showAlert(message, 'alert-danger', 4000)
-          }
 
-          this.el.removeAttr('disabled')
+            this.el.removeAttr('disabled')
+          }
         }.bind(this))
         .error(function(error) {
           this.el.removeAttr('disabled')
         }.bind(this))
+    },
+    _disableActionButtons: function(data_shared) {
+      this.el.attr('disabled', 'disabled')
+      this.el.siblings('.btn').attr('disabled', 'disabled')
     }
   }
 })

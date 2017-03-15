@@ -104,6 +104,7 @@ this.ckan.module('modal-form', function($) {
                             }
                         } else if (data.success) {
                             this._showSuccessMsg(data.message);
+                            this._disableActionButtons();
                         }
                     }.bind(this))
                     .error(function(error) {
@@ -151,6 +152,10 @@ this.ckan.module('modal-form', function($) {
             this.modal.modal('hide');
             // Clear form fields
             this.modal.find('form')[0].reset();
+        },
+        _disableActionButtons: function() {
+            this.el.attr('disabled', 'disabled');
+            this.el.siblings('.btn').attr('disabled', 'disabled');
         }
     };
 });
