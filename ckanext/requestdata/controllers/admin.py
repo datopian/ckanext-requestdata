@@ -1,6 +1,7 @@
 from ckan.lib import base
 from ckan import logic
 from ckan.plugins import toolkit
+from ckan.controllers.admin import AdminController
 
 get_action = logic.get_action
 NotFound = logic.NotFound
@@ -11,7 +12,7 @@ abort = base.abort
 BaseController = base.BaseController
 
 
-class AdminController(BaseController):
+class AdminController(AdminController):
 
     def email(self):
         '''Email template admin tab.
