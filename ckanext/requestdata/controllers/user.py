@@ -1,5 +1,7 @@
 import json
 
+from paste.deploy.converters import asbool
+
 from ckan.lib import base
 from ckan import logic, model
 from ckan.plugins import toolkit
@@ -110,6 +112,9 @@ class UserController(BaseController):
 
         data = dict(toolkit.request.POST)
 
+        if 'rejected' in data:
+            data['rejected'] = asbool(data['rejected'])
+
         message_content = data.get('message_content')
 
         if message_content is None or message_content == '':
@@ -176,6 +181,9 @@ class UserController(BaseController):
         '''
 
         data = dict(toolkit.request.POST)
+
+        if 'data_shared' in data:
+            data['data_shared'] = asbool(data['data_shared'])
 
         if data['data_shared'] == 'true':
             data['data_shared'] = True
