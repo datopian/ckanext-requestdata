@@ -90,6 +90,8 @@ def define_request_data_table():
                                       default='new'),
                                Column('data_shared', types.Boolean,
                                       default=False),
+                               Column('rejected', types.Boolean,
+                                      default=False),
                                Column('created_at', types.DateTime,
                                       default=datetime.datetime.now),
                                Column('modified_at', types.DateTime,
