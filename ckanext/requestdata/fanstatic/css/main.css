@@ -20,10 +20,10 @@
 }
 
 .my-requested-data-container__actions {
-  float: right;
   position: absolute;
-  top: 18px;
+  top: 50%;
   right: 18px;
+  transform: translateY(-50%);
 }
 
 .my-requested-data-container__actions button {
@@ -66,4 +66,37 @@
 .my-requested-data-container__actions--data-notshared .icon-thumbs-down {
   margin-left: 8px;
   font-size: 18px;
+}
+
+.my-requested-data-container__status {
+  position: absolute;
+  top: 50%;
+  right: 20px;
+  transform: translateY(-39%);
+  text-align: center;
+  width: 60px;
+}
+
+.my-requested-data-container__status-text {
+  font-size: 12px;
+  color: #565656;
+  margin-top: 5px;
+}
+
+.my-requested-data-container__status .icon-remove-circle,
+.my-requested-data-container__status .icon-thumbs-up,
+.my-requested-data-container__status .icon-thumbs-down {
+  font-size: 30px;
+}
+
+.my-requested-data-container__status .icon-remove-circle {
+  color: #bd362f;
+}
+
+.my-requested-data-container__status .icon-thumbs-up {
+  color: #51a351;
+}
+
+.my-requested-data-container__status .icon-thumbs-down {
+  color: #49afcd;
 }
