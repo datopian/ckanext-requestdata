@@ -1,12 +1,13 @@
 {% extends "admin/base.html" %}
 
 {% import 'macros/form.html' as form %}
+{% set action_url = h.url_for('ckanadmin_email') %}
 
 {% block primary_content_inner %}
-   <form class="form-horizontal col-sm-12" id="email-body-form">
-      {{ form.textarea('header', id='field-header', label=_('Header'), value='', error='') }}
-      {{ form.textarea('body', id='field-body', label=_('Body'), value='', error='') }}
-      {{ form.textarea('footer', id='field-footer', label=_('Footer'), value='', error='') }}
+   <form method="post" action="{{ action_url }}"class="form-horizontal col-sm-12" id="email-body-form">
+      {{ form.textarea('email_header', id='field-header', label=_('Header'), value=data.email_header, error='') }}
+      {{ form.textarea('email_body', id='field-body', label=_('Body'), value=data.email_body, error='') }}
+      {{ form.textarea('email_footer', id='field-footer', label=_('Footer'), value=data.email_footer, error='') }}
       <div class="form-actions">
         <button type="submit" class="btn btn-primary" name="save">{{ _('Update Email Form') }}</button>
     </div>
