@@ -33,5 +33,6 @@ def request_patch_schema():
         'id': [not_empty, unicode],
         'package_id': [not_empty, package_id_exists, unicode],
         'state': [state_validator],
-        'data_shared': [boolean_validator]
+        'data_shared': [boolean_validator],
+        'rejected': [boolean_validator]
     }
