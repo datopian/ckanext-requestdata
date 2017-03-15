@@ -64,7 +64,6 @@ this.ckan.module('modal-form', function($) {
                 });
                 this.modalFormError = this.modal.find('.alert-error')
             }
-
             return this.modal;
         },
         _onSubmit: function(event) {
@@ -99,7 +98,6 @@ this.ckan.module('modal-form', function($) {
                 $.post(url, data, 'json')
                     .done(function(data) {
                         data = JSON.parse(data)
-
                         if (data.error && data.error.fields) {
                             for(var key in data.error.fields){
                                 this._showFormError(data.error.fields[key]);
@@ -112,15 +110,11 @@ this.ckan.module('modal-form', function($) {
                         this._showFormError(error.statusText)
                     }.bind(this))
             }
-
         },
         _onCancel: function(event) {
-            this.modal.modal('hide');
             this._snippetReceived = false;
             this._clearFormErrors()
-
-            // Clear form fields
-            this.modal.find('form')[0].reset()
+            this._resetModalForm();
         },
         _showInputError: function(element, message) {
             var span = document.createElement('span');
@@ -144,8 +138,6 @@ this.ckan.module('modal-form', function($) {
             this.modalFormError.text(message)
         },
         _showSuccessMsg: function(msg) {
-            // $("#result").html(msg);
-            //  $("#result").addClass("alert alert-success alert-dismissable fade in");
             var div = document.createElement('div');
             div.className = "alert alert-success alert-dismissable fade in";
             div.id = 'request-success-container'
@@ -153,8 +145,12 @@ this.ckan.module('modal-form', function($) {
             var currentDiv = document.getElementsByClassName("module-content");
             // ckan main module content is 1 in the array
             currentDiv[1].insertBefore(div, currentDiv[1].firstChild);
-            this.modal.modal('hide');
-            this.modal.find('form')[0].reset();
+            this._resetModalForm();
         },
+        _resetModalForm: function(){
+            this.modal.modal('hide');
+            // Clear form fields
+            this.modal.find('form')[0].reset();
+        }
     };
 });
