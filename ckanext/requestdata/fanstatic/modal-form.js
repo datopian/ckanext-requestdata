@@ -2,7 +2,7 @@
 
 /* modal-form
  *
- * This JavaScript module creates a modal and responds to from actions
+ * This JavaScript module creates a modal and responds to actions
  *
  */
 
@@ -104,7 +104,10 @@ this.ckan.module('modal-form', function($) {
                             }
                         } else if (data.success) {
                             this._showSuccessMsg(data.message);
-                            this._disableActionButtons();
+
+                            if (this.options.disable_action_buttons) {
+                              this._disableActionButtons();
+                            }
                         }
                     }.bind(this))
                     .error(function(error) {
