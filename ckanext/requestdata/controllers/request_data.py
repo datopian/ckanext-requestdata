@@ -12,6 +12,7 @@ except ImportError:
 import ckan.model as model
 import ckan.plugins as p
 import json
+from ckan.controllers.admin import get_sysadmins
 
 get_action = logic.get_action
 NotFound = logic.NotFound
@@ -50,9 +51,7 @@ class RequestDataController(BaseController):
         try:
             if p.toolkit.request.method == 'POST':
                 data = dict(toolkit.request.POST)
-                content = data['message_content']
-                to = data['email_address']
-                mail_subject = 'Request data'
+
                 get_action('requestdata_request_create')(context, data)
         except NotAuthorized:
             abort(403, _('Unauthorized to update this dataset.'))
@@ -66,6 +65,32 @@ class RequestDataController(BaseController):
 
             return json.dumps(error)
 
-        response_message = emailer.send_email(content, to, mail_subject)
+        data_dict = {'id': data['package_id']}
+        package = get_action('package_show')(context, data_dict)
 
-        return json.dumps(response_message)
+        if len(get_sysadmins()) > 0:
+            sysadmin = get_sysadmins()[0].name
+            context_sysadmin = {
+                'model': model,
+                'session': model.Session,
+                'user': sysadmin,
+                'auth_user_obj': c.userobj
+            }
+
+            data_dict = {'id': package['creator_user_id']}
+            user = get_action('user_show')(context_sysadmin, data_dict)
+
+            content = data['message_content']
+            to = user['email']
+            mail_subject = 'Request data'
+
+            response_message = emailer.send_email(content, to, mail_subject)
+
+            return json.dumps(response_message)
+        else:
+            message = {
+                'success': True,
+                'message': 'Request sent, but email message was not sent.'
+            }
+
+            return json.dumps(message)
