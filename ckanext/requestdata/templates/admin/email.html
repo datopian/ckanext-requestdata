@@ -22,7 +22,21 @@
     </h2>
     <div class="module-content">
       {% block admin_form_help %}
-        <p><strong>Email:</strong> We will add info for these page here</a>.</p>
+        <p><strong>Header:</strong>This is the first sentence in email body where you can send important notes which should be read before a user reads the message.</p>
+        <p><strong>Body:</strong>This is the body for the actual email content.</p>
+        <p><strong>Footer:</strong>This is the last sentence in email body where you can send copy rights, disclosures or portal/organization information.</p>
+        <p><strong>Formating:</strong>You can use generic terms for the email template. Just surround one of the available terms in <b>{ }</b> and they will be converted.
+        <b>e.g</b>
+        <p>Hi { name } will be displayed as Hi Chris</p></p>
+        <p><strong>Available terms:</strong>
+           <ul>
+                <li><b>name</b>: full name or user name</li>
+                <li><b>dataset</b>: requested dataset title </li>
+                <li><b>message</b>: comment field from data request form</li>
+                <li><b>organization</b>: list of all organizations</li>
+                <li><b>email</b>:  email address from the data requester</li>
+           </ul>
+        </p>
       {% endblock %}
     </div>
   </div>
