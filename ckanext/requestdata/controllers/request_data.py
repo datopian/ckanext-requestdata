@@ -25,14 +25,9 @@ BaseController = base.BaseController
 def _get_email_congiuration(user_name,dataset_name,email,message,organization):
 
     schema = logic.schema.update_configuration_schema()
-    email_header = ''
-    email_footer = ''
-    email_body = ''
-    user_term = '{name}'
-    dataset_term = '{dataset}'
-    org_term = '{organization}'
-    msg_term = '{message}'
-    email_term = '{email}'
+    avaiable_terms =['{name}','{dataset}','{organization}','{message}','{email}']
+    new_terms = [user_name,dataset_name,email,message,organization]
+
     for key in schema:
         ##get only email configuration
         if 'email_header' in key:
@@ -41,25 +36,14 @@ def _get_email_congiuration(user_name,dataset_name,email,message,organization):
             email_footer = config.get(key)
         elif 'email_footer' in key:
             email_body = config.get(key)
-    header = email_header.replace(user_term,user_name)\
-                         .replace(dataset_term,dataset_name)\
-                         .replace(org_term,organization)\
-                         .replace(msg_term,message)\
-                         .replace(email_term,email)
-    body = email_body.replace(user_term,user_name)\
-                         .replace(dataset_term,dataset_name)\
-                         .replace(org_term,organization)\
-                         .replace(email_term,email)\
-                         .replace(msg_term, message)
-    if msg_term not in email_body:
-        body+=message
-    footer = email_footer.replace(user_term,user_name)\
-                         .replace(dataset_term,dataset_name)\
-                         .replace(org_term,organization)\
-                         .replace(msg_term,message)\
-                         .replace(email_term,email)
+    if '{message}' not in email_body:
+        email_body+=message
+    for i in range(0,len(avaiable_terms)):
+            email_header = email_header.replace(avaiable_terms[i],new_terms[i])
+            email_body = email_body.replace(avaiable_terms[i],new_terms[i])
+            email_footer = email_footer.replace(avaiable_terms[i],new_terms[i])
 
-    result = header + '\n' + body + '\n' + footer
+    result = email_header + '\n' + email_body + '\n' + email_footer
     return result
 
 class RequestDataController(BaseController):
