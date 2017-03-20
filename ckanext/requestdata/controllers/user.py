@@ -1,6 +1,7 @@
 import json
 
 from paste.deploy.converters import asbool
+from pylons import config
 
 from ckan.lib import base
 from ckan import logic, model
@@ -142,7 +143,9 @@ class UserController(BaseController):
             return json.dumps(error)
 
         to = data['send_to']
-        subject = 'CKAN Request Data'
+
+        subject = config.get('ckan.site_title') + ': Data request ' +\
+            request_action
 
         response = send_email(message_content, to, subject)
 
