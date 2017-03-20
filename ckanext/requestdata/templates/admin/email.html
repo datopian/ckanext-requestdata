@@ -5,9 +5,9 @@
 
 {% block primary_content_inner %}
    <form method="post" action="{{ action_url }}"class="form-horizontal col-sm-12" id="email-body-form">
-      {{ form.textarea('email_header', id='field-header', label=_('Header'), value=data.email_header, error='') }}
-      {{ form.textarea('email_body', id='field-body', label=_('Body'), value=data.email_body, error='') }}
-      {{ form.textarea('email_footer', id='field-footer', label=_('Footer'), value=data.email_footer, error='') }}
+      {{ form.textarea('email_header', id='field-header', label=_('Header'), value=data.email_header, error='',is_required=true,attrs={'required':'required'}) }}
+      {{ form.textarea('email_body', id='field-body', label=_('Body'), value=data.email_body, error='',is_required=true,attrs={'required':'required'}) }}
+      {{ form.textarea('email_footer', id='field-footer', label=_('Footer'), value=data.email_footer, error='',is_required=true,attrs={'required':'required'}) }}
       <div class="form-actions">
         <button type="submit" class="btn btn-primary" name="save">{{ _('Update Email Form') }}</button>
     </div>
