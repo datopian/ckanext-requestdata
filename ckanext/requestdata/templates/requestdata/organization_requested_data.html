@@ -1,0 +1,13 @@
+{% extends 'organization/read_base.html' %}
+
+{% block subtitle %}{{ _('Requested Data') }} - {{ super() }}{% endblock %}
+
+{% block primary_content_inner %}
+  {% snippet 'requestdata/snippets/section_base.html', state='new', title='New', requests=requests_new %}
+  {% snippet 'requestdata/snippets/section_base.html', state='open', title='Open', requests=requests_open %}
+  {% snippet 'requestdata/snippets/section_base.html', state='archive', title='Archive', requests=requests_archive %}
+
+  <div class="alert alert-dismissible request-message-alert hide" role="alert">
+    <div class="alert-text"></div>
+  </div>
+{% endblock %}

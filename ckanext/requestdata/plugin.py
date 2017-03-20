@@ -46,6 +46,8 @@ class RequestdataPlugin(plugins.SingletonPlugin):
             'ckanext.requestdata.controllers.request_data:RequestDataController'
         admin_controller = \
             'ckanext.requestdata.controllers.admin:AdminController'
+        organization_controller =\
+            'ckanext.requestdata.controllers.organization:OrganizationController'
 
         map.connect('/dataset/make_active/{pkg_name}',
                     controller=package_controller,
@@ -75,6 +77,11 @@ class RequestdataPlugin(plugins.SingletonPlugin):
                     action='email', ckan_icon='envelope-alt')
         map.connect('ckanadmin_requests_data', '/ckan-admin/requests_data', controller=admin_controller,
                     action='requests_data', ckan_icon='list')
+
+        map.connect('requestdata_organization_requests',
+                    '/organization/requested_data/{id}',
+                    controller=organization_controller,
+                    action='requested_data', ckan_icon='list')
 
         return map
 
