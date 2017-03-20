@@ -36,13 +36,13 @@ def _get_email_congiuration(user_name,dataset_name,email,message,organization):
             email_footer = config.get(key)
         elif 'email_footer' in key:
             email_body = config.get(key)
-    if '{message}' not in email_body:
-        email_body+=message
+    if '{message}' not in email_body and not email_body and not email_footer:
+        email_body += message
+        return email_body
     for i in range(0,len(avaiable_terms)):
             email_header = email_header.replace(avaiable_terms[i],new_terms[i])
             email_body = email_body.replace(avaiable_terms[i],new_terms[i])
             email_footer = email_footer.replace(avaiable_terms[i],new_terms[i])
-
     result = email_header + '\n' + email_body + '\n' + email_footer
     return result
 
