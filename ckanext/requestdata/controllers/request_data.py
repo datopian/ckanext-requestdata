@@ -43,7 +43,7 @@ def _get_email_congiuration(user_name,dataset_name,email,message,organization):
             email_header = email_header.replace(avaiable_terms[i],new_terms[i])
             email_body = email_body.replace(avaiable_terms[i],new_terms[i])
             email_footer = email_footer.replace(avaiable_terms[i],new_terms[i])
-    result = email_header + '\n' + email_body + '\n' + email_footer
+    result = email_header + '\n\n' + email_body + '\n\n' + email_footer
     return result
 
 class RequestDataController(BaseController):
