@@ -71,6 +71,10 @@ this.ckan.module('handle-open-request', function($) {
 
             this.el.html('<i class="' + className + '"></i>')
             this._disableActionButtons(payload.data_shared)
+
+            if (this.options.refresh_on_success) {
+              location.reload();
+            }
           } else if (data.error && data.error.fields) {
             for (var key in data.error.fields) {
               message += key + ': ' + data.error.fields[key] + '<br>'

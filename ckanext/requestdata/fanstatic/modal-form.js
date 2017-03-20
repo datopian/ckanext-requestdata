@@ -108,6 +108,10 @@ this.ckan.module('modal-form', function($) {
                             if (this.options.disable_action_buttons) {
                               this._disableActionButtons();
                             }
+
+                            if (this.options.refresh_on_success) {
+                              location.reload();
+                            }
                         }
                     }.bind(this))
                     .error(function(error) {
