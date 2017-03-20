@@ -26,7 +26,7 @@ def _get_email_congiuration(user_name,dataset_name,email,message,organization):
 
     schema = logic.schema.update_configuration_schema()
     avaiable_terms =['{name}','{dataset}','{organization}','{message}','{email}']
-    new_terms = [user_name,dataset_name,email,message,organization]
+    new_terms = [user_name,dataset_name,organization,message,email]
 
     for key in schema:
         ##get only email configuration
