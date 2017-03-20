@@ -33,9 +33,9 @@ def _get_email_congiuration(user_name,dataset_name,email,message,organization):
         if 'email_header' in key:
             email_header = config.get(key)
         elif 'email_body' in key:
-            email_footer = config.get(key)
-        elif 'email_footer' in key:
             email_body = config.get(key)
+        elif 'email_footer' in key:
+            email_footer = config.get(key)
     if '{message}' not in email_body and not email_body and not email_footer:
         email_body += message
         return email_body
