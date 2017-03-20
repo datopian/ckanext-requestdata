@@ -104,7 +104,7 @@ class RequestDataController(BaseController):
             data_dict = {'id': package['creator_user_id']}
             user = get_action('user_show')(context_sysadmin, data_dict)
             to = user['email']
-            mail_subject = 'Request data'
+            mail_subject = config.get('ckan.site_title') + ': New data request'
 
             response_message = emailer.send_email(content, to, mail_subject)
 
