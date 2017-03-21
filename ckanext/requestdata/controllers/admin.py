@@ -6,35 +6,46 @@ except ImportError:
     from pylons import config
 from ckan.plugins import toolkit
 from ckan.controllers.admin import AdminController
+from ckan import  model
+from ckan.common import c, _
 import ckan.lib.base as base
 import ckan.lib.helpers as h
 import ckan.logic as logic
 
-get_action = logic.get_action
 NotFound = logic.NotFound
 NotAuthorized = logic.NotAuthorized
 
 c = base.c
 redirect = base.redirect
 request = base.request
+abort = base.abort
+
+def _get_context():
+    return {
+        'model': model,
+        'session': model.Session,
+        'user': c.user or c.author,
+        'auth_user_obj': c.userobj
+    }
+
+def _get_action(action, data_dict):
+    return toolkit.get_action(action)(_get_context(), data_dict)
 
 class AdminController(AdminController):
     ctrl = 'ckanext.requestdata.controllers.admin:AdminController'
 
     def email(self):
-        '''Email template admin tab.
+        '''
+            Handles creating the emailt templatet in admin tab.
 
-        :param :
-        :type
-
+            :returns template
         '''
         data = request.POST
         if 'save' in data:
             try:
                 data_dict = dict(request.POST)
                 del data_dict['save']
-                data = logic.get_action('config_option_update')(
-                    {'user': c.user}, data_dict)
+                data = _get_action('config_option_update',data_dict)
             except logic.ValidationError, e:
                 errors = e.error_dict
                 error_summary = e.error_summary
@@ -54,9 +65,20 @@ class AdminController(AdminController):
 
     def requests_data(self):
         '''
-        Return all of the data requests in admin panel
+            Handles creating template for 'Requested Data' page in the
+            admin dashboard.
 
-        :return:
+            :returns: template
+
         '''
+        try:
+            requests = _get_action('requestdata_requests_list', {})
+            print requests
+        except NotAuthorized:
+            abort(403, _('Not authorized to see this page.'))
 
-        return toolkit.render('admin/all_requests_data.html')
+        extra_vars = {
+            'requests_data' : requests
+        }
+
+        return toolkit.render('admin/all_requests_data.html', extra_vars)
