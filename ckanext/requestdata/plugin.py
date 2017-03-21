@@ -98,7 +98,10 @@ class RequestdataPlugin(plugins.SingletonPlugin):
         return {
             'requestdata_request_create': actions.request_create,
             'requestdata_request_show': actions.request_show,
-            'requestdata_request_list': actions.request_list,
+            'requestdata_request_list_for_current_user':
+            actions.request_list_for_current_user,
+            'requestdata_request_list_for_organization':
+            actions.request_list_for_organization,
             'requestdata_request_patch': actions.request_patch,
             'requestdata_request_update': actions.request_update,
             'requestdata_request_delete': actions.request_delete
@@ -110,7 +113,10 @@ class RequestdataPlugin(plugins.SingletonPlugin):
         return {
             'requestdata_request_create': auth.request_create,
             'requestdata_request_show': auth.request_show,
-            'requestdata_request_list': auth.request_list,
+            'requestdata_request_list_for_current_user':
+            auth.request_list_for_current_user,
+            'requestdata_request_list_for_organization':
+            auth.request_list_for_organization,
             'requestdata_request_patch': auth.request_patch
         }
 

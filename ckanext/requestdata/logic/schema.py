@@ -36,3 +36,9 @@ def request_patch_schema():
         'data_shared': [boolean_validator],
         'rejected': [boolean_validator]
     }
+
+
+def request_list_for_organization_schema():
+    return {
+        'org_id': [not_empty]
+    }

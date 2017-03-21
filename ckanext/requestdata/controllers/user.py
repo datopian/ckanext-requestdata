@@ -48,7 +48,8 @@ class UserController(BaseController):
         '''
 
         try:
-            requests = _get_action('requestdata_request_list', {})
+            requests = _get_action('requestdata_request_list_for_current_user',
+                                   {})
         except NotAuthorized:
             abort(403, _('Not authorized to see this page.'))
 

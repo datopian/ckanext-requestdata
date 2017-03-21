@@ -50,7 +50,8 @@ class OrganizationController(organization.OrganizationController):
         '''
 
         try:
-            requests = _get_action('requestdata_request_list', {})
+            requests = _get_action('requestdata_request_list_for_organization',
+                                   {'org_id': id})
         except NotAuthorized:
             abort(403, _('Not authorized to see this page.'))
 
@@ -63,7 +64,6 @@ class OrganizationController(organization.OrganizationController):
         c.group_dict = self._get_group_dict(id)
         group_type = c.group_dict['type']
 
-        requests = []
         requests_new = []
         requests_open = []
         requests_archive = []

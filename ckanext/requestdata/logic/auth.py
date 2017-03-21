@@ -22,7 +22,11 @@ def request_show(context, data_dict):
         return {'success': False, 'msg': message}
 
 
-def request_list(context, data_dict):
+def request_list_for_current_user(context, data_dict):
+    return {'success': True}
+
+
+def request_list_for_organization(context, data_dict):
     return {'success': True}
 
 

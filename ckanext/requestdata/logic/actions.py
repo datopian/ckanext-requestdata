@@ -115,7 +115,63 @@ def request_show(context, data_dict):
 
 
 @toolkit.side_effect_free
-def request_list(context, data_dict):
+def request_list_for_organization(context, data_dict):
+    '''Returns a list of requests for specified organization.
+
+    :param org_id: The organization id.
+    :type org_id: string
+
+    :rtype: list of dictionaries
+
+    '''
+
+    # This code is in a try/except clause because when running the tests it
+    # gives the error "TypeError: No object (name: request) has been
+    # registered for this thread"
+    try:
+        if request.method != 'GET':
+            return {
+                'error': {
+                    'message': 'Please use HTTP method GET for this action.'
+                }
+            }
+    except TypeError:
+        pass
+
+    check_access('requestdata_request_list_for_current_user',
+                 context, data_dict)
+
+    data, errors = df.validate(data_dict,
+                               schema.request_list_for_organization_schema(),
+                               context)
+
+    if errors:
+        raise toolkit.ValidationError(errors)
+
+    org_id = data.get('org_id')
+
+    data_dict = {
+        'fq': 'organization:' + org_id,
+        'include_private': True
+    }
+
+    packages = toolkit.get_action('package_search')(context, data_dict)
+    total_requests = []
+
+    for package in packages['results']:
+        data = {
+            'package_id': package['id']
+        }
+        requests = ckanextRequestdata.search(**data)
+
+        for item in requests:
+            total_requests.append(item.as_dict())
+
+    return total_requests
+
+
+@toolkit.side_effect_free
+def request_list_for_current_user(context, data_dict):
     '''Returns a list of requests.
 
     :param id: The id of a requestdata.
@@ -138,7 +194,8 @@ def request_list(context, data_dict):
     except TypeError:
         pass
 
-    check_access('requestdata_request_list', context, data_dict)
+    check_access('requestdata_request_list_for_current_user',
+                 context, data_dict)
 
     user_id = context['auth_user_obj'].id
 
