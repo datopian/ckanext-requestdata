@@ -1,0 +1,24 @@
+{#
+
+Creates base layout for a section.
+
+requests - The requests that need to be shown.
+
+Example usage:
+  {% snippet 'admin/snippets/section_base.html', requests=requests %}
+
+#}
+
+<section class="my-requested-data-container">
+  <h3>{{ title }}</h3>
+
+  {% if requests | length > 0 %}
+    <div class="my-requested-data-container__content">
+      {% for item in requests %}
+        {% snippet 'admin/snippets/section_item_request.html', item=item %}
+      {% endfor %}
+    </div>
+  {% else %}
+    <p>{{ _('No requests found.') }}</p>
+  {% endif %}
+</section>

@@ -61,7 +61,6 @@ class RequestDataController(BaseController):
         try:
             if p.toolkit.request.method == 'POST':
                 data = dict(toolkit.request.POST)
-                #a = _get_email_congiuration()
                 get_action('requestdata_request_create')(context, data)
         except NotAuthorized:
             abort(403, _('Unauthorized to update this dataset.'))
