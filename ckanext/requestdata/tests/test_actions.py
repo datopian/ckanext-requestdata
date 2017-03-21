@@ -184,3 +184,56 @@ class TestActions(ActionBase):
 
         helpers.call_action('requestdata_request_show', context=context,
                             **data_dict)
+
+    def test_requestdata_request_list_for_current_user(self):
+        package = factories.Dataset(name='test_dataset')
+        user = factories.User()
+        context = {'user': user['name']}
+        data_dict = {
+            'package_id': package['id'],
+            'sender_name': 'John Doe',
+            'message_content': 'I want to add additional data.',
+            'organization': 'Google',
+            'email_address': 'test@test.com',
+        }
+
+        # Create 10 requests.
+        for i in range(10):
+            helpers.call_action('requestdata_request_create',
+                                     context=context, **data_dict)
+
+        user = helpers.call_action('user_show', id=package['creator_user_id'])
+        context = {'user': user['name']}
+
+        result = helpers.call_action('requestdata_request_list_for_current_user',
+                                     context=context)
+
+        assert len(result) == 10
+
+    def test_requestdata_request_list_for_organization(self):
+        org = factories.Organization(name='test_org')
+        user = factories.User()
+        context = {'user': user['name']}
+        data_dict = {
+            'sender_name': 'John Doe',
+            'message_content': 'I want to add additional data.',
+            'organization': 'Google',
+            'email_address': 'test@test.com',
+        }
+
+        package_ids = []
+
+        for i in range(5):
+            package = factories.Dataset(owner_org=org['name'])
+            package_ids.append(package['id'])
+
+        # Create one request for each dataset.
+        for i in range(5):
+            data_dict['package_id'] = package_ids[i]
+            helpers.call_action('requestdata_request_create',
+                                     context=context, **data_dict)
+
+        result = helpers.call_action('requestdata_request_list_for_organization',
+                                     org_id=org['id'])
+
+        assert len(result) == 5
