@@ -104,6 +104,19 @@ class RequestDataController(BaseController):
             data_dict = {'id': package['creator_user_id']}
             user = get_action('user_show')(context_sysadmin, data_dict)
             to = user['email']
+
+            if to is None:
+                message = {
+                    'success': False,
+                    'error': {
+                        'fields': {
+                            'email': 'Dataset creator email not found.'
+                        }
+                    }
+                }
+
+                return json.dumps(message)
+
             mail_subject = config.get('ckan.site_title') + ': New data request'
 
             response_message = emailer.send_email(content, to, mail_subject)
