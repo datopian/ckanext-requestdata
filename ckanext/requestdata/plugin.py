@@ -102,6 +102,7 @@ class RequestdataPlugin(plugins.SingletonPlugin):
             actions.request_list_for_current_user,
             'requestdata_request_list_for_organization':
             actions.request_list_for_organization,
+            'requestdata_requests_list':actions.requests_list,
             'requestdata_request_patch': actions.request_patch,
             'requestdata_request_update': actions.request_update,
             'requestdata_request_delete': actions.request_delete

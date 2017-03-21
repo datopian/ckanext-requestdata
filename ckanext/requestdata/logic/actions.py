@@ -113,6 +113,38 @@ def request_show(context, data_dict):
 
     return out
 
+@toolkit.side_effect_free
+def requests_list(context, data_dict):
+    '''Returns a list of all requests.
+
+    :rtype: list of dictionaries
+
+    '''
+
+    # This code is in a try/except clause because when running the tests it
+    # gives the error "TypeError: No object (name: request) has been
+    # registered for this thread"
+    try:
+        if request.method != 'GET':
+            return {
+                'error': {
+                    'message': 'Please use HTTP method GET for this action.'
+                }
+            }
+    except TypeError:
+        pass
+
+    check_access('requestdata_request_list',
+                 context, data_dict)
+
+    requests = ckanextRequestdata.search()
+
+    out = []
+
+    for item in requests:
+        out.append(item.as_dict())
+
+    return out
 
 @toolkit.side_effect_free
 def request_list_for_organization(context, data_dict):
@@ -211,7 +243,6 @@ def request_list_for_current_user(context, data_dict):
         out.append(item.as_dict())
 
     return out
-
 
 def request_patch(context, data_dict):
     '''Patch a request.
