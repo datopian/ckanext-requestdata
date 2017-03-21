@@ -1,5 +1,6 @@
 from ckan.plugins.toolkit import _
 from ckan.plugins.toolkit import get_action
+from ckan import logic
 
 
 def request_create(context, data_dict):
@@ -27,7 +28,23 @@ def request_list_for_current_user(context, data_dict):
 
 
 def request_list_for_organization(context, data_dict):
-    return {'success': True}
+    current_user_id = context['auth_user_obj'].id
+
+    payload = {'id': data_dict['org_id']}
+
+    try:
+        organization = get_action('organization_show')(context, payload)
+    except logic.NotFound:
+        raise logic.ValidationError('Organization not found.')
+
+    for user in organization['users']:
+
+        # Checks whether the current logged in user is admin on the
+        # organization
+        if user['id'] == current_user_id and user['capacity'] == 'admin':
+            return {'success': True}
+
+    return {'success': False}
 
 
 def request_patch(context, data_dict):
