@@ -170,9 +170,6 @@ def request_list_for_organization(context, data_dict):
     except TypeError:
         pass
 
-    check_access('requestdata_request_list_for_current_user',
-                 context, data_dict)
-
     data, errors = df.validate(data_dict,
                                schema.request_list_for_organization_schema(),
                                context)
@@ -180,11 +177,16 @@ def request_list_for_organization(context, data_dict):
     if errors:
         raise toolkit.ValidationError(errors)
 
+    check_access('requestdata_request_list_for_organization',
+                 context, data_dict)
+
     org_id = data.get('org_id')
+    org = toolkit.get_action('organization_show')(context, {'id': org_id})
 
     data_dict = {
-        'fq': 'organization:' + org_id,
-        'include_private': True
+        'fq': 'organization:' + org['name'],
+        'include_private': True,
+        'rows': 1000000
     }
 
     packages = toolkit.get_action('package_search')(context, data_dict)
@@ -229,7 +231,8 @@ def request_list_for_current_user(context, data_dict):
     check_access('requestdata_request_list_for_current_user',
                  context, data_dict)
 
-    user_id = context['auth_user_obj'].id
+    model = context['model']
+    user_id = model.User.get(context['user']).id
 
     data = {
         'package_creator_id': user_id
