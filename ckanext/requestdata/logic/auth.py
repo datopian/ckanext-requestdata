@@ -56,6 +56,19 @@ def request_patch(context, data_dict):
         return {'success': False, 'msg': message}
 
 
+def request_list_for_sysadmin(context, data_dict):
+    model = context['model']
+    user = model.User.get(context['user'])
+    is_sysadmin = user.sysadmin
+
+    if is_sysadmin:
+        return {'success': True}
+    else:
+        message = _('You don\'t have access to this request data.')
+
+        return {'success': False, 'msg': message}
+
+
 def _user_has_access_to_request(context, data_dict):
     current_user_id = context['auth_user_obj'].id
 

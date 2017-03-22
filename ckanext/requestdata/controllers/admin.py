@@ -36,7 +36,7 @@ class AdminController(AdminController):
 
     def email(self):
         '''
-            Handles creating the emailt templatet in admin tab.
+            Handles creating the email template in admin dashboard.
 
             :returns template
         '''
@@ -72,7 +72,7 @@ class AdminController(AdminController):
 
         '''
         try:
-            requests = _get_action('requestdata_requests_list', {})
+            requests = _get_action('requestdata_request_list_for_sysadmin', {})
             print requests
         except NotAuthorized:
             abort(403, _('Not authorized to see this page.'))
