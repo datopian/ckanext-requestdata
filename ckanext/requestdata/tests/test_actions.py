@@ -237,3 +237,11 @@ class TestActions(ActionBase):
                                      org_id=org['id'])
 
         assert len(result) == 5
+
+    def test_requestdata_request_list_for_organization_missing_org_id(self):
+        with assert_raises(logic.ValidationError) as cm:
+            helpers.call_action('requestdata_request_list_for_organization')
+
+        ex = cm.exception
+
+        assert ex.error_dict['org_id'] == ['Missing value']
