@@ -11,11 +11,11 @@ Example usage:
 
 #}
 
-<section class="my-requested-data-container">
+<section class="requested-data-container">
   <h3>{{ title }}</h3>
 
   {% if requests | length > 0 %}
-    <div class="my-requested-data-container__content">
+    <div class="requested-data-container__content">
       {% for item in requests %}
         {% snippet 'requestdata/snippets/section_item_' + state + '.html', item=item %}
       {% endfor %}

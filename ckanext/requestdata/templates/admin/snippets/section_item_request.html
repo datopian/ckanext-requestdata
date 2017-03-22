@@ -12,8 +12,8 @@ Example usage:
 {% set sender_profile = h.url_for(controller='user', action='read', id=item.sender_user_id) %}
 {% set package_url = h.url_for(controller='package', action='read', id=item.package_id) %}
 
-<div class="my-requested-data-container__content-item">
-  <p class="my-requested-data-container__content-item-info">
+<div class="requested-data-container__content-item">
+  <p class="requested-data-container__content-item-info">
       There is a request for dataset <a href="{{ package_url }}" title="{{ _('View dataset') }}">{{ h.requestdata_get_package_title(item.package_id) }}</a>
       and the current state is <b>{{ item.state }}</b>
   </p>
