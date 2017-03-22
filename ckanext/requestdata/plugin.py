@@ -102,7 +102,7 @@ class RequestdataPlugin(plugins.SingletonPlugin):
             actions.request_list_for_current_user,
             'requestdata_request_list_for_organization':
             actions.request_list_for_organization,
-            'requestdata_requests_list':actions.requests_list,
+            'requestdata_request_list_for_sysadmin': actions.request_list_for_sysadmin,
             'requestdata_request_patch': actions.request_patch,
             'requestdata_request_update': actions.request_update,
             'requestdata_request_delete': actions.request_delete
@@ -118,7 +118,8 @@ class RequestdataPlugin(plugins.SingletonPlugin):
             auth.request_list_for_current_user,
             'requestdata_request_list_for_organization':
             auth.request_list_for_organization,
-            'requestdata_request_patch': auth.request_patch
+            'requestdata_request_patch': auth.request_patch,
+            'requestdata_request_list_for_sysadmin': auth.request_list_for_sysadmin
         }
 
     # ITemplateHelpers

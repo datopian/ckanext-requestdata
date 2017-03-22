@@ -114,7 +114,7 @@ def request_show(context, data_dict):
     return out
 
 @toolkit.side_effect_free
-def requests_list(context, data_dict):
+def request_list_for_sysadmin(context, data_dict):
     '''Returns a list of all requests.
 
     :rtype: list of dictionaries
@@ -134,7 +134,7 @@ def requests_list(context, data_dict):
     except TypeError:
         pass
 
-    check_access('requestdata_request_list',
+    check_access('requestdata_request_list_for_sysadmin',
                  context, data_dict)
 
     requests = ckanextRequestdata.search()
