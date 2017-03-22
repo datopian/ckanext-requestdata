@@ -185,7 +185,6 @@ def request_list_for_organization(context, data_dict):
 
     data_dict = {
         'fq': 'organization:' + org['name'],
-        'include_private': True,
         'rows': 1000000
     }
 
