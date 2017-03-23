@@ -5,7 +5,7 @@
 .requested-data-container__content {
   border: 1px solid #dddddd;
   border-radius: 3px;
-}
+  }
 
 .requested-data-container__content-item {
   border-bottom: 1px solid #dddddd;
@@ -99,4 +99,10 @@
 
 .requested-data-container__status .icon-thumbs-down {
   color: #49afcd;
+}
+.dropdown {
+    float: right;
+}
+.title-requests{
+    display:inline-block;
 }
