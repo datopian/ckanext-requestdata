@@ -78,6 +78,9 @@ class RequestdataPlugin(plugins.SingletonPlugin):
         map.connect('ckanadmin_requests_data', '/ckan-admin/requests_data', controller=admin_controller,
                     action='requests_data', ckan_icon='list')
 
+        map.connect('download_requests_data', '/ckan-admin/requests_data/download', controller=admin_controller,
+                    action='download_requests_data')
+
         map.connect('requestdata_organization_requests',
                     '/organization/requested_data/{id}',
                     controller=organization_controller,

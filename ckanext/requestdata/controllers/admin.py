@@ -11,13 +11,17 @@ from ckan.common import c, _
 import ckan.lib.base as base
 import ckan.lib.helpers as h
 import ckan.logic as logic
+import csv
+import json
+from cStringIO import StringIO
+
+from ckan.common import response ,request
 
 NotFound = logic.NotFound
 NotAuthorized = logic.NotAuthorized
 
 c = base.c
 redirect = base.redirect
-request = base.request
 abort = base.abort
 
 def _get_context():
@@ -82,3 +86,32 @@ class AdminController(AdminController):
         }
 
         return toolkit.render('admin/all_requests_data.html', extra_vars)
+
+    def download_requests_data(self):
+        '''
+            Handles creating csv or json file from all of the Requested Data
+
+            :returns: json or csv file
+        '''
+
+        file_format = request.query_string
+        requests = _get_action('requestdata_request_list_for_sysadmin', {})
+        s = StringIO()
+
+        if 'json' in file_format.lower():
+            response.headerlist = [('Content-Type', 'application/json'), ('Content-Disposition', 'attachment;filename="data_requests.json"')]
+            json.dump(requests, s, indent=4)
+
+            return s.getvalue()
+
+        if 'csv' in file_format.lower():
+            response.headerlist = [('Content-Type','text/csv'),('Content-Disposition', 'attachment;filename="data_requests.csv"')]
+            writer = csv.writer(s)
+            header = True
+            for k in requests:
+                if header:
+                    writer.writerow(k.keys())
+                    header = False
+                writer.writerow(k.values())
+
+            return s.getvalue()
