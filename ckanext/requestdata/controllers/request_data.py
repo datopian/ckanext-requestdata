@@ -120,6 +120,9 @@ class RequestDataController(BaseController):
 
             response_message = emailer.send_email(content, to, mail_subject)
 
+            #notify package creator that new data request was made
+            send_notification = get_action('requestdata_notification_create')(context, data)
+
             return json.dumps(response_message)
         else:
             message = {
