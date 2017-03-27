@@ -56,3 +56,19 @@ def get_package_title(package_id):
         base.abort(403, _('Package not found.'))
 
     return package['title']
+
+
+def get_notification():
+    '''Returns a boolean which indicates if notification was seen or not
+
+      :rtype: bool
+
+      '''
+
+    notification = _get_action('requestdata_notification_for_current_user',{})
+    if notification is None:
+        #do not display notification
+        return True
+    else:
+        is_notified = notification.seen
+        return is_notified

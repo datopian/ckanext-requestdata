@@ -108,7 +108,10 @@ class RequestdataPlugin(plugins.SingletonPlugin):
             'requestdata_request_list_for_sysadmin': actions.request_list_for_sysadmin,
             'requestdata_request_patch': actions.request_patch,
             'requestdata_request_update': actions.request_update,
-            'requestdata_request_delete': actions.request_delete
+            'requestdata_request_delete': actions.request_delete,
+            'requestdata_notification_create': actions.notification_create,
+            'requestdata_notification_for_current_user': actions.notification_for_current_user,
+            'requestdata_notification_change': actions.notification_change
         }
 
     # IAuthFunctions
@@ -132,5 +135,7 @@ class RequestdataPlugin(plugins.SingletonPlugin):
             'requestdata_time_ago_from_datetime':
                 helpers.time_ago_from_datetime,
             'requestdata_get_package_title':
-                helpers.get_package_title
+                helpers.get_package_title,
+            'requestdata_get_notification':
+                helpers.get_notification
         }

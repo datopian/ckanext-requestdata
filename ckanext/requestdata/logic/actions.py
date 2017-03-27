@@ -6,7 +6,7 @@ import ckan.lib.navl.dictization_functions as df
 from ckan.common import request
 
 from ckanext.requestdata.logic import schema
-from ckanext.requestdata.model import ckanextRequestdata
+from ckanext.requestdata.model import ckanextRequestdata, ckanextUserNotification
 
 
 def request_create(context, data_dict):
@@ -309,3 +309,71 @@ def request_update(self):
 
 def request_delete(self):
     pass
+
+
+def notification_create(context, data_dict):
+    '''Create new notification data.
+
+    :param package_id: The id of the package the data belongs to.
+    :type package_id: string
+
+    :returns: the newly created notification data
+    :rtype: dictionary
+
+    '''
+
+    data, errors = df.validate(data_dict, schema.request_create_schema(),
+                               context)
+
+    if errors:
+        raise toolkit.ValidationError(errors)
+
+    seen = False
+    package_id = data.get('package_id')
+
+    package = toolkit.get_action('package_show')(context, {'id': package_id})
+    package_creator_id = package['creator_user_id']
+
+    user_exist = ckanextUserNotification.get(package_creator_id=package_creator_id)
+
+    if user_exist is None:
+        data = {
+            'package_creator_id': package_creator_id,
+            'seen': seen
+        }
+        user_notification = ckanextUserNotification(**data)
+        user_notification.save()
+        out = user_notification.as_dict()
+        return out
+    else:
+        user_exist.seen = False
+        user_exist.commit()
+        out = user_exist.as_dict()
+        return out
+
+
+@toolkit.side_effect_free
+def notification_for_current_user(context,id):
+    '''Returns a notification for user
+
+    :rtype: notification
+
+    '''
+    model = context['model']
+    user_id = model.User.get(context['user']).id
+    notification = ckanextUserNotification.get(package_creator_id=user_id)
+    return notification
+
+@toolkit.side_effect_free
+def notification_change(context, user_id):
+    '''
+    Change the notification flag to True when user see the notification
+    :param context:
+    :param user_id: String
+    '''
+    user_exist = ckanextUserNotification.get(package_creator_id=user_id)
+    if user_exist is not None:
+        user_exist.seen = True
+        user_exist.commit()
+        return user_exist
+    return "User not found"
