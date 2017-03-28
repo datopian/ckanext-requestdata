@@ -22,11 +22,12 @@ ValidationError = logic.ValidationError
 abort = base.abort
 BaseController = base.BaseController
 
-def _get_email_congiuration(user_name,dataset_name,email,message,organization):
+
+def _get_email_configuration(user_name,data_owner, dataset_name,email,message,organization):
 
     schema = logic.schema.update_configuration_schema()
-    avaiable_terms =['{name}','{dataset}','{organization}','{message}','{email}']
-    new_terms = [user_name,dataset_name,organization,message,email]
+    avaiable_terms =['{name}','{data_owner}','{dataset}','{organization}','{message}','{email}']
+    new_terms = [user_name,data_owner,dataset_name,organization,message,email]
 
     for key in schema:
         ##get only email configuration
@@ -90,7 +91,8 @@ class RequestDataController(BaseController):
         dataset_name = package['name']
         email = user_obj.email
         message = data['message_content']
-        content = _get_email_congiuration(user_name,dataset_name,email,message,org)
+        data_owner = package['author']
+        content = _get_email_configuration(user_name,data_owner,dataset_name,email,message,org)
         if len(get_sysadmins()) > 0:
             sysadmin = get_sysadmins()[0].name
             context_sysadmin = {
