@@ -148,7 +148,9 @@ class UserController(BaseController):
         subject = config.get('ckan.site_title') + ': Data request ' +\
             request_action
 
-        response = send_email(message_content, to, subject)
+        file = data.get('file_upload')
+
+        response = send_email(message_content, to, subject, file=file)
 
         if response['success'] is False:
             error = {

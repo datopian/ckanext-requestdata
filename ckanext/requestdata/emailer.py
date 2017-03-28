@@ -1,7 +1,12 @@
 import logging
 import smtplib
+import cgi
+
 from socket import error as socket_error
 from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from email.MIMEBase import MIMEBase
+from email import Encoders
 
 from pylons import config
 
@@ -13,7 +18,8 @@ SMTP_USER = config.get('smtp.user', '')
 SMTP_PASSWORD = config.get('smtp.password', '')
 SMTP_FROM = config.get('smtp.mail_from')
 
-def send_email(content, to, subject):
+
+def send_email(content, to, subject, file=None):
     '''Sends email
        :param content: The body content for the mail.
        :type string:
@@ -26,13 +32,30 @@ def send_email(content, to, subject):
        :rtype: string
 
        '''
-    msg = MIMEText(content,'plain','UTF-8')
+
+    msg = MIMEMultipart()
+
     from_ = SMTP_FROM
+
     if isinstance(to, basestring):
         to = [to]
+
     msg['Subject'] = subject
     msg['From'] = from_
     msg['To'] = ','.join(to)
+
+    msg.attach(MIMEText(content))
+
+    if isinstance(file, cgi.FieldStorage):
+        part = MIMEBase('application', 'octet-stream')
+        part.set_payload(file.file.read())
+        Encoders.encode_base64(part)
+
+        extension = file.filename.split('.')[-1]
+
+        part.add_header('Content-Disposition', 'attachment; filename=attachment.{0}'.format(extension))
+
+        msg.attach(part)
 
     try:
         s = smtplib.SMTP(SMTP_SERVER)

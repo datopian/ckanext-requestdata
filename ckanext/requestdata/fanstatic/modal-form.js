@@ -73,9 +73,14 @@ this.ckan.module('modal-form', function($) {
             var form = this.modal.find('form')
             var formElements = $(form[0].elements)
             var submit = true
+            var formData = new FormData();
 
             // Clear form errors before submitting the form.
             this._clearFormErrors(form)
+
+            for (var item in data) {
+              formData.append(item, data[item])
+            }
 
             // Add field data to payload data
             $.each(formElements, function(i, element) {
@@ -90,33 +95,43 @@ this.ckan.module('modal-form', function($) {
 
                     submit = false
                 } else {
-                    data[element.name] = element.value
+                    if (element.type == 'file') {
+                      formData.append(element.name, element.files[0], element.value)
+                    } else {
+                      formData.append(element.name, element.value)
+                    }
                 }
             }.bind(this))
 
             if (submit) {
-                $.post(url, data, 'json')
-                    .done(function(data) {
-                        data = JSON.parse(data)
-                        if (data.error && data.error.fields) {
-                            for(var key in data.error.fields){
-                                this._showFormError(data.error.fields[key]);
-                            }
-                        } else if (data.success) {
-                            this._showSuccessMsg(data.message);
-
-                            if (this.options.disable_action_buttons) {
-                              this._disableActionButtons();
-                            }
-
-                            if (this.options.refresh_on_success) {
-                              location.reload();
-                            }
+              $.ajax({
+                url: url,
+                data: formData,
+                processData: false,
+                contentType: false,
+                type: 'POST'
+              })
+                .done(function(data) {
+                    data = JSON.parse(data)
+                    if (data.error && data.error.fields) {
+                        for(var key in data.error.fields){
+                            this._showFormError(data.error.fields[key]);
                         }
-                    }.bind(this))
-                    .error(function(error) {
-                        this._showFormError(error.statusText)
-                    }.bind(this))
+                    } else if (data.success) {
+                        this._showSuccessMsg(data.message);
+
+                        if (this.options.disable_action_buttons) {
+                          this._disableActionButtons();
+                        }
+
+                        if (this.options.refresh_on_success) {
+                          location.reload();
+                        }
+                    }
+                }.bind(this))
+                .error(function(error) {
+                    this._showFormError(error.statusText)
+                }.bind(this))
             }
         },
         _onCancel: function(event) {
