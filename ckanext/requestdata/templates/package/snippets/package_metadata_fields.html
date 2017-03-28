@@ -1,7 +1,9 @@
-{% import 'macros/form.html' as form %}
 {% ckan_extends %}
 
-  {% block package_metadata_fields_maintainer %}
-    {{ form.input('maintainer', label=_('Maintainer'), id='field-maintainer', placeholder=_('Joe Bloggs'), value=data.maintainer, error=errors.maintainer, classes=['control-medium'],
-        is_required=true, attrs={'required': 'required'}  ) }}
-   {% endblock %}
+{% import 'macros/form.html' as form %}
+
+{% block package_metadata_fields_maintainer %}
+  {% set tag_attrs = {'data-module': 'autocomplete', 'data-module-tags': '', 'data-module-source': '/api/2/util/user/members_for_org_autocomplete?q=?', 'required': 'required'} %}
+
+  {{ form.input('maintainer', label=_('Maintainer'), id='field-maintainer', placeholder=_('Joe Bloggs'), value=data.maintainer, error=errors.maintainer, classes=['control-full'], is_required=true, attrs=tag_attrs) }}
+{% endblock %}
