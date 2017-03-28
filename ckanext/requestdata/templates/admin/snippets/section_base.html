@@ -10,14 +10,25 @@ Example usage:
 #}
 
 <section class="requested-data-container">
-  <h3>{{ title }}</h3>
+  <h3 class="title-requests">{{ title }}</h3>
 
   {% if requests | length > 0 %}
-    <div class="requested-data-container__content">
-      {% for item in requests %}
-        {% snippet 'admin/snippets/section_item_request.html', item=item %}
-      {% endfor %}
-    </div>
+     {% set service_url = h.url_for('download_requests_data') %}
+     {% set csv = '?format=csv'%}
+     {% set json = '?format=json'%}
+      <div class="dropdown">
+            <button class="btn btn-primary dropdown-toggle " type="button" data-toggle="dropdown">Download
+            <span class="caret"></span></button>
+            <ul class="dropdown-menu dropdown-menu-left">
+              <li><a href="{{ service_url }}{{ csv }}">CSV</a></li>
+              <li><a href="{{ service_url }}{{ json }}">JSON</a></li>
+            </ul>
+      </div>
+      <div class="requested-data-container__content">
+        {% for item in requests %}
+          {% snippet 'admin/snippets/section_item_request.html', item=item %}
+        {% endfor %}
+      </div>
   {% else %}
     <p>{{ _('No requests found.') }}</p>
   {% endif %}

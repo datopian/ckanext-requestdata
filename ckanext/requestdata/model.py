@@ -14,7 +14,7 @@ from ckan.model.domain_object import DomainObject
 log = logging.getLogger(__name__)
 
 request_data_table = None
-
+user_notification_table = None
 
 def setup():
     if request_data_table is None:
@@ -36,6 +36,24 @@ def setup():
             Index('ckanext_requestdata_id_idx',
                   request_data_table.c.ckanext_event_id).create()
 
+    if user_notification_table is None:
+        define_user_notification_table()
+        log.debug('UserNotification table defined in memory.')
+
+        if not user_notification_table.exists():
+            user_notification_table.create()
+    else:
+        log.debug('UserNotification table already exists.')
+        inspector = Inspector.from_engine(engine)
+
+        index_names = \
+            [index['name'] for index in
+             inspector.get_indexes('ckanext_user_notification')]
+
+        if 'ckanext_user_notification_id_idx' not in index_names:
+            log.debug('Creating index for ckanext_user_notification.')
+            Index('ckanext_user_notification_id_idx',
+                  user_notification_table.c.ckanext_event_id).create()
 
 class ckanextRequestdata(DomainObject):
     @classmethod
@@ -101,4 +119,50 @@ def define_request_data_table():
     mapper(
         ckanextRequestdata,
         request_data_table
+    )
+
+
+class ckanextUserNotification(DomainObject):
+    @classmethod
+    def get(self, **kwds):
+        '''Finds a single entity in the table.
+
+        '''
+
+        query = Session.query(self).autoflush(False)
+        query = query.filter_by(**kwds).first()
+
+        return query
+
+    @classmethod
+    def search(self,**kwds):
+        '''Finds entities in the table that satisfy certain criteria.
+
+        :param order: Order rows by specified column.
+        :type order: string
+
+        '''
+
+        query = Session.query(self).autoflush(False)
+        query = query.filter_by(**kwds)
+
+        return query.all()
+
+
+def define_user_notification_table():
+    global user_notification_table
+
+    user_notification_table = Table('ckanext_user_notification', metadata,
+                               Column('id', types.UnicodeText,
+                                      primary_key=True,
+                                      default=make_uuid),
+                               Column('package_creator_id', types.UnicodeText,
+                                      nullable=False),
+                               Column('seen', types.Boolean,
+                                      default=False),
+                               Index('ckanext_user_notification_id_idx', 'id'))
+
+    mapper(
+        ckanextUserNotification,
+        user_notification_table
     )

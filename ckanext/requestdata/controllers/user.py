@@ -81,6 +81,10 @@ class UserController(BaseController):
             'include_num_followers': True
         }
 
+        context = _get_context()
+        user_obj = context['auth_user_obj']
+        user_id = user_obj.id
+        notify_seen = _get_action('requestdata_notification_change', user_id)
         self._setup_template_variables(_get_context(), data_dict)
 
         return toolkit.render('requestdata/my_requested_data.html', extra_vars)
