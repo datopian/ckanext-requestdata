@@ -7,13 +7,14 @@ from ckanext.requestdata.logic import auth
 from ckanext.requestdata import helpers
 
 
-class RequestdataPlugin(plugins.SingletonPlugin):
+class RequestdataPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
     plugins.implements(plugins.IConfigurer)
     plugins.implements(plugins.IRoutes, inherit=True)
     plugins.implements(plugins.IConfigurable)
     plugins.implements(plugins.IActions)
     plugins.implements(plugins.IAuthFunctions)
     plugins.implements(plugins.ITemplateHelpers)
+    plugins.implements(plugins.IDatasetForm)
 
     # IConfigurer
 
@@ -139,3 +140,43 @@ class RequestdataPlugin(plugins.SingletonPlugin):
             'requestdata_get_notification':
                 helpers.get_notification
         }
+
+    def _modify_package_schema(self, schema):
+        not_empty = [toolkit.get_validator('not_empty'),
+                     toolkit.get_converter('convert_to_extras')]
+        schema.update({
+            'maintainer': not_empty
+        })
+        return schema
+
+    def create_package_schema(self):
+        schema = super(RequestdataPlugin, self).create_package_schema()
+        schema = self._modify_package_schema(schema)
+
+        return schema
+
+    def update_package_schema(self):
+        schema = super(RequestdataPlugin, self).update_package_schema()
+        schema = self._modify_package_schema(schema)
+
+        return schema
+
+    def show_package_schema(self):
+        schema = super(RequestdataPlugin, self).show_package_schema()
+        not_empty = [toolkit.get_converter('convert_from_extras'),
+                     toolkit.get_validator('not_empty')]
+        schema.update({
+            'maintainer': not_empty
+        })
+
+        return schema
+
+    def is_fallback(self):
+        # Return True to register this plugin as the default handler for
+        # package types not handled by any other IDatasetForm plugin.
+        return True
+
+    def package_types(self):
+        # This plugin doesn't handle any special package types, it just
+        # registers itself as the default (above).
+        return []
