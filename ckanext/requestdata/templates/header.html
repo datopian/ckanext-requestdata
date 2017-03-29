@@ -18,7 +18,7 @@
               {% endif %}
               {% set notification_seen = h.requestdata_get_notification() %}
               {% if not notification_seen %}
-                {% block header_account_notification %}
+                {% block header_account_new_data_request %}
                 <li>
                   <a href="{{ h.url_for('requestdata_my_requests', id=c.userobj.name) }}" title="{{ _('New data request') }}">
                     <i class="icon-circle" aria-hidden="true"></i>

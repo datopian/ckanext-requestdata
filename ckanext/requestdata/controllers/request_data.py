@@ -11,6 +11,7 @@ except ImportError:
     # CKAN 2.6 and earlier
     from pylons import config
 import ckan.model as model
+from ckan.model.user import User
 import ckan.plugins as p
 import json
 
@@ -101,17 +102,22 @@ class RequestDataController(BaseController):
                 'user': sysadmin,
                 'auth_user_obj': c.userobj
             }
+            to = package['maintainer']
+            maintainers = to.split(',')
+            data_dict = {
+                'users' : []
+            }
 
-            data_dict = {'id': package['creator_user_id']}
-            user = get_action('user_show')(context_sysadmin, data_dict)
-            to = user['email']
-
+            #Get user objects with provided email address in maintainers list
+            for m in maintainers:
+                if len(User.by_email(m)) > 0:
+                     data_dict['users'].append(User.by_email(m)[0])
             if to is None:
                 message = {
                     'success': False,
                     'error': {
                         'fields': {
-                            'email': 'Dataset creator email not found.'
+                            'email': 'Dataset maintainer email not found.'
                         }
                     }
                 }
@@ -119,11 +125,10 @@ class RequestDataController(BaseController):
                 return json.dumps(message)
 
             mail_subject = config.get('ckan.site_title') + ': New data request'
-
             response_message = emailer.send_email(content, to, mail_subject)
 
             #notify package creator that new data request was made
-            send_notification = get_action('requestdata_notification_create')(context, data)
+            send_notification = get_action('requestdata_notification_create')(context, data_dict)
 
             return json.dumps(response_message)
         else:
