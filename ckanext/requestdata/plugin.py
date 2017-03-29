@@ -5,6 +5,7 @@ from ckanext.requestdata.model import setup as model_setup
 from ckanext.requestdata.logic import actions
 from ckanext.requestdata.logic import auth
 from ckanext.requestdata import helpers
+from ckanext.requestdata.logic import validators
 
 
 class RequestdataPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
@@ -150,11 +151,15 @@ class RequestdataPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
         }
 
     def _modify_package_schema(self, schema):
-        not_empty = [toolkit.get_validator('not_empty'),
-                     toolkit.get_converter('convert_to_extras')]
+        not_empty = toolkit.get_validator('not_empty')
+        convert_to_extras = toolkit.get_converter('convert_to_extras')
+        members_in_org_validator = validators.members_in_org_validator
+
         schema.update({
-            'maintainer': not_empty
+            'maintainer': [not_empty, members_in_org_validator,
+                           convert_to_extras]
         })
+
         return schema
 
     def create_package_schema(self):
@@ -171,10 +176,11 @@ class RequestdataPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
 
     def show_package_schema(self):
         schema = super(RequestdataPlugin, self).show_package_schema()
-        not_empty = [toolkit.get_converter('convert_from_extras'),
-                     toolkit.get_validator('not_empty')]
+        not_empty = toolkit.get_validator('not_empty')
+        convert_from_extras = toolkit.get_converter('convert_from_extras')
+
         schema.update({
-            'maintainer': not_empty
+            'maintainer': [not_empty, convert_from_extras]
         })
 
         return schema
