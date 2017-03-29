@@ -49,7 +49,8 @@ Example usage:
             data-module-is_logged_in="{{ is_logged_in }}"
             data-module-redirect_url="{{ redirect_url }}"
             data-module-refresh_on_success="1"
-            data-module-disable_action_buttons="1">Reply</button>
+            data-module-disable_action_buttons="1"
+            data-module-message_content="{{ item.message_content }}">Reply</button>
     <br>
     <button class="btn btn-danger requested-data-container__actions--reject"
             data-module="modal-form"
