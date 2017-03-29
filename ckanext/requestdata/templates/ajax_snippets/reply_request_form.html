@@ -6,6 +6,9 @@
       <h2>Reply to the request</h2>
     </div>
     <div class="modal-body">
+      <blockquote class="requested-data-container__message--modal">
+        <p>{{ message_content }}</p>
+      </blockquote>
       <form class="form-horizontal col-sm-12" enctype="multipart/form-data">
         <div class="alert alert-error hide"></div>
         {{ form.textarea('message_content', label=_('Message content'), is_required=true, attrs={'required': 'required', 'class': 'form-element'}) }}

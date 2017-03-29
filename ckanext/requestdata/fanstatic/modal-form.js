@@ -38,7 +38,7 @@ this.ckan.module('modal-form', function($) {
               return;
             }
             if (!this._snippetReceived) {
-                this.sandbox.client.getTemplate(this.options.template_file, {}, this._onReceiveSnippet);
+                this.sandbox.client.getTemplate(this.options.template_file, {message_content: this.options.message_content}, this._onReceiveSnippet);
                 this._snippetReceived = true;
             } else if (this.modal) {
                 this.modal.modal('show');

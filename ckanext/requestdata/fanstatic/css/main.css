@@ -19,6 +19,12 @@
   color: #5f5f5f;
 }
 
+.requested-data-container__message--modal {
+  margin-top: 0;
+  width: 96%;
+  color: #5f5f5f;
+}
+
 .requested-data-container__actions {
   position: absolute;
   top: 50%;

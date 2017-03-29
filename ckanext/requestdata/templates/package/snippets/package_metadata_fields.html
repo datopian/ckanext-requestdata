@@ -3,7 +3,13 @@
 {% import 'macros/form.html' as form %}
 
 {% block package_metadata_fields_maintainer %}
-  {% set tag_attrs = {'data-module': 'autocomplete', 'data-module-tags': '', 'data-module-source': '/api/2/util/user/members_for_org_autocomplete?q=?', 'required': 'required'} %}
+  {% set tag_attrs = {'data-module': 'autocomplete', 'data-module-tags': '', 'required': 'required'} %}
 
-  {{ form.input('maintainer', label=_('Maintainer'), id='field-maintainer', placeholder=_('Joe Bloggs'), value=data.maintainer, error=errors.maintainer, classes=['control-full'], is_required=true, attrs=tag_attrs) }}
+  {% if data.name %}
+    {% set maintainers_value = data.maintainer %}
+  {% else %}
+    {% set maintainers_value = c.userobj.email %}
+  {% endif %}
+
+  {{ form.input('maintainer', label=_('Maintainers'), id='field-maintainer', placeholder=_('joe@example.com'), value=maintainers_value, error=errors.maintainer, classes=['control-full'], is_required=true, attrs=tag_attrs) }}
 {% endblock %}

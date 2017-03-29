@@ -20,8 +20,12 @@ class RoutesBase(object):
 
 class TestRoutes(RoutesBase):
     def test_make_dataset_active(self):
-        factories.Organization(name='test_org')
-        factories.Dataset(owner_org='test_org', name='test_dataset')
+        user = factories.User()
+        users = [{'name': user['name']}]
+
+        factories.Organization(name='test_org', users=users)
+        factories.Dataset(owner_org='test_org', name='test_dataset',
+                          maintainer=user['email'])
 
         user = factories.Sysadmin()
 
