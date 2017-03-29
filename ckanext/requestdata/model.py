@@ -156,7 +156,7 @@ def define_user_notification_table():
                                Column('id', types.UnicodeText,
                                       primary_key=True,
                                       default=make_uuid),
-                               Column('package_creator_id', types.UnicodeText,
+                               Column('package_maintainer_id', types.UnicodeText,
                                       nullable=False),
                                Column('seen', types.Boolean,
                                       default=False),

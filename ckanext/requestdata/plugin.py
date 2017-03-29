@@ -149,6 +149,8 @@ class RequestdataPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
                 helpers.get_notification
         }
 
+    # IDatasetForm
+
     def _modify_package_schema(self, schema):
         not_empty = [toolkit.get_validator('not_empty'),
                      toolkit.get_converter('convert_to_extras')]
