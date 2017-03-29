@@ -275,3 +275,19 @@ class TestActions(ActionBase):
         ex = cm.exception
 
         assert ex.error_dict['org_id'] == ['Missing value']
+
+    def test_package_create_valid(self):
+        user = factories.User()
+        users = [{'name': user['name']}]
+
+        factories.Organization(name='test_org', users=users)
+        factories.Dataset(owner_org='test_org', name='test_dataset',
+                                    maintainer=user['email'])
+
+    def test_package_create_missing_maintainer(self):
+        with assert_raises(logic.ValidationError) as cm:
+            factories.Dataset()
+
+        ex = cm.exception
+
+        assert ex.error_dict['maintainer'] == ['Missing value']
