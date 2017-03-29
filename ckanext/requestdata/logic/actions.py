@@ -349,21 +349,6 @@ def notification_for_current_user(context,id):
 
     '''
 
-    # This code is in a try/except clause because when running the tests it
-    # gives the error "TypeError: No object (name: request) has been
-    # registered for this thread"
-    try:
-        if request.method != 'GET':
-            return {
-                'error': {
-                    'message': 'Please use HTTP method GET for this action.'
-                }
-            }
-    except TypeError:
-        pass
-
-    #check_access('requestdata_request_list_for_current_user',
-                # context, data_dict)
     model = context['model']
     user_id = model.User.get(context['user']).id
     notification = ckanextUserNotification.get(package_maintainer_id=user_id)
