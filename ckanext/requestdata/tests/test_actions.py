@@ -22,9 +22,13 @@ class ActionBase(object):
 
 class TestActions(ActionBase):
     def test_create_requestdata_valid(self):
-        package = factories.Dataset(name='test_dataset',
-                                    maintainer='Aleksandar')
         user = factories.User()
+        users = [{'name': user['name']}]
+
+        factories.Organization(name='test_org', users=users)
+
+        package = factories.Dataset(owner_org='test_org', name='test_dataset',
+                                    maintainer=user['email'])
         context = {'user': user['name']}
         data_dict = {
             'package_id': package['id'],
@@ -101,9 +105,13 @@ class TestActions(ActionBase):
             ['Not found: Dataset']
 
     def test_show_requestdata_valid(self):
-        package = factories.Dataset(name='test_dataset',
-                                    maintainer='Aleksandar')
         user = factories.User()
+        users = [{'name': user['name']}]
+
+        factories.Organization(name='test_org', users=users)
+
+        package = factories.Dataset(owner_org='test_org', name='test_dataset',
+                                    maintainer=user['email'])
         context = {'user': user['name']}
         data_dict = {
             'package_id': package['id'],
@@ -159,8 +167,13 @@ class TestActions(ActionBase):
             ['Not found: Dataset']
 
     def test_show_requestdata_request_not_found(self):
-        package = factories.Dataset(name='test_dataset',
-                                    maintainer='Aleksandar')
+        user = factories.User()
+        users = [{'name': user['name']}]
+
+        factories.Organization(name='test_org', users=users)
+
+        package = factories.Dataset(owner_org='test_org', name='test_dataset',
+                                    maintainer=user['email'])
 
         data_dict = {
             'id': 'non_existing_id',
@@ -176,8 +189,13 @@ class TestActions(ActionBase):
 
     @raises(logic.NotAuthorized)
     def test_show_requestdata_raises_auth_error(self):
-        package = factories.Dataset(name='test_dataset',
-                                    maintainer='Aleksandar')
+        user = factories.User()
+        users = [{'name': user['name']}]
+
+        factories.Organization(name='test_org', users=users)
+
+        package = factories.Dataset(owner_org='test_org', name='test_dataset',
+                                    maintainer=user['email'])
 
         context = {'ignore_auth': False}
 
@@ -190,9 +208,13 @@ class TestActions(ActionBase):
                             **data_dict)
 
     def test_requestdata_request_list_for_current_user(self):
-        package = factories.Dataset(name='test_dataset',
-                                    maintainer='Aleksandar')
         user = factories.User()
+        users = [{'name': user['name']}]
+
+        factories.Organization(name='test_org', users=users)
+
+        package = factories.Dataset(owner_org='test_org', name='test_dataset',
+                                    maintainer=user['email'])
         context = {'user': user['name']}
         data_dict = {
             'package_id': package['id'],
@@ -216,8 +238,10 @@ class TestActions(ActionBase):
         assert len(result) == 10
 
     def test_requestdata_request_list_for_organization(self):
-        org = factories.Organization(name='test_org')
         user = factories.User()
+        users = [{'name': user['name']}]
+
+        org = factories.Organization(name='test_org', users=users)
         context = {'user': user['name']}
         data_dict = {
             'sender_name': 'John Doe',
@@ -229,8 +253,8 @@ class TestActions(ActionBase):
         package_ids = []
 
         for i in range(5):
-            package = factories.Dataset(owner_org=org['name'],
-                                        maintainer='Aleksandar')
+            package = factories.Dataset(owner_org='test_org',
+                                        maintainer=user['email'])
             package_ids.append(package['id'])
 
         # Create one request for each dataset.
