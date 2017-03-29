@@ -22,7 +22,8 @@ class ActionBase(object):
 
 class TestActions(ActionBase):
     def test_create_requestdata_valid(self):
-        package = factories.Dataset(name='test_dataset')
+        package = factories.Dataset(name='test_dataset',
+                                    maintainer='Aleksandar')
         user = factories.User()
         context = {'user': user['name']}
         data_dict = {
@@ -100,7 +101,8 @@ class TestActions(ActionBase):
             ['Not found: Dataset']
 
     def test_show_requestdata_valid(self):
-        package = factories.Dataset(name='test_dataset')
+        package = factories.Dataset(name='test_dataset',
+                                    maintainer='Aleksandar')
         user = factories.User()
         context = {'user': user['name']}
         data_dict = {
@@ -157,7 +159,8 @@ class TestActions(ActionBase):
             ['Not found: Dataset']
 
     def test_show_requestdata_request_not_found(self):
-        package = factories.Dataset(name='test_dataset')
+        package = factories.Dataset(name='test_dataset',
+                                    maintainer='Aleksandar')
 
         data_dict = {
             'id': 'non_existing_id',
@@ -173,7 +176,8 @@ class TestActions(ActionBase):
 
     @raises(logic.NotAuthorized)
     def test_show_requestdata_raises_auth_error(self):
-        package = factories.Dataset(name='test_dataset')
+        package = factories.Dataset(name='test_dataset',
+                                    maintainer='Aleksandar')
 
         context = {'ignore_auth': False}
 
@@ -186,7 +190,8 @@ class TestActions(ActionBase):
                             **data_dict)
 
     def test_requestdata_request_list_for_current_user(self):
-        package = factories.Dataset(name='test_dataset')
+        package = factories.Dataset(name='test_dataset',
+                                    maintainer='Aleksandar')
         user = factories.User()
         context = {'user': user['name']}
         data_dict = {
@@ -200,7 +205,7 @@ class TestActions(ActionBase):
         # Create 10 requests.
         for i in range(10):
             helpers.call_action('requestdata_request_create',
-                                     context=context, **data_dict)
+                                context=context, **data_dict)
 
         user = helpers.call_action('user_show', id=package['creator_user_id'])
         context = {'user': user['name']}
@@ -224,14 +229,15 @@ class TestActions(ActionBase):
         package_ids = []
 
         for i in range(5):
-            package = factories.Dataset(owner_org=org['name'])
+            package = factories.Dataset(owner_org=org['name'],
+                                        maintainer='Aleksandar')
             package_ids.append(package['id'])
 
         # Create one request for each dataset.
         for i in range(5):
             data_dict['package_id'] = package_ids[i]
             helpers.call_action('requestdata_request_create',
-                                     context=context, **data_dict)
+                                context=context, **data_dict)
 
         result = helpers.call_action('requestdata_request_list_for_organization',
                                      org_id=org['id'])
