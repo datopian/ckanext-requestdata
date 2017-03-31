@@ -4,9 +4,9 @@ from ckan.plugins import toolkit
 from ckan.logic import check_access, NotFound
 import ckan.lib.navl.dictization_functions as df
 from ckan.common import request
-
+from ckan.model.user import User
 from ckanext.requestdata.logic import schema
-from ckanext.requestdata.model import ckanextRequestdata, ckanextUserNotification
+from ckanext.requestdata.model import ckanextRequestdata, ckanextUserNotification, ckanextMaintainers
 
 
 def request_create(context, data_dict):
@@ -47,10 +47,10 @@ def request_create(context, data_dict):
     package_id = data.get('package_id')
 
     package = toolkit.get_action('package_show')(context, {'id': package_id})
-    package_creator_id = package['creator_user_id']
 
-    model = context['model']
-    sender_user_id = model.User.get(context['user']).id
+    sender_user_id = User.get(context['user']).id
+
+    maintainers = package['maintainer'].split(',')
 
     data = {
         'sender_name': sender_name,
@@ -58,12 +58,21 @@ def request_create(context, data_dict):
         'organization': organization,
         'email_address': email_address,
         'message_content': message_content,
-        'package_id': package_id,
-        'package_creator_id': package_creator_id
+        'package_id': package_id
     }
-
     requestdata = ckanextRequestdata(**data)
     requestdata.save()
+
+    for email in maintainers:
+        if len(User.by_email(email)) > 0:
+            user = User.by_email(email)[0]
+            data_maintainers = {
+                'maintainer_id' : user.id,
+                'request_data_id': requestdata.id,
+                'email' : user.email
+            }
+            maintainers = ckanextMaintainers(**data_maintainers)
+            maintainers.save()
 
     out = requestdata.as_dict()
 
@@ -233,16 +242,12 @@ def request_list_for_current_user(context, data_dict):
     model = context['model']
     user_id = model.User.get(context['user']).id
 
-    data = {
-        'package_creator_id': user_id
-    }
-
-    requests = ckanextRequestdata.search(**data)
+    requests = ckanextRequestdata.search_by_maintainers(user_id)
 
     out = []
 
     for item in requests:
-        out.append(item.as_dict())
+        out.append(item)
 
     return out
 
@@ -341,9 +346,10 @@ def notification_create(context, data_dict):
 
     return notifications
 
+
 @toolkit.side_effect_free
 def notification_for_current_user(context,id):
-    '''Returns a notification for user
+    '''Returns a notification for logged in user
 
     :rtype: notification
 
@@ -354,15 +360,21 @@ def notification_for_current_user(context,id):
     notification = ckanextUserNotification.get(package_maintainer_id=user_id)
     return notification
 
+
 @toolkit.side_effect_free
 def notification_change(context, user_id):
     '''
-
+        Change the notification status to seen
     :param context:
-    :param user_id:
+
+    :param user_id: The id of logged in user
+    :type String
+
     :return:
     '''
-    user_exist = ckanextUserNotification.get(package_maintainer_id=user_id)
-    if user_exist is not None:
-        user_exist.seen = True
-        user_exist.commit()
+    notification = ckanextUserNotification.get(package_maintainer_id=user_id)
+    if notification is not None:
+        notification.seen = True
+        notification.commit()
+
+        return notification
