@@ -102,7 +102,7 @@ class ckanextRequestdata(DomainObject):
         return query.all()
 
     @classmethod
-    def search_by_maintainers(self,id):
+    def search_by_maintainers(self,id,order='modified_at desc'):
         '''Finds all of the requests for the specific maintainer
 
         :param id: User is
@@ -111,7 +111,8 @@ class ckanextRequestdata(DomainObject):
         '''
         maintainer_id = id;
         requests= Session.query(ckanextRequestdata,ckanextMaintainers).join(ckanextMaintainers)\
-                         .filter(ckanextRequestdata.id == ckanextMaintainers.request_data_id, ckanextMaintainers.maintainer_id == maintainer_id).all()
+                         .filter(ckanextRequestdata.id == ckanextMaintainers.request_data_id, ckanextMaintainers.maintainer_id == maintainer_id)\
+                         .order_by(order).all()
 
         requests_data = []
         for r in requests:
@@ -218,7 +219,6 @@ def define_user_notification_table():
         user_notification_table
     )
 
-
 class ckanextMaintainers(DomainObject):
     @classmethod
     def get(self, **kwds):
@@ -245,6 +245,20 @@ class ckanextMaintainers(DomainObject):
 
         return query.all()
 
+    @classmethod
+    def insert_all(self, maintainers):
+        '''Finds entities in the table that satisfy certain criteria.
+
+        :param order: Order rows by specified column.
+        :type order: string
+
+        '''
+        Session.add_all(maintainers)
+        Session.commit()
+        data_dict = {
+            'message': 'Successfully inserted'
+        }
+        return data_dict
 
 def define_maintainers_table():
     global maintainers_table
