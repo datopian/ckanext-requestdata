@@ -62,19 +62,18 @@ def request_create(context, data_dict):
     }
     requestdata = ckanextRequestdata(**data)
     requestdata.save()
+    maintainers_list = []
 
     for email in maintainers:
         if len(User.by_email(email)) > 0:
             user = User.by_email(email)[0]
-            data_maintainers = {
-                'maintainer_id' : user.id,
-                'request_data_id': requestdata.id,
-                'email' : user.email
-            }
-            maintainers = ckanextMaintainers(**data_maintainers)
-            maintainers.save()
+            data = ckanextMaintainers()
+            data.maintainer_id = user.id
+            data.request_data_id = requestdata.id
+            data.email = user.email
+            maintainers_list.append(data)
 
-    out = requestdata.as_dict()
+    out = ckanextMaintainers.insert_all(maintainers_list)
 
     return out
 
