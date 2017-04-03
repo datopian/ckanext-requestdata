@@ -41,15 +41,7 @@ class TestActions(ActionBase):
         result = helpers.call_action('requestdata_request_create',
                                      context=context, **data_dict)
 
-        assert result['package_id'] == data_dict['package_id']
-        assert result['sender_name'] == data_dict['sender_name']
-        assert result['message_content'] == data_dict['message_content']
-        assert result['organization'] == data_dict['organization']
-        assert result['email_address'] == data_dict['email_address']
-        assert result['package_creator_id'] == package['creator_user_id']
-        assert result['sender_user_id'] == user['id']
-        assert result['state'] == 'new'
-        assert result['data_shared'] is False
+        assert 'requestdata_id' in result
 
     def test_create_requestdata_missing_values_raises_error(self):
         with assert_raises(logic.ValidationError) as cm:
@@ -124,7 +116,7 @@ class TestActions(ActionBase):
         result = helpers.call_action('requestdata_request_create',
                                      context, **data_dict)
 
-        requestdata_id = result['id']
+        requestdata_id = result['requestdata_id']
 
         data_dict_show = {
             'id': requestdata_id,
@@ -141,7 +133,6 @@ class TestActions(ActionBase):
         assert result['email_address'] == data_dict['email_address']
         assert result['data_shared'] is False
         assert result['state'] == 'new'
-        assert result['package_creator_id'] == package['creator_user_id']
         assert result['sender_user_id'] == user['id']
 
     def test_show_requestdata_missing_values(self):
@@ -221,7 +212,7 @@ class TestActions(ActionBase):
             'sender_name': 'John Doe',
             'message_content': 'I want to add additional data.',
             'organization': 'Google',
-            'email_address': 'test@test.com',
+            'email_address': user['email'],
         }
 
         # Create 10 requests.
@@ -229,12 +220,10 @@ class TestActions(ActionBase):
             helpers.call_action('requestdata_request_create',
                                 context=context, **data_dict)
 
-        user = helpers.call_action('user_show', id=package['creator_user_id'])
         context = {'user': user['name']}
 
         result = helpers.call_action('requestdata_request_list_for_current_user',
                                      context=context)
-
         assert len(result) == 10
 
     def test_requestdata_request_list_for_organization(self):
