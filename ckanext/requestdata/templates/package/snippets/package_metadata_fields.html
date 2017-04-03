@@ -3,7 +3,7 @@
 {% import 'macros/form.html' as form %}
 
 {% block package_metadata_fields_maintainer %}
-  {% set tag_attrs = {'data-module': 'autocomplete', 'data-module-tags': '', 'required': 'required'} %}
+  {% set tag_attrs = {'data-module': 'autocomplete', 'data-module-tags': '', 'required': 'required', novalidate} %}
 
   {% if data.name %}
     {% set maintainers_value = data.maintainer %}
