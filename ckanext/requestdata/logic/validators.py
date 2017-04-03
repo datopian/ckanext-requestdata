@@ -60,6 +60,6 @@ def members_in_org_validator(key, data, errors, context):
                             'organization.'.format(email))
                 errors[key].append(message)
         else:
-            message = _('The user with email "{0}" is not part of this '
-                        'organization.'.format(email))
+            message = _('The user with email "{0}" does not exist.'
+                        .format(email))
             errors[key].append(message)
