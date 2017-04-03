@@ -34,7 +34,7 @@ def setup():
         if 'ckanext_requestdata_id_idx' not in index_names:
             log.debug('Creating index for ckanext_requestdata.')
             Index('ckanext_requestdata_id_idx',
-                  request_data_table.c.ckanext_event_id).create()
+                  request_data_table.c.id).create()
 
     if user_notification_table is None:
         define_user_notification_table()
@@ -53,7 +53,7 @@ def setup():
         if 'ckanext_user_notification_id_idx' not in index_names:
             log.debug('Creating index for ckanext_user_notification.')
             Index('ckanext_user_notification_id_idx',
-                  user_notification_table.c.ckanext_event_id).create()
+                  user_notification_table.c.id).create()
 
     if maintainers_table is None:
         define_maintainers_table()
@@ -69,10 +69,10 @@ def setup():
             [index['name'] for index in
              inspector.get_indexes('ckanext_maintainers')]
 
-        if 'ckanext_user_notification_id_idx' not in index_names:
+        if 'ckanext_maintainers_id_idx' not in index_names:
             log.debug('Creating index for ckanext_user_notification.')
             Index('ckanext_maintainers_id_idx',
-                  maintainers_table.c.ckanext_event_id).create()
+                  maintainers_table.c.id).create()
 
 class ckanextRequestdata(DomainObject):
     @classmethod
@@ -246,7 +246,7 @@ class ckanextMaintainers(DomainObject):
         return query.all()
 
     @classmethod
-    def insert_all(self, maintainers):
+    def insert_all(self, maintainers, requestdata_id):
         '''Finds entities in the table that satisfy certain criteria.
 
         :param order: Order rows by specified column.
@@ -256,7 +256,7 @@ class ckanextMaintainers(DomainObject):
         Session.add_all(maintainers)
         Session.commit()
         data_dict = {
-            'message': 'Successfully inserted'
+            'requestdata_id': requestdata_id
         }
         return data_dict
 
