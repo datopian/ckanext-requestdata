@@ -73,7 +73,7 @@ def request_create(context, data_dict):
             data.email = user.email
             maintainers_list.append(data)
 
-    out = ckanextMaintainers.insert_all(maintainers_list)
+    out = ckanextMaintainers.insert_all(maintainers_list, requestdata.id)
 
     return out
 
