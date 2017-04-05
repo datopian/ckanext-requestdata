@@ -325,43 +325,56 @@ def notification_create(context, data_dict):
     :rtype: dictionary
 
     '''
+    data, errors = df.validate(data_dict,
+                               schema.notification_create_schema(),
+                               context)
+    if errors:
+        raise toolkit.ValidationError(errors)
+
     not_seen = False
     notifications = []
-    for m in data_dict['users']:
+    maintainers = data.get('users')
+    for m in maintainers:
+        print m
         data = {
             'package_maintainer_id': m.id,
             'seen': not_seen
         }
         user_notification = ckanextUserNotification(**data)
         user_exist = ckanextUserNotification.get(package_maintainer_id=m.id)
-
         if user_exist is None:
             user_notification.save()
-            notifications.append(user_exist)
+            notifications.append(user_notification)
         else:
             user_exist.seen = not_seen
             user_exist.commit()
-            notifications.append(user_notification)
-
+            notifications.append(user_exist)
     return notifications
 
 
 @toolkit.side_effect_free
-def notification_for_current_user(context,id):
+def notification_for_current_user(context, data_dict):
     '''Returns a notification for logged in user
 
-    :rtype: notification
+    :rtype: boolean
 
     '''
 
     model = context['model']
     user_id = model.User.get(context['user']).id
+    print "ID"
+    print user_id
     notification = ckanextUserNotification.get(package_maintainer_id=user_id)
-    return notification
+    if notification is None:
+        # do not display notification
+        return True
+    else:
+        is_notified = notification.seen
+        return is_notified
 
 
 @toolkit.side_effect_free
-def notification_change(context, user_id):
+def notification_change(context, data_dict):
     '''
         Change the notification status to seen
     :param context:
@@ -371,9 +384,16 @@ def notification_change(context, user_id):
 
     :return:
     '''
+
+    data, errors = df.validate(data_dict,
+                               schema.notification_change_schema(),
+                               context)
+    if errors:
+        raise toolkit.ValidationError(errors)
+
+    user_id = data.get('user_id')
     notification = ckanextUserNotification.get(package_maintainer_id=user_id)
     if notification is not None:
         notification.seen = True
         notification.commit()
-
         return notification

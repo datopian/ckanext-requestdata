@@ -183,7 +183,6 @@ class ckanextUserNotification(DomainObject):
 
         query = Session.query(self).autoflush(False)
         query = query.filter_by(**kwds).first()
-
         return query
 
     @classmethod

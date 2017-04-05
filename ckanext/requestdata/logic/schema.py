@@ -42,3 +42,15 @@ def request_list_for_organization_schema():
     return {
         'org_id': [not_empty]
     }
+
+
+def notification_create_schema():
+    return {
+        'users': [not_empty]
+    }
+
+
+def notification_change_schema():
+    return{
+        'user_id': [not_empty, unicode]
+    }
