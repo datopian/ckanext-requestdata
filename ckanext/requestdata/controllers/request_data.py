@@ -103,15 +103,6 @@ class RequestDataController(BaseController):
                 'auth_user_obj': c.userobj
             }
             to = package['maintainer']
-            maintainers = to.split(',')
-            data_dict = {
-                'users' : []
-            }
-
-            #Get user objects with provided email address in maintainers list
-            for m in maintainers:
-                if len(User.by_email(m)) > 0:
-                     data_dict['users'].append(User.by_email(m)[0])
             if to is None:
                 message = {
                     'success': False,
@@ -123,6 +114,16 @@ class RequestDataController(BaseController):
                 }
 
                 return json.dumps(message)
+            maintainers = to.split(',')
+            data_dict = {
+                'users' : []
+            }
+
+            #Get users objects from maintainers list
+            for m in maintainers:
+                if len(User.by_email(m)) > 0:
+                     data_dict['users'].append(User.by_email(m)[0])
+
 
             mail_subject = config.get('ckan.site_title') + ': New data request'
             response_message = emailer.send_email(content, to, mail_subject)

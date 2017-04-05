@@ -76,15 +76,18 @@ class UserController(BaseController):
             'requests_archive': requests_archive
         }
 
+        context = _get_context()
+        user_obj = context['auth_user_obj']
+        user_id = user_obj.id
+        data_dict = {
+            'user_id' : user_id
+        }
+        notify_seen = _get_action('requestdata_notification_change', data_dict)
+
         data_dict = {
             'id': id,
             'include_num_followers': True
         }
-
-        context = _get_context()
-        user_obj = context['auth_user_obj']
-        user_id = user_obj.id
-        notify_seen = _get_action('requestdata_notification_change', user_id)
         self._setup_template_variables(_get_context(), data_dict)
 
         return toolkit.render('requestdata/my_requested_data.html', extra_vars)

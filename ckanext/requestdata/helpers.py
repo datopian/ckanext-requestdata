@@ -66,9 +66,4 @@ def get_notification():
       '''
 
     notification = _get_action('requestdata_notification_for_current_user',{})
-    if notification is None:
-        #do not display notification
-        return True
-    else:
-        is_notified = notification.seen
-        return is_notified
+    return notification
