@@ -14,7 +14,7 @@ log = logging.getLogger(__name__)
 request_data_table = None
 user_notification_table = None
 maintainers_table = None
-
+request_data_counters_table = None
 
 def setup():
     if request_data_table is None:
@@ -73,6 +73,26 @@ def setup():
             log.debug('Creating index for ckanext_user_notification.')
             Index('ckanext_maintainers_id_idx',
                   maintainers_table.c.id).create()
+
+    if request_data_counters_table is None:
+        define_request_data_counters_table()
+        log.debug('Request data counters table defined in memory.')
+
+        if not request_data_counters_table.exists():
+            request_data_counters_table.create()
+    else:
+        log.debug('Request data counters table already exists.')
+        inspector = Inspector.from_engine(engine)
+
+        index_names = \
+            [index['name'] for index in
+             inspector.get_indexes('ckanext_request_data_counters')]
+
+        if 'ckanext_request_data_counters_id_idx' not in index_names:
+            log.debug('Creating index for ckanext_request_data_counters.')
+            Index('ckanext_request_data_counters_id_idx',
+                  request_data_counters_table.c.id).create()
+
 
 class ckanextRequestdata(DomainObject):
     @classmethod
@@ -259,6 +279,7 @@ class ckanextMaintainers(DomainObject):
         }
         return data_dict
 
+
 def define_maintainers_table():
     global maintainers_table
 
@@ -274,4 +295,36 @@ def define_maintainers_table():
     mapper(
         ckanextMaintainers,
         maintainers_table
+    )
+
+
+class ckanextRequestDataCounters(DomainObject):
+    @classmethod
+    def get(self, **kwds):
+        '''Finds a single entity in the table.
+
+        '''
+
+        query = Session.query(self).autoflush(False)
+        query = query.filter_by(**kwds).first()
+
+        return query
+
+
+def define_request_data_counters_table():
+    global request_data_counters_table
+
+    request_data_counters_table = Table('ckanext_request_data_counters', metadata,
+                                Column('id', types.UnicodeText, primary_key=True, default=make_uuid),
+                                Column('package_id', types.UnicodeText),
+                                Column('requests', types.Integer,default=0),
+                                Column('replied', types.Integer,default=0),
+                                Column('declined', types.Integer,default=0),
+                                Column('shared', types.Integer,default=0),
+                                Index('ckanext_request_data_counters_id_idx', 'id')
+                                )
+
+    mapper(
+        ckanextRequestDataCounters,
+        request_data_counters_table
     )
