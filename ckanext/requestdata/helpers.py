@@ -67,3 +67,17 @@ def get_notification():
 
     notification = _get_action('requestdata_notification_for_current_user',{})
     return notification
+
+
+def get_request_counters(id):
+    '''
+        Returns a counters for particular request data
+
+       :param package_id: The id of the package the request belongs to.
+       :type package_id: string
+
+     '''
+
+    package_id = id
+    counters = _get_action('requestdata_request_data_counters_get', {'package_id':package_id})
+    return counters

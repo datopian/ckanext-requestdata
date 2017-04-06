@@ -415,8 +415,8 @@ def increment_request_data_counters(context, data_dict):
      if errors:
          raise toolkit.ValidationError(errors)
 
-     flag = data_dict['flag']
-     package_id = data_dict['package_id']
+     flag = data.get('flag')
+     package_id = data.get('package_id')
      data = {
             'package_id' : package_id
       }
@@ -439,3 +439,12 @@ def increment_request_data_counters(context, data_dict):
 
          data_request.save()
          return data_request
+
+
+@toolkit.side_effect_free
+def request_data_counters_get(context, data_dict):
+
+
+    package_id = data_dict['package_id']
+    counters = ckanextRequestDataCounters.get(package_id=package_id)
+    return counters

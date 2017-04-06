@@ -122,7 +122,8 @@ class RequestdataPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
             'requestdata_notification_create': actions.notification_create,
             'requestdata_notification_for_current_user': actions.notification_for_current_user,
             'requestdata_notification_change': actions.notification_change,
-            'requestdata_increment_request_data_counters':actions.increment_request_data_counters
+            'requestdata_increment_request_data_counters':actions.increment_request_data_counters,
+            'requestdata_request_data_counters_get' : actions.request_data_counters_get
         }
 
     # IAuthFunctions
@@ -148,7 +149,9 @@ class RequestdataPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
             'requestdata_get_package_title':
                 helpers.get_package_title,
             'requestdata_get_notification':
-                helpers.get_notification
+                helpers.get_notification,
+            'requestdata_get_request_counters':
+                helpers.get_request_counters
         }
 
     # IDatasetForm
