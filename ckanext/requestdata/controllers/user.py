@@ -208,9 +208,10 @@ class UserController(BaseController):
             'flag': ''
         }
         if data['data_shared']:
+            print "Shared"
             data_dict['flag'] = 'shared'
         else:
-            data_dict['flag'] = 'rejected'
+            data_dict['flag'] = 'declined'
 
         get_action('requestdata_increment_request_data_counters')({}, data_dict)
         try:
