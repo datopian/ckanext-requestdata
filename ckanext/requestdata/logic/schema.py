@@ -9,7 +9,7 @@ package_id_exists = toolkit.get_validator('package_id_exists')
 email_validator = validators.email_validator
 state_validator = validators.state_validator
 boolean_validator = validators.boolean_validator
-
+counters_validator = validators.request_counter_validator
 
 def request_create_schema():
     return {
@@ -53,4 +53,11 @@ def notification_create_schema():
 def notification_change_schema():
     return{
         'user_id': [not_empty, unicode]
+    }
+
+
+def increment_request_counters_schema():
+    return{
+         'package_id': [not_empty],
+         'flag' : [counters_validator]
     }

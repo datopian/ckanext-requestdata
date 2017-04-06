@@ -409,6 +409,11 @@ def increment_request_data_counters(context, data_dict):
 
        :return:
      '''
+     data, errors = df.validate(data_dict,
+                                schema.increment_request_counters_schema(),
+                                context)
+     if errors:
+         raise toolkit.ValidationError(errors)
 
      flag = data_dict['flag']
      package_id = data_dict['package_id']
