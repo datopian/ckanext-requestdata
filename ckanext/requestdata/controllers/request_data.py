@@ -129,8 +129,12 @@ class RequestDataController(BaseController):
             response_message = emailer.send_email(content, to, mail_subject)
 
             #notify package creator that new data request was made
-            send_notification = get_action('requestdata_notification_create')(context, data_dict)
-
+            get_action('requestdata_notification_create')(context, data_dict)
+            data_dict = {
+                'package_id' : data['package_id'],
+                'flag' : 'request'
+            }
+            get_action('requestdata_increment_request_data_counters')(context,data_dict)
             return json.dumps(response_message)
         else:
             message = {

@@ -120,10 +120,15 @@ class UserController(BaseController):
         '''
 
         data = dict(toolkit.request.POST)
-
+        counters_data_dict = {
+            'package_id': data['package_id'],
+            'flag': ''
+        }
         if 'rejected' in data:
             data['rejected'] = asbool(data['rejected'])
-
+            counters_data_dict['flag'] = 'declined'
+        else:
+            counters_data_dict['flag'] = 'replied'
         message_content = data.get('message_content')
 
         if message_content is None or message_content == '':
@@ -176,6 +181,8 @@ class UserController(BaseController):
             'message': 'Message was sent successfully'
         }
 
+        get_action('requestdata_increment_request_data_counters')({}, counters_data_dict)
+
         return json.dumps(success)
 
     def handle_open_request_action(self, username, request_action):
@@ -194,15 +201,18 @@ class UserController(BaseController):
         '''
 
         data = dict(toolkit.request.POST)
-
         if 'data_shared' in data:
             data['data_shared'] = asbool(data['data_shared'])
+        data_dict = {
+            'package_id': data['package_id'],
+            'flag': ''
+        }
+        if data['data_shared']:
+            data_dict['flag'] = 'shared'
+        else:
+            data_dict['flag'] = 'rejected'
 
-        if data['data_shared'] == 'true':
-            data['data_shared'] = True
-        elif data['data_shared'] == 'false':
-            data['data_shared'] = False
-
+        get_action('requestdata_increment_request_data_counters')({}, data_dict)
         try:
             _get_action('requestdata_request_patch', data)
         except NotAuthorized:

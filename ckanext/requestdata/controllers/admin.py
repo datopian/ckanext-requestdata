@@ -77,7 +77,6 @@ class AdminController(AdminController):
         '''
         try:
             requests = _get_action('requestdata_request_list_for_sysadmin', {})
-            print requests
         except NotAuthorized:
             abort(403, _('Not authorized to see this page.'))
 
