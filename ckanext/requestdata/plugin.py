@@ -121,7 +121,8 @@ class RequestdataPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
             'requestdata_request_delete': actions.request_delete,
             'requestdata_notification_create': actions.notification_create,
             'requestdata_notification_for_current_user': actions.notification_for_current_user,
-            'requestdata_notification_change': actions.notification_change
+            'requestdata_notification_change': actions.notification_change,
+            'requestdata_increment_request_data_counters':actions.increment_request_data_counters
         }
 
     # IAuthFunctions

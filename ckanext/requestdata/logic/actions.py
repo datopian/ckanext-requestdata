@@ -6,7 +6,7 @@ import ckan.lib.navl.dictization_functions as df
 from ckan.common import request
 from ckan.model.user import User
 from ckanext.requestdata.logic import schema
-from ckanext.requestdata.model import ckanextRequestdata, ckanextUserNotification, ckanextMaintainers
+from ckanext.requestdata.model import ckanextRequestdata, ckanextUserNotification, ckanextMaintainers, ckanextRequestDataCounters
 
 
 def request_create(context, data_dict):
@@ -335,7 +335,6 @@ def notification_create(context, data_dict):
     notifications = []
     maintainers = data.get('users')
     for m in maintainers:
-        print m
         data = {
             'package_maintainer_id': m.id,
             'seen': not_seen
@@ -362,8 +361,6 @@ def notification_for_current_user(context, data_dict):
 
     model = context['model']
     user_id = model.User.get(context['user']).id
-    print "ID"
-    print user_id
     notification = ckanextUserNotification.get(package_maintainer_id=user_id)
     if notification is None:
         # do not display notification
@@ -397,3 +394,42 @@ def notification_change(context, data_dict):
         notification.seen = True
         notification.commit()
         return notification
+
+
+@toolkit.side_effect_free
+def increment_request_data_counters(context, data_dict):
+     '''
+       Increment the counter for the requested data depending on the flag
+
+       :param package_id: The id of the package the data belongs to.
+       :type package_id: string
+
+       :param flag: The flag that indicates which counter to increment
+       :type String
+
+       :return:
+     '''
+
+     flag = data_dict['flag']
+     package_id = data_dict['package_id']
+     data = {
+            'package_id' : package_id
+      }
+
+     data_request = ckanextRequestDataCounters.get(package_id=package_id)
+     if data_request is None:
+         new_request = ckanextRequestDataCounters(**data)
+         new_request.requests = 1
+         new_request.save()
+         return new_request
+     else:
+         if flag == 'request':
+            data_request.requests += 1
+         elif flag == 'replied':
+            data_request.replied += 1
+         elif flag == 'declined':
+            data_request.declined += 1
+         elif flag == 'shared':
+             data_request.shared += 1
+             data_request.save()
+         return data_request
