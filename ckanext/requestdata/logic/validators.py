@@ -63,3 +63,10 @@ def members_in_org_validator(key, data, errors, context):
             message = _('The user with email "{0}" does not exist.'
                         .format(email))
             errors[key].append(message)
+
+
+def request_counter_validator(key, data, errors, context):
+    counters = ['request','replied','declined','shared']
+    if data[key] not in counters:
+        message = _('The flag parameter must be request, replied, declined, or shared')
+        errors[key].append(message)
