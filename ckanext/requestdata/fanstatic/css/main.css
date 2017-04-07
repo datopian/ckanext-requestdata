@@ -107,11 +107,15 @@
   color: #49afcd;
 }
 .dropdown {
-    float: right;
+    /*float: right;*/
 }
 .title-requests{
     display:inline-block;
 }
 .icon-circle{
     color:red;
+}
+
+.sysadmin-requests-container {
+  margin-top: 40px;
 }

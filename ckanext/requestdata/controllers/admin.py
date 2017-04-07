@@ -80,8 +80,22 @@ class AdminController(AdminController):
         except NotAuthorized:
             abort(403, _('Not authorized to see this page.'))
 
+        requests_new = []
+        requests_open = []
+        requests_archive = []
+
+        for item in requests:
+            if item['state'] == 'new':
+                requests_new.append(item)
+            elif item['state'] == 'open':
+                requests_open.append(item)
+            elif item['state'] == 'archive':
+                requests_archive.append(item)
+
         extra_vars = {
-            'requests_data' : requests
+            'requests_new': requests_new,
+            'requests_open': requests_open,
+            'requests_archive': requests_archive
         }
 
         return toolkit.render('admin/all_requests_data.html', extra_vars)

@@ -3,7 +3,25 @@
 {% import 'macros/form.html' as form %}
 
 {% block primary_content_inner %}
-  {% snippet 'admin/snippets/section_base.html', title='Requests data', requests=requests_data %}
+  {% set service_url = h.url_for('download_requests_data') %}
+  {% set csv = '?format=csv'%}
+  {% set json = '?format=json'%}
+  <div class="dropdown">
+    <button class="btn btn-primary dropdown-toggle " type="button" data-toggle="dropdown">Download
+    <span class="caret"></span></button>
+    <ul class="dropdown-menu dropdown-menu-left">
+      <li><a href="{{ service_url }}{{ csv }}">CSV</a></li>
+      <li><a href="{{ service_url }}{{ json }}">JSON</a></li>
+    </ul>
+  </div>
+  <div class="sysadmin-requests-container">
+    {% snippet 'requestdata/snippets/section_base.html', state='new', title='New', requests=requests_new %}
+    {% snippet 'requestdata/snippets/section_base.html', state='open', title='Open', requests=requests_open %}
+    {% snippet 'requestdata/snippets/section_base.html', state='archive', title='Archive', requests=requests_archive %}
+  </div>
+  <div class="alert alert-dismissible request-message-alert hide" role="alert">
+    <div class="alert-text"></div>
+  </div>
 {% endblock %}
 
 {% block secondary_content %}
