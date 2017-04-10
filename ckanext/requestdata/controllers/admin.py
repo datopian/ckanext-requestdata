@@ -80,9 +80,34 @@ class AdminController(AdminController):
         except NotAuthorized:
             abort(403, _('Not authorized to see this page.'))
 
+        order_by = request.query_string
         requests_new = []
         requests_open = []
         requests_archive = []
+
+        reverse = True
+        order = ''
+
+        if order_by is not '':
+            if 'shared' in order_by:
+                order = 'shared'
+            elif 'requests' in order_by:
+                order = 'requests'
+            elif 'asc' in order_by:
+                reverse = False
+                order = 'title'
+            elif 'desc' in order_by:
+                reverse = True
+                order = 'title'
+
+            for item in requests:
+                package = _get_action('package_show', {'id': item['package_id']})
+                count = _get_action('requestdata_request_data_counters_get', {'package_id': item['package_id']})
+                item['title'] = package['title']
+                item['shared'] = count.shared
+                item['requests'] = count.requests
+
+            requests = sorted(requests, key=lambda x: x[order], reverse=reverse)
 
         for item in requests:
             if item['state'] == 'new':
