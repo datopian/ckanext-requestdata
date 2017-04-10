@@ -15,9 +15,27 @@
     </ul>
   </div>
   <div class="sysadmin-requests-container">
-    {% snippet 'requestdata/snippets/section_base.html', state='new', title='New', requests=requests_new %}
-    {% snippet 'requestdata/snippets/section_base.html', state='open', title='Open', requests=requests_open %}
-    {% snippet 'requestdata/snippets/section_base.html', state='archive', title='Archive', requests=requests_archive %}
+    {% for org in organizations %}
+      <h2>Organization: {{ org['title'] }}</h2>
+      <div class="btn-group">
+        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+          Action
+          <span class="caret"></span>
+        </a>
+        <div class="dropdown-menu sysadmin-requests-container__dropdown" onclick="event.stopPropagation()">
+          <label class="checkbox" for="test">
+            <input type="checkbox" value="" id="test">OptionOptionOptionOptionOptionOptionOption 1
+          </label>
+          <label class="checkbox">
+            <input type="checkbox" value="">Option 2
+          </label>
+        </div>
+      </div>
+
+      {% snippet 'requestdata/snippets/section_base.html', state='new', title='New', requests=org['requests_new'] %}
+      {% snippet 'requestdata/snippets/section_base.html', state='open', title='Open', requests=org['requests_open'] %}
+      {% snippet 'requestdata/snippets/section_base.html', state='archive', title='Archive', requests=org['requests_archive'] %}
+    {% endfor %}
   </div>
   <div class="alert alert-dismissible request-message-alert hide" role="alert">
     <div class="alert-text"></div>

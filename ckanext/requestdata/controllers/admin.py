@@ -14,6 +14,7 @@ import ckan.logic as logic
 import csv
 import json
 from cStringIO import StringIO
+from ckan.model.user import User
 
 from ckan.common import response ,request
 
@@ -79,48 +80,101 @@ class AdminController(AdminController):
             requests = _get_action('requestdata_request_list_for_sysadmin', {})
         except NotAuthorized:
             abort(403, _('Not authorized to see this page.'))
-
-        order_by = request.query_string
-        requests_new = []
-        requests_open = []
-        requests_archive = []
-
+        organizations = []
+        tmp_orgs = []
+        filtered_maintainers = []
         reverse = True
-        order = ''
+        org = {}
+        for item in request.params:
+            if item == 'filter_by_maintainers':
+                params = request.params[item].split('|')
+                org = params[0].split(':')[1]
+                maintainers = params[1].split(':')[1]
+                data = {
+                    'org': org,
+                    'maintainers': maintainers.split(',')
+                }
 
-        if order_by is not '':
-            if 'shared' in order_by:
-                order = 'shared'
-            elif 'requests' in order_by:
-                order = 'requests'
-            elif 'asc' in order_by:
-                reverse = False
-                order = 'title'
-            elif 'desc' in order_by:
-                reverse = True
-                order = 'title'
+                filtered_maintainers.append(data)
+            elif item == 'order_by':
+                params = request.params[item].split('|')
+                order = params[0]
+                q_organization = params[1].split(':')[1]
+                if 'asc' in order:
+                    reverse = False
+                    order = 'title'
+                elif 'desc' in order:
+                    reverse = True
+                    order = 'title'
 
-            for item in requests:
-                package = _get_action('package_show', {'id': item['package_id']})
-                count = _get_action('requestdata_request_data_counters_get', {'package_id': item['package_id']})
-                item['title'] = package['title']
-                item['shared'] = count.shared
-                item['requests'] = count.requests
+                for x in requests:
+                    package = _get_action('package_show', {'id': x['package_id']})
+                    count = _get_action('requestdata_request_data_counters_get', {'package_id': x['package_id']})
+                    x['title'] = package['title']
+                    x['shared'] = count.shared
+                    x['requests'] = count.requests
+                    data_dict = {'id': package['owner_org']}
+                    current_org = _get_action('organization_show', data_dict)
+                    x['org_id'] = current_org['id']
 
-            requests = sorted(requests, key=lambda x: x[order], reverse=reverse)
 
         for item in requests:
-            if item['state'] == 'new':
-                requests_new.append(item)
-            elif item['state'] == 'open':
-                requests_open.append(item)
-            elif item['state'] == 'archive':
-                requests_archive.append(item)
+            package = _get_action('package_show', {'id': item['package_id']})
+            package_maintainer_ids = package['maintainer'].split(',')
+            maintainer_found = False
+            org_found = False
+
+            data_dict = {'id': package['owner_org']}
+            org = _get_action('organization_show', data_dict)
+
+            # Check if current request is part of a filtered maintainer
+            for x in filtered_maintainers:
+                for maint in x['maintainers']:
+                    if maint in package_maintainer_ids:
+                        maintainer_found = True
+
+                if x['org'] == org['id']:
+                    org_found = True
+
+            if org_found and not maintainer_found:
+                continue
+
+            # Group requests by organization
+            if org['id'] not in tmp_orgs:
+                data = {
+                    'title': org['title'],
+                    'org_id': org['id'],
+                    'requests_new': [],
+                    'requests_open': [],
+                    'requests_archive': []
+                }
+
+                if item['state'] == 'new':
+                    data['requests_new'].append(item)
+                elif item['state'] == 'open':
+                    data['requests_open'].append(item)
+                elif item['state'] == 'archive':
+                    data['requests_archive'].append(item)
+
+                organizations.append(data)
+            else:
+                current_org = next(item for item in organizations if item['org_id'] == org['id'])
+
+                if item['state'] == 'new':
+                    current_org['requests_new'].append(item)
+                elif item['state'] == 'open':
+                    current_org['requests_open'].append(item)
+                elif item['state'] == 'archive':
+                    current_org['requests_archive'].append(item)
+
+            tmp_orgs.append(org['id'])
+
+        for org in organizations:
+            if org['org_id'] == q_organization:
+                org['requests_archive'] = sorted( org['requests_archive'], key=lambda x: x[order], reverse=reverse)
 
         extra_vars = {
-            'requests_new': requests_new,
-            'requests_open': requests_open,
-            'requests_archive': requests_archive
+            'organizations': organizations
         }
 
         return toolkit.render('admin/all_requests_data.html', extra_vars)
