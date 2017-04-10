@@ -5,6 +5,7 @@ from ckan import model, logic
 from ckan.common import c, _
 from ckan.lib import base
 from ckan.plugins import toolkit
+from ckan.model.user import User
 
 NotFound = logic.NotFound
 NotAuthorized = logic.NotAuthorized
@@ -81,3 +82,16 @@ def get_request_counters(id):
     package_id = id
     counters = _get_action('requestdata_request_data_counters_get', {'package_id':package_id})
     return counters
+
+
+def convert_id_to_email(ids):
+    ids = ids.split(',')
+    emails = []
+
+    for id in ids:
+        user = User.get(id)
+
+        if user:
+            emails.append(user.email)
+
+    return ','.join(emails)

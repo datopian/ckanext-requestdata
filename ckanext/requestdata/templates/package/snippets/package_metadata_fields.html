@@ -6,7 +6,7 @@
   {% set tag_attrs = {'data-module': 'autocomplete', 'data-module-tags': ''} %}
 
   {% if data.name %}
-    {% set maintainers_value = data.maintainer %}
+    {% set maintainers_value = h.requestdata_convert_id_to_email(data.maintainer) %}
   {% else %}
     {% set maintainers_value = c.userobj.email %}
   {% endif %}

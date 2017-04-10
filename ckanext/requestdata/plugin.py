@@ -151,7 +151,9 @@ class RequestdataPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
             'requestdata_get_notification':
                 helpers.get_notification,
             'requestdata_get_request_counters':
-                helpers.get_request_counters
+                helpers.get_request_counters,
+            'requestdata_convert_id_to_email':
+                helpers.convert_id_to_email
         }
 
     # IDatasetForm
