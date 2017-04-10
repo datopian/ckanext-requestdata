@@ -14,6 +14,7 @@ import ckan.logic as logic
 import csv
 import json
 from cStringIO import StringIO
+from ckan.model.user import User
 
 from ckan.common import response ,request
 
@@ -80,22 +81,75 @@ class AdminController(AdminController):
         except NotAuthorized:
             abort(403, _('Not authorized to see this page.'))
 
-        requests_new = []
-        requests_open = []
-        requests_archive = []
+        organizations = []
+        tmp_orgs = []
+        filtered_maintainers = []
+
+        for item in request.params:
+            if item == 'filter_by_maintainers':
+                params = request.params[item].split('|')
+                org = params[0].split(':')[1]
+                maintainers = params[1].split(':')[1]
+                data = {
+                    'org': org,
+                    'maintainers': maintainers.split(',')
+                }
+
+                filtered_maintainers.append(data)
 
         for item in requests:
-            if item['state'] == 'new':
-                requests_new.append(item)
-            elif item['state'] == 'open':
-                requests_open.append(item)
-            elif item['state'] == 'archive':
-                requests_archive.append(item)
+            package = _get_action('package_show', {'id': item['package_id']})
+            package_maintainer_ids = package['maintainer'].split(',')
+            maintainer_found = False
+            org_found = False
+
+            data_dict = {'id': package['owner_org']}
+            org = _get_action('organization_show', data_dict)
+
+            # Check if current request is part of a filtered maintainer
+            for x in filtered_maintainers:
+                for maint in x['maintainers']:
+                    if maint in package_maintainer_ids:
+                        maintainer_found = True
+
+                if x['org'] == org['id']:
+                    org_found = True
+
+            if org_found and not maintainer_found:
+                continue
+
+            # Group requests by organization
+            if org['id'] not in tmp_orgs:
+                data = {
+                    'title': org['title'],
+                    'org_id': org['id'],
+                    'requests_new': [],
+                    'requests_open': [],
+                    'requests_archive': []
+                }
+
+                if item['state'] == 'new':
+                    data['requests_new'].append(item)
+                elif item['state'] == 'open':
+                    data['requests_open'].append(item)
+                elif item['state'] == 'archive':
+                    data['requests_archive'].append(item)
+
+                organizations.append(data)
+            else:
+                current_org = next(item for item in organizations if item['org_id'] == org['id'])
+
+                if item['state'] == 'new':
+                    current_org['requests_new'].append(item)
+                elif item['state'] == 'open':
+                    current_org['requests_open'].append(item)
+                elif item['state'] == 'archive':
+                    current_org['requests_archive'].append(item)
+
+            tmp_orgs.append(org['id'])
 
         extra_vars = {
-            'requests_new': requests_new,
-            'requests_open': requests_open,
-            'requests_archive': requests_archive
+            'organizations': organizations
         }
 
         return toolkit.render('admin/all_requests_data.html', extra_vars)

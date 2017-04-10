@@ -119,3 +119,7 @@
 .sysadmin-requests-container {
   margin-top: 40px;
 }
+
+.sysadmin-requests-container__dropdown {
+  padding: 15px;
+}
