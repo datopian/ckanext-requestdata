@@ -15,6 +15,7 @@ import csv
 import json
 from cStringIO import StringIO
 from ckan.model.user import User
+from collections import Counter
 
 from ckan.common import response ,request
 
@@ -85,47 +86,52 @@ class AdminController(AdminController):
         tmp_orgs = []
         filtered_maintainers = []
 
-        for item in request.params:
+        requestParams = request.params.dict_of_lists()
+
+        for item in requestParams:
             if item == 'filter_by_maintainers':
-                params = request.params[item].split('|')
-                org = params[0].split(':')[1]
-                maintainers = params[1].split(':')[1]
-                data = {
-                    'org': org,
-                    'maintainers': maintainers.split(',')
-                }
+                for x in requestParams[item]:
+                    params = x.split('|')
+                    org = params[0].split(':')[1]
+                    maintainers = params[1].split(':')[1].split(',')
+                    maintainers_ids = []
 
-                filtered_maintainers.append(data)
+                    if maintainers[0] != '*all*':
+                        for i in maintainers:
+                            user = _get_action('user_show', {'id': i})
+                            maintainers_ids.append(user['id'])
 
+                        data = {
+                            'org': org,
+                            'maintainers': maintainers_ids
+                        }
+
+                        filtered_maintainers.append(data)
+
+        # Group requests by organization
         for item in requests:
             package = _get_action('package_show', {'id': item['package_id']})
             package_maintainer_ids = package['maintainer'].split(',')
-            maintainer_found = False
-            org_found = False
-
             data_dict = {'id': package['owner_org']}
             org = _get_action('organization_show', data_dict)
 
-            # Check if current request is part of a filtered maintainer
-            for x in filtered_maintainers:
-                for maint in x['maintainers']:
-                    if maint in package_maintainer_ids:
-                        maintainer_found = True
+            for id in package_maintainer_ids:
+                user = _get_action('user_show', {'id': id})
+                username = user['name']
+                name = user['fullname']
 
-                if x['org'] == org['id']:
-                    org_found = True
+                if not name:
+                    name = username
 
-            if org_found and not maintainer_found:
-                continue
-
-            # Group requests by organization
             if org['id'] not in tmp_orgs:
                 data = {
                     'title': org['title'],
-                    'org_id': org['id'],
+                    'name': org['name'],
+                    'id': org['id'],
                     'requests_new': [],
                     'requests_open': [],
-                    'requests_archive': []
+                    'requests_archive': [],
+                    'maintainers': []
                 }
 
                 if item['state'] == 'new':
@@ -135,9 +141,15 @@ class AdminController(AdminController):
                 elif item['state'] == 'archive':
                     data['requests_archive'].append(item)
 
+                payload = {'id': id, 'name': name, 'username': username}
+                data['maintainers'].append(payload)
+
                 organizations.append(data)
             else:
-                current_org = next(item for item in organizations if item['org_id'] == org['id'])
+                current_org = next(item for item in organizations if item['id'] == org['id'])
+
+                payload = {'id': id, 'name': name, 'username': username}
+                current_org['maintainers'].append(payload)
 
                 if item['state'] == 'new':
                     current_org['requests_new'].append(item)
@@ -147,6 +159,34 @@ class AdminController(AdminController):
                     current_org['requests_archive'].append(item)
 
             tmp_orgs.append(org['id'])
+
+        for org in organizations:
+            copy_of_maintainers = org['maintainers']
+            org['maintainers'] = dict((item['id'], item) for item in org['maintainers']).values()
+
+            # Count how many requests each maintainer has
+            for main in org['maintainers']:
+                c = Counter(item for dct in copy_of_maintainers for item in dct.items())
+                main['count'] = c[('id', main['id'])]
+
+            for i, r in enumerate(org['requests_new'][:]):
+                maintainer_found = False
+
+                package = _get_action('package_show', {'id': r['package_id']})
+                package_maintainer_ids = package['maintainer'].split(',')
+
+                data_dict = {'id': package['owner_org']}
+                organ = _get_action('organization_show', data_dict)
+
+                # Check if current request is part of a filtered maintainer
+                for x in filtered_maintainers:
+                    if x['org'] == organ['name']:
+                        for maint in x['maintainers']:
+                            if maint in package_maintainer_ids:
+                                maintainer_found = True
+
+                        if not maintainer_found:
+                            org['requests_new'].remove(r)
 
         extra_vars = {
             'organizations': organizations
