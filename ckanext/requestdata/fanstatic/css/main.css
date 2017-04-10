@@ -123,3 +123,7 @@
 .sysadmin-requests-container__dropdown {
   padding: 15px;
 }
+
+.sysadmin-requests-container__dropdown-buttons {
+  margin-top: 30px;
+}
