@@ -121,8 +121,9 @@ class RequestDataController(BaseController):
 
             #Get users objects from maintainers list
             for m in maintainers:
-                if len(User.by_email(m)) > 0:
-                     data_dict['users'].append(User.by_email(m)[0])
+                user = User.get(m)
+                if user:
+                    data_dict['users'].append(user)
 
 
             mail_subject = config.get('ckan.site_title') + ': New data request'
