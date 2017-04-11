@@ -106,6 +106,9 @@ class OrganizationController(organization.OrganizationController):
             count = Counter(item for dct in copy_of_maintainers for item in dct.items())
             main['count'] = count[('id', main['id'])]
 
+        # Sort maintainers by number of requests
+        maintainers = sorted(maintainers, key=lambda k: k['count'], reverse=True)
+
         for i, r in enumerate(requests[:]):
             maintainer_found = False
 

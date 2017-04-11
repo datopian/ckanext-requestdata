@@ -205,6 +205,9 @@ class AdminController(AdminController):
                 c = Counter(item for dct in copy_of_maintainers for item in dct.items())
                 main['count'] = c[('id', main['id'])]
 
+            # Sort maintainers by number of requests
+            org['maintainers'] = sorted(org['maintainers'], key=lambda k: k['count'], reverse=True)
+
             total_organizations = org['requests_new'] + org['requests_open'] + org['requests_archive']
 
             for i, r in enumerate(total_organizations):
