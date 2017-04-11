@@ -242,7 +242,6 @@ def request_list_for_current_user(context, data_dict):
     user_id = model.User.get(context['user']).id
 
     requests = ckanextRequestdata.search_by_maintainers(user_id)
-
     out = []
 
     for item in requests:
@@ -443,8 +442,28 @@ def increment_request_data_counters(context, data_dict):
 
 @toolkit.side_effect_free
 def request_data_counters_get(context, data_dict):
+    '''
+        Returns a counters for particular request data
 
+       :param package_id: The id of the package the request belongs to.
+       :type package_id: string
+
+     '''
 
     package_id = data_dict['package_id']
     counters = ckanextRequestDataCounters.get(package_id=package_id)
+    return counters
+
+
+@toolkit.side_effect_free
+def request_data_counters_get_all(context, data_dict):
+    '''
+        Returns a counters for particular request data
+
+       :param package_id: The id of the package the request belongs to.
+       :type package_id: string
+
+     '''
+
+    counters = ckanextRequestDataCounters.search()
     return counters

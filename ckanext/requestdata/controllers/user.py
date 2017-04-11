@@ -1,4 +1,5 @@
 import json
+from operator import attrgetter
 
 from paste.deploy.converters import asbool
 from pylons import config
@@ -6,7 +7,7 @@ from pylons import config
 from ckan.lib import base
 from ckan import logic, model
 from ckan.plugins import toolkit
-from ckan.common import c, _
+from ckan.common import c, _, request
 from ckan import authz
 import ckan.lib.helpers as h
 
@@ -58,17 +59,41 @@ class UserController(BaseController):
         if not c.is_myself:
             abort(403, _('Not authorized to see this page.'))
 
+        order_by = request.query_string
         requests_new = []
         requests_open = []
         requests_archive = []
+        reverse = True
+        order = ''
+
+        if order_by is not '':
+            if 'shared' in order_by:
+                order = 'shared'
+            elif 'requests' in order_by:
+                order = 'requests'
+            elif 'asc' in order_by:
+                reverse = False
+                order = 'title'
+            elif 'desc' in order_by:
+                reverse = True
+                order = 'title'
+
+            for item in requests:
+                package = _get_action('package_show', {'id': item['package_id']})
+                count = _get_action('requestdata_request_data_counters_get',{'package_id':item['package_id']})
+                item['title'] = package['title']
+                item['shared'] = count.shared
+                item['requests'] = count.requests
+
+            requests = sorted(requests, key=lambda x: x[order], reverse=reverse)
 
         for item in requests:
-            if item['state'] == 'new':
-                requests_new.append(item)
-            elif item['state'] == 'open':
-                requests_open.append(item)
-            elif item['state'] == 'archive':
-                requests_archive.append(item)
+             if item['state'] == 'new':
+                 requests_new.append(item)
+             elif item['state'] == 'open':
+                 requests_open.append(item)
+             elif item['state'] == 'archive':
+                 requests_archive.append(item)
 
         extra_vars = {
             'requests_new': requests_new,
@@ -82,7 +107,7 @@ class UserController(BaseController):
         data_dict = {
             'user_id' : user_id
         }
-        notify_seen = _get_action('requestdata_notification_change', data_dict)
+        _get_action('requestdata_notification_change', data_dict)
 
         data_dict = {
             'id': id,

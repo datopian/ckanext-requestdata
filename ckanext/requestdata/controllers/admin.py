@@ -81,10 +81,12 @@ class AdminController(AdminController):
             requests = _get_action('requestdata_request_list_for_sysadmin', {})
         except NotAuthorized:
             abort(403, _('Not authorized to see this page.'))
-
         organizations = []
         tmp_orgs = []
         filtered_maintainers = []
+        reverse = True
+        org = {}
+        q_organization = ''
 
         requestParams = request.params.dict_of_lists()
 
@@ -107,6 +109,26 @@ class AdminController(AdminController):
                         }
 
                         filtered_maintainers.append(data)
+            elif item == 'order_by':
+                params = request.params[item].split('|')
+                order = params[0]
+                q_organization = params[1].split(':')[1]
+                if 'asc' in order:
+                    reverse = False
+                    order = 'title'
+                elif 'desc' in order:
+                    reverse = True
+                    order = 'title'
+
+                for x in requests:
+                    package = _get_action('package_show', {'id': x['package_id']})
+                    count = _get_action('requestdata_request_data_counters_get', {'package_id': x['package_id']})
+                    x['title'] = package['title']
+                    x['shared'] = count.shared
+                    x['requests'] = count.requests
+                    data_dict = {'id': package['owner_org']}
+                    current_org = _get_action('organization_show', data_dict)
+                    x['id'] = current_org['id']
 
         # Group requests by organization
         for item in requests:
@@ -187,6 +209,9 @@ class AdminController(AdminController):
 
                         if not maintainer_found:
                             org['requests_new'].remove(r)
+
+            if org['id'] == q_organization:
+                org['requests_archive'] = sorted( org['requests_archive'], key=lambda x: x[order], reverse=reverse)
 
         extra_vars = {
             'organizations': organizations

@@ -2,7 +2,7 @@ import logging
 import datetime
 
 from sqlalchemy import Table, Column ,Index, ForeignKey
-from sqlalchemy import types
+from sqlalchemy import types, func
 
 from sqlalchemy.engine.reflection import Inspector
 from ckan.model.meta import metadata, mapper, Session, engine
@@ -309,6 +309,28 @@ class ckanextRequestDataCounters(DomainObject):
         query = query.filter_by(**kwds).first()
 
         return query
+
+    @classmethod
+    def search(self, **kwds):
+        '''Finds entities in the table that satisfy certain criteria.
+
+        :param order: Order rows by specified column.
+        :type order: string
+
+        '''
+
+        request = Session.query(func.sum(ckanextRequestDataCounters.requests)).all()
+        replied = Session.query(func.sum(ckanextRequestDataCounters.replied)).all()
+        declined = Session.query(func.sum(ckanextRequestDataCounters.declined)).all()
+        shared = Session.query(func.sum(ckanextRequestDataCounters.shared))[0]
+        counters = {
+            'request' : request[0],
+            'replied': replied,
+            'declined': declined,
+            'shared' : shared
+        }
+
+        return counters
 
 
 def define_request_data_counters_table():
