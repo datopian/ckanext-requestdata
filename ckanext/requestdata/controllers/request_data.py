@@ -128,7 +128,7 @@ class RequestDataController(BaseController):
             users_email = []
             #Get users objects from maintainers list
             for id in maintainers:
-                user = _get_action('user_show', {'id': id})
+                user = toolkit.get_action('user_show')(context_sysadmin, {'id': id})
                 if user:
                     data_dict['users'].append(user)
                     users_email.append(user['email'])
