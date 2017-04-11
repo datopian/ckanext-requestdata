@@ -14,7 +14,6 @@ import ckan.logic as logic
 import csv
 import json
 from cStringIO import StringIO
-from ckan.model.user import User
 from collections import Counter
 
 from ckan.common import response ,request
@@ -85,14 +84,12 @@ class AdminController(AdminController):
         tmp_orgs = []
         filtered_maintainers = []
         reverse = True
-        org = {}
         q_organization = ''
+        request_params = request.params.dict_of_lists()
 
-        requestParams = request.params.dict_of_lists()
-
-        for item in requestParams:
+        for item in request_params:
             if item == 'filter_by_maintainers':
-                for x in requestParams[item]:
+                for x in request_params[item]:
                     params = x.split('|')
                     org = params[0].split(':')[1]
                     maintainers = params[1].split(':')[1].split(',')
@@ -110,9 +107,10 @@ class AdminController(AdminController):
 
                         filtered_maintainers.append(data)
             elif item == 'order_by':
-                params = request.params[item].split('|')
-                order = params[0]
-                q_organization = params[1].split(':')[1]
+                for x in request_params[item]:
+                    params = x.split('|')
+                    q_organization = params[1].split(':')[1]
+                    order = params[0]
                 if 'asc' in order:
                     reverse = False
                     order = 'title'
@@ -128,7 +126,7 @@ class AdminController(AdminController):
                     x['requests'] = count.requests
                     data_dict = {'id': package['owner_org']}
                     current_org = _get_action('organization_show', data_dict)
-                    x['id'] = current_org['id']
+                    x['name'] = current_org['name']
 
         # Group requests by organization
         for item in requests:
@@ -210,7 +208,7 @@ class AdminController(AdminController):
                         if not maintainer_found:
                             org['requests_new'].remove(r)
 
-            if org['id'] == q_organization:
+            if org['name'] == q_organization:
                 org['requests_archive'] = sorted( org['requests_archive'], key=lambda x: x[order], reverse=reverse)
 
         extra_vars = {

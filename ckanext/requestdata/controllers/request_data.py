@@ -11,18 +11,25 @@ except ImportError:
     # CKAN 2.6 and earlier
     from pylons import config
 import ckan.model as model
-from ckan.model.user import User
 import ckan.plugins as p
 import json
 
-
-get_action = logic.get_action
 NotFound = logic.NotFound
 NotAuthorized = logic.NotAuthorized
 ValidationError = logic.ValidationError
 abort = base.abort
 BaseController = base.BaseController
 
+def _get_context():
+    return {
+        'model': model,
+        'session': model.Session,
+        'user': c.user or c.author,
+        'auth_user_obj': c.userobj
+    }
+
+def _get_action(action, data_dict):
+    return toolkit.get_action(action)(_get_context(), data_dict)
 
 def _get_email_configuration(user_name,data_owner, dataset_name,email,message,organization):
 
@@ -63,7 +70,7 @@ class RequestDataController(BaseController):
         try:
             if p.toolkit.request.method == 'POST':
                 data = dict(toolkit.request.POST)
-                get_action('requestdata_request_create')(context, data)
+                _get_action('requestdata_request_create', data)
         except NotAuthorized:
             abort(403, _('Unauthorized to update this dataset.'))
         except ValidationError as e:
@@ -77,14 +84,14 @@ class RequestDataController(BaseController):
             return json.dumps(error)
 
         data_dict = {'id': data['package_id']}
-        package = get_action('package_show')(context, data_dict)
+        package = _get_action('package_show', data_dict)
 
         user_obj = context['auth_user_obj']
         user_name = user_obj.fullname
         data_dict = {
             'id': user_obj.id
         }
-        organizations = get_action('organization_list_for_user')(context, data_dict)
+        organizations = _get_action('organization_list_for_user', data_dict)
         orgs = []
         for i in organizations:
                 orgs.append(i['display_name'])
@@ -118,24 +125,23 @@ class RequestDataController(BaseController):
             data_dict = {
                 'users' : []
             }
-
+            users_email = []
             #Get users objects from maintainers list
-            for m in maintainers:
-                user = User.get(m)
+            for id in maintainers:
+                user = _get_action('user_show', {'id': id})
                 if user:
                     data_dict['users'].append(user)
-
-
+                    users_email.append(user['email'])
             mail_subject = config.get('ckan.site_title') + ': New data request'
-            response_message = emailer.send_email(content, to, mail_subject)
+            response_message = emailer.send_email(content, users_email, mail_subject)
 
             #notify package creator that new data request was made
-            get_action('requestdata_notification_create')(context, data_dict)
+            _get_action('requestdata_notification_create', data_dict)
             data_dict = {
                 'package_id' : data['package_id'],
                 'flag' : 'request'
             }
-            get_action('requestdata_increment_request_data_counters')(context,data_dict)
+            _get_action('requestdata_increment_request_data_counters',data_dict)
             return json.dumps(response_message)
         else:
             message = {

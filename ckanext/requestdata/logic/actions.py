@@ -64,14 +64,13 @@ def request_create(context, data_dict):
     requestdata.save()
     maintainers_list = []
 
-    for email in maintainers:
-        if len(User.by_email(email)) > 0:
-            user = User.by_email(email)[0]
-            data = ckanextMaintainers()
-            data.maintainer_id = user.id
-            data.request_data_id = requestdata.id
-            data.email = user.email
-            maintainers_list.append(data)
+    for id in maintainers:
+        user = User.get(id)
+        data = ckanextMaintainers()
+        data.maintainer_id = user.id
+        data.request_data_id = requestdata.id
+        data.email = user.email
+        maintainers_list.append(data)
 
     out = ckanextMaintainers.insert_all(maintainers_list, requestdata.id)
 
@@ -324,22 +323,16 @@ def notification_create(context, data_dict):
     :rtype: dictionary
 
     '''
-    data, errors = df.validate(data_dict,
-                               schema.notification_create_schema(),
-                               context)
-    if errors:
-        raise toolkit.ValidationError(errors)
-
     not_seen = False
     notifications = []
-    maintainers = data.get('users')
+    maintainers = data_dict['users']
     for m in maintainers:
         data = {
-            'package_maintainer_id': m.id,
+            'package_maintainer_id':  m['id'],
             'seen': not_seen
         }
         user_notification = ckanextUserNotification(**data)
-        user_exist = ckanextUserNotification.get(package_maintainer_id=m.id)
+        user_exist = ckanextUserNotification.get(package_maintainer_id=m['id'])
         if user_exist is None:
             user_notification.save()
             notifications.append(user_notification)
