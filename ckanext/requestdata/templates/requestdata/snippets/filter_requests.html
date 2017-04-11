@@ -1,0 +1,44 @@
+{#
+
+Creates base layout for a section.
+
+state - The state in which a request belongs to. Can be new|open|archive.
+title - The title of the section.
+requests - The requests that need to be shown.
+
+Example usage:
+  {% snippet 'requestdata/snippets/section_base.html', state='new', title='New', requests=requests_new %}
+
+#}
+
+{% resource 'requestdata/filter-requests.js' %}
+
+<div data-module="filter-requests"
+     data-module-org_name="{{ org_name }}">
+  Filter by:
+  <div class="btn-group">
+    <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+      {{ title }}
+      <span class="caret"></span>
+    </a>
+    <div class="dropdown-menu sysadmin-requests-container__dropdown">
+      <div onclick="event.stopPropagation()">
+        {% for item in filter_options %}
+          {% if type == 'maintainer' %}
+            {% set value = item.username %}
+            {% set optionName = item.name %}
+          {% else %}
+            {% set value = item.name %}
+          {% endif %}
+          <label class="checkbox" for="{{ value }}">
+            <input type="checkbox" value="{{ value }}" id="{{ value }}">{{ optionName }} ({{ item.count }})
+          </label>
+        {% endfor %}
+      </div>
+      <div class="sysadmin-requests-container__dropdown-buttons">
+        <button class="btn btn-small" type="button" data-action="apply">Apply</button>
+        <button class="btn btn-small" type="button" data-action="reset">Reset</button>
+      </div>
+    </div>
+  </div>
+</div>

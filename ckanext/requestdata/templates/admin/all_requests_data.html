@@ -2,12 +2,6 @@
 
 {% import 'macros/form.html' as form %}
 
-{% block scripts %}
-  {{ super() }}
-  {% resource 'requestdata/filter-requests.js' %}
-{% endblock -%}
-
-
 {% block primary_content_inner %}
   {% set service_url = h.url_for('download_requests_data') %}
   {% set csv = '?format=csv'%}
@@ -23,29 +17,7 @@
   <div class="sysadmin-requests-container">
     {% for org in organizations %}
       <h2 data-id="{{ org.id }}">Organization: {{ org['title'] }}</h2>
-      <div data-module="filter-requests"
-           data-module-org_name="{{ org.name }}">
-        Filter by:
-        <div class="btn-group">
-          <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-            Maintainer
-            <span class="caret"></span>
-          </a>
-          <div class="dropdown-menu sysadmin-requests-container__dropdown">
-            <div onclick="event.stopPropagation()">
-              {% for item in org.maintainers %}
-                <label class="checkbox" for="{{ item.username }}">
-                  <input type="checkbox" value="{{ item.username }}" id="{{ item.username }}">{{ item.name }} ({{ item.count }})
-                </label>
-              {% endfor %}
-            </div>
-            <div class="sysadmin-requests-container__dropdown-buttons">
-              <button class="btn btn-small" type="button" data-action="apply">Apply</button>
-              <button class="btn btn-small" type="button" data-action="reset">Reset</button>
-            </div>
-          </div>
-        </div>
-      </div>
+      {% snippet 'requestdata/snippets/filter_requests.html', org_name=org.name, title='Maintainer', filter_options=org.maintainers, type='maintainer' %}
 
       {% snippet 'requestdata/snippets/section_base.html', state='new', title='New', requests=org['requests_new'] %}
       {% snippet 'requestdata/snippets/section_base.html', state='open', title='Open', requests=org['requests_open'] %}

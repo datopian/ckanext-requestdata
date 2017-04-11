@@ -3,6 +3,8 @@
 {% block subtitle %}{{ _('Requested Data') }} - {{ super() }}{% endblock %}
 
 {% block primary_content_inner %}
+  {% snippet 'requestdata/snippets/filter_requests.html', org_name=org_name, title='Maintainer', filter_options=maintainers, type='maintainer' %}
+
   {% snippet 'requestdata/snippets/section_base.html', state='new', title='New', requests=requests_new %}
   {% snippet 'requestdata/snippets/section_base.html', state='open', title='Open', requests=requests_open %}
   {% snippet 'requestdata/snippets/section_base.html', state='archive', title='Archive', requests=requests_archive %}
