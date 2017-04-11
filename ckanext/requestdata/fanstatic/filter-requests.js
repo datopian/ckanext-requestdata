@@ -29,40 +29,83 @@ this.ckan.module('filter-requests', function($) {
       var paramFound = false
 
       if (action === 'apply') {
-        param = 'filter_by_maintainers=org:' + this.options.org_name + '|maintainers:'
-
-        this.checkboxes.each(function(i, el) {
-          if (el.checked) {
-            checked = true
-            param += el.value + ','
-          }
-        })
-
-        if (checked) {
-
-          // Remove the comma at the end of the string
-          param = param.slice(0, -1)
-        } else {
-
-          // If none of the checkboxes are clicked, show all requests
-          param += '*all*'
-        }
-
         if (window.location.search == '') {
           params = []
         } else {
           params = window.location.search.split('&')
         }
 
-        params.forEach(function(item, i) {
+        if (this.options.type == 'maintainer') {
+          param = 'filter_by_maintainers=org:' + this.options.org_name + '|maintainers:'
 
-          // If the current filter is already applied, just update it to
-          // prevent duplication
-          if (item.indexOf('filter_by_maintainers=org:' + this.options.org_name) > -1) {
-            paramFound = true
-            params[i] = param
+          this.checkboxes.each(function(i, el) {
+            if (el.checked) {
+              checked = true
+              param += el.value + ','
+            }
+          })
+
+          if (checked) {
+
+            // Remove the comma at the end of the string
+            param = param.slice(0, -1)
+          } else {
+
+            // If none of the checkboxes are clicked, show all requests
+            param += '*all*'
           }
-        }.bind(this))
+
+          params.forEach(function(item, i) {
+
+            // If the current filter is already applied, just update it to
+            // prevent duplication
+            if (item.indexOf('filter_by_maintainers=org:' + this.options.org_name) > -1) {
+              paramFound = true
+              params[i] = param
+            }
+          }.bind(this))
+        } else if (this.options.type == 'organization') {
+          param = 'filter_by_organizations='
+
+          this.checkboxes.each(function(i, el) {
+            if (el.checked) {
+              checked = true
+              param += el.value + ','
+            }
+          })
+
+          if (checked) {
+
+            // Remove the comma at the end of the string
+            param = param.slice(0, -1)
+          } else {
+            var copy_params = [].concat(params)
+
+            copy_params.forEach(function(item, i) {
+              if (item.indexOf('filter_by_organizations') > -1) {
+                params.splice(i, 1)
+              }
+            })
+
+            if (params[0] && params[0].indexOf('?') === -1) {
+              params[0] = '?' + params[0]
+            }
+
+            params = params.join('&')
+
+            location.href = location.origin + location.pathname + params
+          }
+
+          params.forEach(function(item, i) {
+
+            // If the current filter is already applied, just update it to
+            // prevent duplication
+            if (item.indexOf('filter_by_organizations') > -1) {
+              paramFound = true
+              params[i] = param
+            }
+          }.bind(this))
+        }
 
         // If this is a new param then push it to all params
         if (!paramFound) {
@@ -124,6 +167,14 @@ this.ckan.module('filter-requests', function($) {
               }
             })
           }
+        } else if (param.filter_by_organizations) {
+          var organizations = param.filter_by_organizations.split(',')
+
+          this.checkboxes.each(function(i, checkbox) {
+            if (organizations.indexOf(checkbox.value) > -1) {
+              $(checkbox).attr('checked', true)
+            }
+          })
         }
       }.bind(this))
     }

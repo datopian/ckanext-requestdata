@@ -14,7 +14,8 @@ Example usage:
 {% resource 'requestdata/filter-requests.js' %}
 
 <div data-module="filter-requests"
-     data-module-org_name="{{ org_name }}">
+     data-module-org_name="{{ org_name }}"
+     data-module-type="{{ type }}">
   Filter by:
   <div class="btn-group">
     <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
@@ -27,11 +28,14 @@ Example usage:
           {% if type == 'maintainer' %}
             {% set value = item.username %}
             {% set optionName = item.name %}
-          {% else %}
-            {% set value = item.name %}
+            {% set count = item.count %}
+          {% elif type == 'organization' %}
+            {% set value = item[1].name %}
+            {% set optionName = item[1].title %}
+            {% set count = item[1].requests  %}
           {% endif %}
           <label class="checkbox" for="{{ value }}">
-            <input type="checkbox" value="{{ value }}" id="{{ value }}">{{ optionName }} ({{ item.count }})
+            <input type="checkbox" value="{{ value }}" id="{{ value }}">{{ optionName }} ({{ count }})
           </label>
         {% endfor %}
       </div>

@@ -15,6 +15,9 @@
     </ul>
   </div>
   <div class="sysadmin-requests-container">
+    {% snippet 'requestdata/snippets/filter_requests.html', title='Organization', filter_options=organizations_for_filters, type='maintainer', type='organization' %}
+    <br><br>
+
     {% for org in organizations %}
       <h2 data-id="{{ org.id }}">Organization: {{ org['title'] }}</h2>
       {% snippet 'requestdata/snippets/filter_requests.html', org_name=org.name, title='Maintainer', filter_options=org.maintainers, type='maintainer' %}

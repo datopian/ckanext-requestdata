@@ -83,6 +83,8 @@ class AdminController(AdminController):
         organizations = []
         tmp_orgs = []
         filtered_maintainers = []
+        filtered_organizations = []
+        organizations_for_filters = {}
         reverse = True
         q_organization = ''
         request_params = request.params.dict_of_lists()
@@ -106,6 +108,8 @@ class AdminController(AdminController):
                         }
 
                         filtered_maintainers.append(data)
+            elif item == 'filter_by_organizations':
+                filtered_organizations = request_params[item][0].split(',')
             elif item == 'order_by':
                 for x in request_params[item]:
                     params = x.split('|')
@@ -134,6 +138,18 @@ class AdminController(AdminController):
             package_maintainer_ids = package['maintainer'].split(',')
             data_dict = {'id': package['owner_org']}
             org = _get_action('organization_show', data_dict)
+
+            if org['id'] in organizations_for_filters:
+                organizations_for_filters[org['id']]['requests'] = organizations_for_filters[org['id']]['requests'] + 1
+            else:
+                organizations_for_filters[org['id']] = {
+                    'name': org['name'],
+                    'title': org['title'],
+                    'requests': 1
+                }
+
+            if len(filtered_organizations) > 0 and org['name'] not in filtered_organizations:
+                continue
 
             for id in package_maintainer_ids:
                 user = _get_action('user_show', {'id': id})
@@ -189,7 +205,9 @@ class AdminController(AdminController):
                 c = Counter(item for dct in copy_of_maintainers for item in dct.items())
                 main['count'] = c[('id', main['id'])]
 
-            for i, r in enumerate(org['requests_new'][:]):
+            total_organizations = org['requests_new'] + org['requests_open'] + org['requests_archive']
+
+            for i, r in enumerate(total_organizations):
                 maintainer_found = False
 
                 package = _get_action('package_show', {'id': r['package_id']})
@@ -211,8 +229,11 @@ class AdminController(AdminController):
             if org['name'] == q_organization:
                 org['requests_archive'] = sorted( org['requests_archive'], key=lambda x: x[order], reverse=reverse)
 
+        organizations_for_filters = sorted(organizations_for_filters.iteritems(), key=lambda (x, y): y['requests'], reverse=True)
+
         extra_vars = {
-            'organizations': organizations
+            'organizations': organizations,
+            'organizations_for_filters': organizations_for_filters
         }
 
         return toolkit.render('admin/all_requests_data.html', extra_vars)
