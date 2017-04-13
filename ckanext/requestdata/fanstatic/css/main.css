@@ -127,3 +127,44 @@
 .sysadmin-requests-container__dropdown-buttons {
   margin-top: 30px;
 }
+
+.requested-data-container__content-item-counters {
+  position: absolute;
+  right: 30px;
+  top: 28px;
+}
+
+.requested-data-container__content-item-counters span {
+  margin-right: 50px;
+  display: inline-block;
+  font-size: 13px;
+  width: 28px;
+  height: 28px;
+}
+
+.counter-number {
+  border-radius: 50%;
+  width: 12px;
+  height: 12px;
+  padding: 8px;
+  background: #d3d3d3;
+  color: #606060;
+  text-align: center;
+  font: 12px Arial, sans-serif;
+  margin-left: 8px;
+  font-weight: bold;
+}
+
+.archive-requests-arrow {
+  position: absolute;
+  right: 10px;
+  top: 43px;
+  color: #848484;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 6px;
+}
+
+.requested-data-container__content-item-archive-maintainers {
+  width: 300px;
+}

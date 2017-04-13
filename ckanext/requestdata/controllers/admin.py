@@ -15,6 +15,7 @@ import csv
 import json
 from cStringIO import StringIO
 from collections import Counter
+from ckanext.requestdata import helpers
 
 from ckan.common import response ,request
 
@@ -140,7 +141,7 @@ class AdminController(AdminController):
             org = _get_action('organization_show', data_dict)
 
             if org['id'] in organizations_for_filters:
-                organizations_for_filters[org['id']]['requests'] = organizations_for_filters[org['id']]['requests'] + 1
+                organizations_for_filters[org['id']]['requests'] += 1
             else:
                 organizations_for_filters[org['id']] = {
                     'name': org['name'],
@@ -231,6 +232,8 @@ class AdminController(AdminController):
 
             if org['name'] == q_organization:
                 org['requests_archive'] = sorted( org['requests_archive'], key=lambda x: x[order], reverse=reverse)
+
+            org['requests_archive'] = helpers.group_archived_requests_by_dataset(org['requests_archive'])
 
         organizations_for_filters = sorted(organizations_for_filters.iteritems(), key=lambda (x, y): y['requests'], reverse=True)
 

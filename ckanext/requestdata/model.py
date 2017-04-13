@@ -322,9 +322,9 @@ class ckanextRequestDataCounters(DomainObject):
         request = Session.query(func.sum(ckanextRequestDataCounters.requests)).all()
         replied = Session.query(func.sum(ckanextRequestDataCounters.replied)).all()
         declined = Session.query(func.sum(ckanextRequestDataCounters.declined)).all()
-        shared = Session.query(func.sum(ckanextRequestDataCounters.shared))[0]
+        shared = Session.query(func.sum(ckanextRequestDataCounters.shared)).all()
         counters = {
-            'request' : request[0],
+            'request' : request,
             'replied': replied,
             'declined': declined,
             'shared' : shared

@@ -4,6 +4,7 @@ from ckan.plugins import toolkit
 from ckan.common import c, _, request
 from ckan.controllers import organization
 from collections import Counter
+from ckanext.requestdata import helpers
 
 get_action = logic.get_action
 NotFound = logic.NotFound
@@ -165,10 +166,12 @@ class OrganizationController(organization.OrganizationController):
             elif item['state'] == 'archive':
                 requests_archive.append(item)
 
+        grouped_requests_archive = helpers.group_archived_requests_by_dataset(requests_archive)
+
         extra_vars = {
             'requests_new': requests_new,
             'requests_open': requests_open,
-            'requests_archive': requests_archive,
+            'requests_archive': grouped_requests_archive,
             'maintainers': maintainers,
             'org_name': organ['name']
         }

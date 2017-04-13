@@ -8,24 +8,47 @@ Example usage:
   {% snippet 'requestdata/snippets/section_item_archive.html', item=item %}
 
 #}
-{% set sender_profile = h.url_for(controller='user', action='read', id=item.sender_user_id) %}
-{% set package_url = h.url_for(controller='package', action='read', id=item.package_id) %}
+
+{% resource 'requestdata/expand-dataset.js' %}
 
 <div class="requested-data-container__content-item">
-  <p class="requested-data-container__content-item-info">Data request from <a href="{{ sender_profile }}" title="{{ _('View profile') }}">{{ item.sender_name }}</a> for dataset <a href="{{ package_url }}" title="{{ _('View dataset') }}">{{ h.requestdata_get_package_title(item.package_id) }}</a>.</p>
+  <p class="requested-data-container__content-item-info"><h4 style="width: 50%;">{{ item.package_title }}</h4></p>
+  {% set counters = h.requestdata_get_request_counters(item.package_id) %}
+  <div class="requested-data-container__content-item-counters">
+    <span><div class="counter-number">{{ counters.requests }}</div> Requests</span>
+    <span><div class="counter-number">{{ counters.replied }}</div> Replied</span>
+    <span><div class="counter-number">{{ counters.declined }}</div> Declined</span>
+    <span><div class="counter-number">{{ counters.shared }}</div> Shared</span>
+  </div>
+  <i class="icon-chevron-down archive-requests-arrow" data-toggle="collapse" data-target="#{{ item.package_id }}"></i>
+  <p class="requested-data-container__content-item-archive-maintainers">
+    Maintainers:
+    {% for m in item.maintainers %}
+      {% set profile = h.url_for(controller='user', action='read', id=m.id) %}
+      <a href="{{ profile }}" title="{{ _('View profile') }}">{{ m.fullname }}</a>{% if not loop.last %}, {% endif %}
+    {% endfor %}
+  </p>
+  <div id="{{ item.package_id }}" class="collapse">
+    {% for x in item.requests %}
+    <div class="requested-data-container__content-item">
+      {% set sender_profile = h.url_for(controller='user', action='read', id=x.sender_user_id) %}
+      <p class="requested-data-container__content-item-info">Request by: <a href="{{ sender_profile }}" title="{{ _('View profile') }}">{{ x.sender_name }}</a></p>
 
-  <p class="requested-data-container__date" title="{{ h.render_datetime(item.modified_at, with_hours=True) }}">{{ h.requestdata_time_ago_from_datetime(item.modified_at) }}</p>
+      <p class="requested-data-container__date" title="{{ h.render_datetime(x.modified_at, with_hours=True) }}">{{ h.requestdata_time_ago_from_datetime(x.modified_at) }}</p>
 
-  <div class="requested-data-container__status">
-    {% if item.rejected %}
-      <i class="icon-remove-circle"></i>
-      <p class="requested-data-container__status-text">Rejected</p>
-    {% elif item.data_shared %}
-      <i class="icon-thumbs-up"></i>
-      <p class="requested-data-container__status-text">Shared</p>
-    {% elif not item.data_shared %}
-       <i class="icon-thumbs-down"></i>
-      <p class="requested-data-container__status-text">Not shared</p>
-    {% endif %}
+      <div class="requested-data-container__status">
+        {% if x.rejected %}
+          <i class="icon-remove-circle"></i>
+          <p class="requested-data-container__status-text">Rejected</p>
+        {% elif x.data_shared %}
+          <i class="icon-thumbs-up"></i>
+          <p class="requested-data-container__status-text">Shared</p>
+        {% elif not x.data_shared %}
+           <i class="icon-thumbs-down"></i>
+          <p class="requested-data-container__status-text">Not shared</p>
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
   </div>
 </div>

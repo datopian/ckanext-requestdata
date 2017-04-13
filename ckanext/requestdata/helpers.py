@@ -1,5 +1,7 @@
 import timeago
 import datetime
+import itertools
+from operator import itemgetter
 
 from ckan import model, logic
 from ckan.common import c, _
@@ -95,3 +97,32 @@ def convert_id_to_email(ids):
             emails.append(user.email)
 
     return ','.join(emails)
+
+
+def group_archived_requests_by_dataset(requests):
+    sorted_requests = sorted(requests, key=itemgetter('package_id'))
+    grouped_requests = []
+
+    for key, group in itertools.groupby(sorted_requests, key=lambda x: x['package_id']):
+        package = _get_action('package_show', {'id': key})
+        package_maintainers_ids = package['maintainer'].split(',')
+        maintainers = []
+
+        for item in package_maintainers_ids:
+            user = _get_action('user_show', {'id': item})
+            payload = {
+                'id': item,
+                'fullname': user['fullname']
+            }
+            maintainers.append(payload)
+
+        data = {
+            'package_id': key,
+            'package_title': package['title'],
+            'maintainers': maintainers,
+            'requests': list(group)
+        }
+
+        grouped_requests.append(data)
+
+    return grouped_requests

@@ -12,6 +12,7 @@ from ckan import authz
 import ckan.lib.helpers as h
 
 from ckanext.requestdata.emailer import send_email
+from ckanext.requestdata import helpers
 
 get_action = logic.get_action
 NotFound = logic.NotFound
@@ -88,17 +89,19 @@ class UserController(BaseController):
             requests = sorted(requests, key=lambda x: x[order], reverse=reverse)
 
         for item in requests:
-             if item['state'] == 'new':
-                 requests_new.append(item)
-             elif item['state'] == 'open':
-                 requests_open.append(item)
-             elif item['state'] == 'archive':
-                 requests_archive.append(item)
+            if item['state'] == 'new':
+                requests_new.append(item)
+            elif item['state'] == 'open':
+                requests_open.append(item)
+            elif item['state'] == 'archive':
+                requests_archive.append(item)
+
+        grouped_requests_archive = helpers.group_archived_requests_by_dataset(requests_archive)
 
         extra_vars = {
             'requests_new': requests_new,
             'requests_open': requests_open,
-            'requests_archive': requests_archive
+            'requests_archive': grouped_requests_archive
         }
 
         context = _get_context()
@@ -233,7 +236,6 @@ class UserController(BaseController):
             'flag': ''
         }
         if data['data_shared']:
-            print "Shared"
             data_dict['flag'] = 'shared'
         else:
             data_dict['flag'] = 'declined'
