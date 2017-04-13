@@ -51,9 +51,6 @@ class RequestdataPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
         organization_controller =\
             'ckanext.requestdata.controllers.organization:OrganizationController'
 
-        api_controller =\
-            'ckanext.requestdata.controllers.api:ApiController'
-
         map.connect('/dataset/make_active/{pkg_name}',
                     controller=package_controller,
                     action='make_active')
@@ -90,11 +87,6 @@ class RequestdataPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
                     '/organization/requested_data/{id}',
                     controller=organization_controller,
                     action='requested_data', ckan_icon='list')
-
-        map.connect('members_for_org_autocomplete',
-                    '/api/2/util/user/members_for_org_autocomplete',
-                    controller=api_controller,
-                    action='members_for_org_autocomplete')
 
         return map
 
