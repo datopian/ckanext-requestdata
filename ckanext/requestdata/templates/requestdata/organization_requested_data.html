@@ -7,6 +7,25 @@
 
   {% snippet 'requestdata/snippets/section_base.html', state='new', title='New', requests=requests_new %}
   {% snippet 'requestdata/snippets/section_base.html', state='open', title='Open', requests=requests_open %}
+
+  {% set service_url = h.url_for('requestdata_organization_requests', id=c.id) %}
+  {% set o = org_name%}
+  {% set asc = "?order_by=asc|org:"+ o%}
+  {% set desc = '?order_by=desc|org:' + o%}
+  {% set req = '?order_by=requests|org:' + o %}
+  {% set shared = '?order_by=shared|org:' + o %}
+
+  <div class="dropdown">
+    <button class="btn btn-primary dropdown-toggle " type="button" data-toggle="dropdown">ORDER BY
+    <span class="caret"></span></button>
+    <ul class="dropdown-menu dropdown-menu-left">
+      <li><a href="{{ service_url }}{{ asc }}">ALPHABETICAL(A-Z)</a></li>
+      <li><a href="{{ service_url }}{{ desc }}">ALPHABETICAL (Z-A)</a></li>
+       <li><a href="{{ service_url }}{{ req }}">REQUESTS RATE</a></li>
+       <li><a href="{{ service_url }}{{ shared }}">SHARING RATE</a></li>
+    </ul>
+  </div>
+
   {% snippet 'requestdata/snippets/section_base.html', state='archive', title='Archive', requests=requests_archive %}
 
   <div class="alert alert-dismissible request-message-alert hide" role="alert">

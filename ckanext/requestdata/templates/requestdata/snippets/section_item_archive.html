@@ -12,7 +12,7 @@ Example usage:
 {% resource 'requestdata/expand-dataset.js' %}
 
 <div class="requested-data-container__content-item">
-  <p class="requested-data-container__content-item-info"><h4 style="width: 50%;">{{ item.package_title }}</h4></p>
+  <p class="requested-data-container__content-item-info"><h4 style="width: 50%;">{{ item.title }}</h4></p>
   {% set counters = h.requestdata_get_request_counters(item.package_id) %}
   <div class="requested-data-container__content-item-counters">
     <span><div class="counter-number">{{ counters.requests }}</div> Requests</span>
@@ -29,7 +29,7 @@ Example usage:
     {% endfor %}
   </p>
   <div id="{{ item.package_id }}" class="collapse">
-    {% for x in item.requests %}
+    {% for x in item.requests_archived %}
     <div class="requested-data-container__content-item">
       {% set sender_profile = h.url_for(controller='user', action='read', id=x.sender_user_id) %}
       <p class="requested-data-container__content-item-info">Request by: <a href="{{ sender_profile }}" title="{{ _('View profile') }}">{{ x.sender_name }}</a></p>

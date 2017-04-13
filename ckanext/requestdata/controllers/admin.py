@@ -160,6 +160,8 @@ class AdminController(AdminController):
                 if not name:
                     name = username
 
+            counters = _get_action('requestdata_request_data_counters_get_by_org', {'org_id': org['id']})
+
             if org['id'] not in tmp_orgs:
                 data = {
                     'title': org['title'],
@@ -168,7 +170,8 @@ class AdminController(AdminController):
                     'requests_new': [],
                     'requests_open': [],
                     'requests_archive': [],
-                    'maintainers': []
+                    'maintainers': [],
+                    'counters': counters
                 }
 
                 if item['state'] == 'new':
@@ -228,18 +231,26 @@ class AdminController(AdminController):
                                 maintainer_found = True
 
                         if not maintainer_found:
-                            org['requests_new'].remove(r)
+                            if r['state'] == 'new':
+                                org['requests_new'].remove(r)
+                            elif r['state'] == 'open':
+                                org['requests_open'].remove(r)
+                            elif r['state'] == 'archive':
+                                org['requests_archive'].remove(r)
+
+            org['requests_archive'] = helpers.group_archived_requests_by_dataset(org['requests_archive'])
 
             if org['name'] == q_organization:
                 org['requests_archive'] = sorted( org['requests_archive'], key=lambda x: x[order], reverse=reverse)
 
-            org['requests_archive'] = helpers.group_archived_requests_by_dataset(org['requests_archive'])
-
         organizations_for_filters = sorted(organizations_for_filters.iteritems(), key=lambda (x, y): y['requests'], reverse=True)
+
+        total_requests_counters = _get_action('requestdata_request_data_counters_get_all', {})
 
         extra_vars = {
             'organizations': organizations,
-            'organizations_for_filters': organizations_for_filters
+            'organizations_for_filters': organizations_for_filters,
+            'total_requests_counters': total_requests_counters
         }
 
         return toolkit.render('admin/all_requests_data.html', extra_vars)

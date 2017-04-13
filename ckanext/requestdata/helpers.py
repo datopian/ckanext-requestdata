@@ -116,11 +116,17 @@ def group_archived_requests_by_dataset(requests):
             }
             maintainers.append(payload)
 
+        requests = list(group)
+        item_shared = requests[0].get('shared')
+        item_requests = requests[0].get('requests')
+
         data = {
             'package_id': key,
-            'package_title': package['title'],
+            'title': package['title'],
             'maintainers': maintainers,
-            'requests': list(group)
+            'requests_archived': requests,
+            'shared': item_shared,
+            'requests': item_requests
         }
 
         grouped_requests.append(data)

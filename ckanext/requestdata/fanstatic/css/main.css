@@ -168,3 +168,12 @@
 .requested-data-container__content-item-archive-maintainers {
   width: 300px;
 }
+
+.total-requests-counter {
+  font-size: 16px;
+  margin-top: 25px;
+}
+
+.sysadmin-requests-container .total-requests-counter {
+  margin-bottom: 20px;
+}

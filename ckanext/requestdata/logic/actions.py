@@ -390,7 +390,7 @@ def notification_change(context, data_dict):
 
 @toolkit.side_effect_free
 def increment_request_data_counters(context, data_dict):
-     '''
+    '''
        Increment the counter for the requested data depending on the flag
 
        :param package_id: The id of the package the data belongs to.
@@ -401,36 +401,38 @@ def increment_request_data_counters(context, data_dict):
 
        :return:
      '''
-     data, errors = df.validate(data_dict,
+    data, errors = df.validate(data_dict,
                                 schema.increment_request_counters_schema(),
                                 context)
-     if errors:
-         raise toolkit.ValidationError(errors)
+    if errors:
+        raise toolkit.ValidationError(errors)
 
-     flag = data.get('flag')
-     package_id = data.get('package_id')
-     data = {
-            'package_id' : package_id
-      }
+    flag = data.get('flag')
+    package_id = data.get('package_id')
+    package = toolkit.get_action('package_show')(context, {'id': package_id})
+    data = {
+        'package_id' : package_id,
+        'org_id': package['owner_org']
+    }
 
-     data_request = ckanextRequestDataCounters.get(package_id=package_id)
-     if data_request is None:
-         new_request = ckanextRequestDataCounters(**data)
-         new_request.requests = 1
-         new_request.save()
-         return new_request
-     else:
-         if flag == 'request':
+    data_request = ckanextRequestDataCounters.get(package_id=package_id)
+    if data_request is None:
+        new_request = ckanextRequestDataCounters(**data)
+        new_request.requests = 1
+        new_request.save()
+        return new_request
+    else:
+        if flag == 'request':
             data_request.requests += 1
-         elif flag == 'replied':
+        elif flag == 'replied':
             data_request.replied += 1
-         elif flag == 'declined':
+        elif flag == 'declined':
             data_request.declined += 1
-         elif flag == 'shared':
+        elif flag == 'shared':
              data_request.shared += 1
 
-         data_request.save()
-         return data_request
+        data_request.save()
+        return data_request
 
 
 @toolkit.side_effect_free
@@ -459,4 +461,21 @@ def request_data_counters_get_all(context, data_dict):
      '''
 
     counters = ckanextRequestDataCounters.search()
+    return counters
+
+
+@toolkit.side_effect_free
+def request_data_counters_get_by_org(context, data_dict):
+    '''
+        Return counters for requests that belong to particular organization
+
+       :param org_id: The id of the organizatiion the request belongs to.
+       :type org_id: string
+
+     '''
+
+    data = {'org_id': data_dict['org_id']}
+
+    counters = ckanextRequestDataCounters.search_by_organization(**data)
+
     return counters

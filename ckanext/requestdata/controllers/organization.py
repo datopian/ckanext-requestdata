@@ -58,6 +58,9 @@ class OrganizationController(organization.OrganizationController):
         group_type = c.group_dict['type']
         request_params = request.params.dict_of_lists()
         filtered_maintainers = []
+        reverse = True
+        order = ''
+        q_organization = ''
 
         for item in request_params:
             if item == 'filter_by_maintainers':
@@ -78,6 +81,27 @@ class OrganizationController(organization.OrganizationController):
                         }
 
                         filtered_maintainers.append(data)
+            elif item == 'order_by':
+                params = request_params[item][0].split('|')
+                q_organization = params[1].split(':')[1]
+                order = params[0]
+
+                if 'asc' in order:
+                    reverse = False
+                    order = 'title'
+                elif 'desc' in order:
+                    reverse = True
+                    order = 'title'
+
+                for x in requests:
+                    package = _get_action('package_show', {'id': x['package_id']})
+                    count = _get_action('requestdata_request_data_counters_get', {'package_id': x['package_id']})
+                    x['title'] = package['title']
+                    x['shared'] = count.shared
+                    x['requests'] = count.requests
+                    data_dict = {'id': package['owner_org']}
+                    current_org = _get_action('organization_show', data_dict)
+                    x['name'] = current_org['name']
 
         maintainers = []
 
@@ -129,31 +153,6 @@ class OrganizationController(organization.OrganizationController):
                     if not maintainer_found:
                         requests.remove(r)
 
-        # order_by = request.query_string
-        # reverse = True
-        # order = ''
-
-        # if order_by is not '':
-        #     if 'shared' in order_by:
-        #         order = 'shared'
-        #     elif 'requests' in order_by:
-        #         order = 'requests'
-        #     elif 'asc' in order_by:
-        #         reverse = False
-        #         order = 'title'
-        #     elif 'desc' in order_by:
-        #         reverse = True
-        #         order = 'title'
-
-        #     for item in requests:
-        #         package = _get_action('package_show', {'id': item['package_id']})
-        #         count = _get_action('requestdata_request_data_counters_get', {'package_id': item['package_id']})
-        #         item['title'] = package['title']
-        #         item['shared'] = count.shared
-        #         item['requests'] = count.requests
-
-        #     requests = sorted(requests, key=lambda x: x[order], reverse=reverse)
-
         requests_new = []
         requests_open = []
         requests_archive = []
@@ -167,6 +166,9 @@ class OrganizationController(organization.OrganizationController):
                 requests_archive.append(item)
 
         grouped_requests_archive = helpers.group_archived_requests_by_dataset(requests_archive)
+
+        if organ['name'] == q_organization:
+            grouped_requests_archive = sorted(grouped_requests_archive, key=lambda x: x[order], reverse=reverse)
 
         extra_vars = {
             'requests_new': requests_new,

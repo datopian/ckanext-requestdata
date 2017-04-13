@@ -116,7 +116,8 @@ class RequestdataPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
             'requestdata_notification_change': actions.notification_change,
             'requestdata_increment_request_data_counters':actions.increment_request_data_counters,
             'requestdata_request_data_counters_get' : actions.request_data_counters_get,
-            'requestdata_request_data_counters_get_all': actions.request_data_counters_get_all
+            'requestdata_request_data_counters_get_all': actions.request_data_counters_get_all,
+            'requestdata_request_data_counters_get_by_org': actions.request_data_counters_get_by_org
         }
 
     # IAuthFunctions

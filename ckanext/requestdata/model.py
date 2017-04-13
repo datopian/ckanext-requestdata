@@ -324,7 +324,33 @@ class ckanextRequestDataCounters(DomainObject):
         declined = Session.query(func.sum(ckanextRequestDataCounters.declined)).all()
         shared = Session.query(func.sum(ckanextRequestDataCounters.shared)).all()
         counters = {
-            'request' : request,
+            'requests' : request,
+            'replied': replied,
+            'declined': declined,
+            'shared' : shared
+        }
+
+        return counters
+
+    @classmethod
+    def search_by_organization(self, **kwds):
+        '''Finds entities in the table that satisfy certain criteria.
+
+        :param order: Order rows by specified column.
+        :type order: string
+
+        '''
+
+        request = Session.query(func.sum(ckanextRequestDataCounters.requests))
+        request = request.filter_by(**kwds).all()
+        replied = Session.query(func.sum(ckanextRequestDataCounters.replied))
+        replied = replied.filter_by(**kwds).all()
+        declined = Session.query(func.sum(ckanextRequestDataCounters.declined))
+        declined = declined.filter_by(**kwds).all()
+        shared = Session.query(func.sum(ckanextRequestDataCounters.shared))
+        shared = shared.filter_by(**kwds).all()
+        counters = {
+            'requests' : request,
             'replied': replied,
             'declined': declined,
             'shared' : shared
@@ -339,6 +365,7 @@ def define_request_data_counters_table():
     request_data_counters_table = Table('ckanext_request_data_counters', metadata,
                                 Column('id', types.UnicodeText, primary_key=True, default=make_uuid),
                                 Column('package_id', types.UnicodeText),
+                                Column('org_id', types.UnicodeText),
                                 Column('requests', types.Integer,default=0),
                                 Column('replied', types.Integer,default=0),
                                 Column('declined', types.Integer,default=0),
