@@ -29,11 +29,11 @@ def setup():
 
         index_names =\
             [index['name'] for index in
-                inspector.get_indexes('ckanext_requestdata')]
+                inspector.get_indexes('ckanext_requestdata_requests')]
 
         if 'ckanext_requestdata_id_idx' not in index_names:
             log.debug('Creating index for ckanext_requestdata.')
-            Index('ckanext_requestdata_id_idx',
+            Index('ckanext_requestdata_requests_id_idx',
                   request_data_table.c.id).create()
 
     if user_notification_table is None:
@@ -48,11 +48,11 @@ def setup():
 
         index_names = \
             [index['name'] for index in
-             inspector.get_indexes('ckanext_user_notification')]
+             inspector.get_indexes('ckanext_requestdata_user_notification')]
 
         if 'ckanext_user_notification_id_idx' not in index_names:
             log.debug('Creating index for ckanext_user_notification.')
-            Index('ckanext_user_notification_id_idx',
+            Index('ckanext_requestdata_user_notification_id_idx',
                   user_notification_table.c.id).create()
 
     if maintainers_table is None:
@@ -67,11 +67,11 @@ def setup():
 
         index_names = \
             [index['name'] for index in
-             inspector.get_indexes('ckanext_maintainers')]
+             inspector.get_indexes('ckanext_requestdata_maintainers')]
 
         if 'ckanext_maintainers_id_idx' not in index_names:
             log.debug('Creating index for ckanext_user_notification.')
-            Index('ckanext_maintainers_id_idx',
+            Index('ckanext_requestdata_maintainers_id_idx',
                   maintainers_table.c.id).create()
 
     if request_data_counters_table is None:
@@ -86,11 +86,11 @@ def setup():
 
         index_names = \
             [index['name'] for index in
-             inspector.get_indexes('ckanext_request_data_counters')]
+             inspector.get_indexes('ckanext_requestdata_counters')]
 
         if 'ckanext_request_data_counters_id_idx' not in index_names:
             log.debug('Creating index for ckanext_request_data_counters.')
-            Index('ckanext_request_data_counters_id_idx',
+            Index('ckanext_requestdata_counters_id_idx',
                   request_data_counters_table.c.id).create()
 
 
@@ -160,7 +160,7 @@ class ckanextRequestdata(DomainObject):
 def define_request_data_table():
     global request_data_table
 
-    request_data_table = Table('ckanext_requestdata', metadata,
+    request_data_table = Table('ckanext_requestdata_requests', metadata,
                                Column('id', types.UnicodeText,
                                       primary_key=True,
                                       default=make_uuid),
@@ -186,7 +186,7 @@ def define_request_data_table():
                                       default=datetime.datetime.now),
                                Column('modified_at', types.DateTime,
                                       default=datetime.datetime.now),
-                               Index('ckanext_requestdata_id_idx', 'id'))
+                               Index('ckanext_requestdata_requests_id_idx', 'id'))
 
     mapper(
         ckanextRequestdata,
@@ -223,7 +223,7 @@ class ckanextUserNotification(DomainObject):
 def define_user_notification_table():
     global user_notification_table
 
-    user_notification_table = Table('ckanext_user_notification', metadata,
+    user_notification_table = Table('ckanext_requestdata_user_notification', metadata,
                                Column('id', types.UnicodeText,
                                       primary_key=True,
                                       default=make_uuid),
@@ -231,7 +231,7 @@ def define_user_notification_table():
                                       nullable=False),
                                Column('seen', types.Boolean,
                                       default=False),
-                               Index('ckanext_user_notification_id_idx', 'id'))
+                               Index('ckanext_requestdata_user_notification_id_idx', 'id'))
 
     mapper(
         ckanextUserNotification,
@@ -283,13 +283,13 @@ class ckanextMaintainers(DomainObject):
 def define_maintainers_table():
     global maintainers_table
 
-    maintainers_table = Table('ckanext_maintainers', metadata,
+    maintainers_table = Table('ckanext_requestdata_maintainers', metadata,
                                 Column('id', types.UnicodeText, primary_key=True, default=make_uuid),
 
-                                Column('request_data_id', types.UnicodeText, ForeignKey('ckanext_requestdata.id')),
+                                Column('request_data_id', types.UnicodeText, ForeignKey('ckanext_requestdata_requests.id')),
                                 Column('maintainer_id', types.UnicodeText),
                                 Column('email', types.UnicodeText),
-                                Index('ckanext_maintainers_id_idx', 'id')
+                                Index('ckanext_requestdata_maintainers_id_idx', 'id')
                                 )
 
     mapper(
@@ -362,7 +362,7 @@ class ckanextRequestDataCounters(DomainObject):
 def define_request_data_counters_table():
     global request_data_counters_table
 
-    request_data_counters_table = Table('ckanext_request_data_counters', metadata,
+    request_data_counters_table = Table('ckanext_requestdata_counters', metadata,
                                 Column('id', types.UnicodeText, primary_key=True, default=make_uuid),
                                 Column('package_id', types.UnicodeText),
                                 Column('org_id', types.UnicodeText),
@@ -370,7 +370,7 @@ def define_request_data_counters_table():
                                 Column('replied', types.Integer,default=0),
                                 Column('declined', types.Integer,default=0),
                                 Column('shared', types.Integer,default=0),
-                                Index('ckanext_request_data_counters_id_idx', 'id')
+                                Index('ckanext_requestdata_counters_id_idx', 'id')
                                 )
 
     mapper(
