@@ -31,7 +31,7 @@ def setup():
             [index['name'] for index in
                 inspector.get_indexes('ckanext_requestdata_requests')]
 
-        if 'ckanext_requestdata_id_idx' not in index_names:
+        if 'ckanext_requestdata_requests_id_idx' not in index_names:
             log.debug('Creating index for ckanext_requestdata.')
             Index('ckanext_requestdata_requests_id_idx',
                   request_data_table.c.id).create()
@@ -50,7 +50,7 @@ def setup():
             [index['name'] for index in
              inspector.get_indexes('ckanext_requestdata_user_notification')]
 
-        if 'ckanext_user_notification_id_idx' not in index_names:
+        if 'ckanext_requestdata_user_notification_id_idx' not in index_names:
             log.debug('Creating index for ckanext_user_notification.')
             Index('ckanext_requestdata_user_notification_id_idx',
                   user_notification_table.c.id).create()
@@ -69,7 +69,7 @@ def setup():
             [index['name'] for index in
              inspector.get_indexes('ckanext_requestdata_maintainers')]
 
-        if 'ckanext_maintainers_id_idx' not in index_names:
+        if 'ckanext_requestdata_maintainers_id_idx' not in index_names:
             log.debug('Creating index for ckanext_user_notification.')
             Index('ckanext_requestdata_maintainers_id_idx',
                   maintainers_table.c.id).create()
@@ -88,7 +88,7 @@ def setup():
             [index['name'] for index in
              inspector.get_indexes('ckanext_requestdata_counters')]
 
-        if 'ckanext_request_data_counters_id_idx' not in index_names:
+        if 'ckanext_requestdata_counters_id_idx' not in index_names:
             log.debug('Creating index for ckanext_request_data_counters.')
             Index('ckanext_requestdata_counters_id_idx',
                   request_data_counters_table.c.id).create()
