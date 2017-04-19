@@ -193,6 +193,4 @@ class RequestdataPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
         return False
 
     def package_types(self):
-        # This plugin doesn't handle any special package types, it just
-        # registers itself as the default (above).
-        return ['metadata-only']
+        return ['requestdata-metadata-only']
