@@ -28,7 +28,7 @@ class TestActions(ActionBase):
         factories.Organization(name='test_org', users=users)
 
         package = factories.Dataset(owner_org='test_org', name='test_dataset',
-                                    maintainer=user['email'])
+                                    maintainer=user['id'])
         context = {'user': user['name']}
         data_dict = {
             'package_id': package['id'],
@@ -103,7 +103,7 @@ class TestActions(ActionBase):
         factories.Organization(name='test_org', users=users)
 
         package = factories.Dataset(owner_org='test_org', name='test_dataset',
-                                    maintainer=user['email'])
+                                    maintainer=user['id'])
         context = {'user': user['name']}
         data_dict = {
             'package_id': package['id'],
@@ -164,7 +164,7 @@ class TestActions(ActionBase):
         factories.Organization(name='test_org', users=users)
 
         package = factories.Dataset(owner_org='test_org', name='test_dataset',
-                                    maintainer=user['email'])
+                                    maintainer=user['id'])
 
         data_dict = {
             'id': 'non_existing_id',
@@ -186,7 +186,7 @@ class TestActions(ActionBase):
         factories.Organization(name='test_org', users=users)
 
         package = factories.Dataset(owner_org='test_org', name='test_dataset',
-                                    maintainer=user['email'])
+                                    maintainer=user['id'])
 
         context = {'ignore_auth': False}
 
@@ -205,7 +205,7 @@ class TestActions(ActionBase):
         factories.Organization(name='test_org', users=users)
 
         package = factories.Dataset(owner_org='test_org', name='test_dataset',
-                                    maintainer=user['email'])
+                                    maintainer=user['id'])
         context = {'user': user['name']}
         data_dict = {
             'package_id': package['id'],
@@ -224,6 +224,8 @@ class TestActions(ActionBase):
 
         result = helpers.call_action('requestdata_request_list_for_current_user',
                                      context=context)
+        print result
+        print "RESULTAT"
         assert len(result) == 10
 
     def test_requestdata_request_list_for_organization(self):
@@ -243,7 +245,7 @@ class TestActions(ActionBase):
 
         for i in range(5):
             package = factories.Dataset(owner_org='test_org',
-                                        maintainer=user['email'])
+                                        maintainer=user['id'])
             package_ids.append(package['id'])
 
         # Create one request for each dataset.
@@ -271,11 +273,11 @@ class TestActions(ActionBase):
 
         factories.Organization(name='test_org', users=users)
         factories.Dataset(owner_org='test_org', name='test_dataset',
-                                    maintainer=user['email'])
+                                    maintainer=user['id'])
 
     def test_package_create_missing_maintainer(self):
         with assert_raises(logic.ValidationError) as cm:
-            factories.Dataset()
+            factories.Dataset(type='requestdata-metadata-only')
 
         ex = cm.exception
 
