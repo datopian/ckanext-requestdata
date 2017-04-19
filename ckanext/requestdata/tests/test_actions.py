@@ -282,3 +282,61 @@ class TestActions(ActionBase):
         ex = cm.exception
 
         assert ex.error_dict['maintainer'] == ['Missing value']
+
+    def test_requestdata_notification_create_valid(self):
+        user = factories.User()
+
+        context = {'user': user['name']}
+
+        usero = {'id': user['id']}
+        data_dict = {
+            'users': [usero]
+        }
+        result = helpers.call_action('requestdata_notification_create',
+                                     context=context, **data_dict)
+
+        assert result[0].seen == False
+
+    def test_notification_for_current_user_valid(self):
+        user = factories.User()
+        users = [{'name': user['name']}]
+
+        factories.Organization(name='test_org', users=users)
+
+        context = {'user': user['name']}
+
+        usero = {'id' : user['id']}
+        data_dict = {
+            'users': [usero]
+        }
+        create = helpers.call_action('requestdata_notification_create',
+                                     context=context, **data_dict)
+
+        data_dict = {}
+        result = helpers.call_action('requestdata_notification_for_current_user',
+                                     context=context, **data_dict)
+
+        assert result == False
+
+    def test_notification_change_valid(self):
+        user = factories.User()
+        users = [{'name': user['name']}]
+
+        factories.Organization(name='test_org', users=users)
+
+        context = {'user': user['name']}
+
+        usero = {'id': user['id']}
+        data_dict = {
+            'users': [usero]
+        }
+        create = helpers.call_action('requestdata_notification_create',
+                                     context=context, **data_dict)
+
+        data_dict = {
+            'user_id': usero['id']
+        }
+        result = helpers.call_action('requestdata_notification_change',
+                                     context=context, **data_dict)
+
+        assert result.seen == True
