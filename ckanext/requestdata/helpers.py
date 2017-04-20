@@ -104,17 +104,6 @@ def group_archived_requests_by_dataset(requests):
     grouped_requests = []
 
     for key, group in itertools.groupby(sorted_requests, key=lambda x: x['package_id']):
-        package = _get_action('package_show', {'id': key})
-        package_maintainers_ids = package['maintainer'].split(',')
-        maintainers = []
-
-        for item in package_maintainers_ids:
-            user = _get_action('user_show', {'id': item})
-            payload = {
-                'id': item,
-                'fullname': user['fullname']
-            }
-            maintainers.append(payload)
 
         requests = list(group)
         item_shared = requests[0].get('shared')
@@ -122,8 +111,8 @@ def group_archived_requests_by_dataset(requests):
 
         data = {
             'package_id': key,
-            'title': package['title'],
-            'maintainers': maintainers,
+            'title': requests[0].get('title'),
+            'maintainers': requests[0].get('maintainers'),
             'requests_archived': requests,
             'shared': item_shared,
             'requests': item_requests

@@ -177,3 +177,6 @@
 .sysadmin-requests-container .total-requests-counter {
   margin-bottom: 20px;
 }
+.requested-data-container-item{
+    float:left
+}

@@ -87,8 +87,20 @@ class UserController(BaseController):
                 item['requests'] = count.requests
 
             requests = sorted(requests, key=lambda x: x[order], reverse=reverse)
-
+        #TODO simplify these
         for item in requests:
+            package = _get_action('package_show', {'id': item['package_id']})
+            package_maintainers_ids = package['maintainer'].split(',')
+            item['title'] = package['title']
+            maintainers = []
+            for i in package_maintainers_ids:
+                user = _get_action('user_show', {'id': i})
+                payload = {
+                    'id': i,
+                    'fullname': user['fullname']
+                }
+                maintainers.append(payload)
+            item['maintainers'] = maintainers
             if item['state'] == 'new':
                 requests_new.append(item)
             elif item['state'] == 'open':
