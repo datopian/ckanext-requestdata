@@ -1,0 +1,11 @@
+{% ckan_extends %}
+
+{% block save_button %}
+  {% set is_metadata = h.requestdata_has_query_param('metadata') %}
+
+  {% if is_metadata %}
+    <button class="btn btn-primary" type="submit" name="save">{{ _('Create') }}</button>
+  {% else %}
+    <button class="btn btn-primary" type="submit" name="save">{% block save_button_text %}{{ _('Next: Add Data') }}{% endblock %}</button>
+  {% endif %}
+{% endblock %}

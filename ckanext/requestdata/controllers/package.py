@@ -3,41 +3,82 @@ from ckan.common import c, _
 from ckan import logic
 import ckan.model as model
 import ckan.lib.helpers as h
+from ckan.plugins import toolkit
+from ckan.controllers.package import PackageController as _PackageController
+
+from ckanext.requestdata.helpers import has_query_param
 
 get_action = logic.get_action
-NotFound = logic.NotFound
 NotAuthorized = logic.NotAuthorized
+ValidationError = logic.ValidationError
 
 redirect = base.redirect
 abort = base.abort
-BaseController = base.BaseController
 
 
-class PackageController(BaseController):
+class PackageController(_PackageController):
 
-    def make_active(self, pkg_name):
-        '''Makes a package active.
+    def create_metadata_package(self):
 
-        :param pkg_name: The name of a package.
-        :type pkg_name: string
+        # Handle metadata-only datasets
+        if has_query_param('metadata'):
+            package_type = 'requestdata-metadata-only'
+            form_vars = {
+                'errors': {},
+                'dataset_type': package_type,
+                'action': 'new',
+                'error_summary': {},
+                'data': {
+                    'tag_string': '',
+                    'group_id': None,
+                    'type': package_type
+                },
+                'stage': ['active']
+            }
 
-        '''
+            if toolkit.request.method == 'POST':
+                context = {'model': model, 'session': model.Session,
+                           'user': c.user, 'auth_user_obj': c.userobj}
 
-        context = {'model': model, 'session': model.Session,
-                   'user': c.user, 'auth_user_obj': c.userobj}
+                data_dict = dict(toolkit.request.POST)
 
-        data_dict = {
-            'id': pkg_name,
-            'state': 'active'
-        }
+                data_dict['type'] = package_type
 
-        try:
-            get_action('package_patch')(context, data_dict)
-        except NotAuthorized:
-            abort(403, _('Unauthorized to update this dataset.'))
-        except NotFound:
-            abort(404, _('The dataset {id} could not be found.')
-                  .format(pkg_name=pkg_name))
+                try:
+                    package = get_action('package_create')(context, data_dict)
 
-        url = h.url_for(controller='package', action='read', id=pkg_name)
-        redirect(url)
+                    url = h.url_for(controller='package', action='read',
+                                    id=package['name'])
+
+                    redirect(url)
+                except NotAuthorized:
+                    abort(403, _('Unauthorized to create a dataset.'))
+                except ValidationError, e:
+                    errors = e.error_dict
+                    error_summary = e.error_summary
+
+                    form_vars = {
+                        'errors': errors,
+                        'dataset_type': package_type,
+                        'action': 'new',
+                        'error_summary': error_summary,
+                        'data': {
+                            'tag_string': '',
+                            'group_id': None,
+                            'type': package_type
+                        },
+                        'stage': ['active']
+                    }
+
+                    extra_vars = {
+                        'form_vars': form_vars,
+                        'form_snippet': 'package/new_package_form.html',
+                        'dataset_type': package_type
+                    }
+
+                    return toolkit.render('package/new.html',
+                                          extra_vars=extra_vars)
+            else:
+                return self.new()
+        else:
+            return self.new()

@@ -4,7 +4,7 @@ import itertools
 from operator import itemgetter
 
 from ckan import model, logic
-from ckan.common import c, _
+from ckan.common import c, _, request
 from ckan.lib import base
 from ckan.plugins import toolkit
 from ckan.model.user import User
@@ -132,3 +132,14 @@ def group_archived_requests_by_dataset(requests):
         grouped_requests.append(data)
 
     return grouped_requests
+
+
+def has_query_param(param):
+    # Checks if the provided parameter is part of the current URL query params
+
+    params = dict(request.params)
+
+    if param in params:
+        return True
+
+    return False

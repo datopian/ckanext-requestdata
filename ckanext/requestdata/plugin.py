@@ -51,9 +51,9 @@ class RequestdataPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
         organization_controller =\
             'ckanext.requestdata.controllers.organization:OrganizationController'
 
-        map.connect('/dataset/make_active/{pkg_name}',
+        map.connect('/dataset/new',
                     controller=package_controller,
-                    action='make_active')
+                    action='create_metadata_package')
 
         map.connect('requestdata_my_requests',
                     '/user/my_requested_data/{id}',
@@ -147,7 +147,9 @@ class RequestdataPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
             'requestdata_get_request_counters':
                 helpers.get_request_counters,
             'requestdata_convert_id_to_email':
-                helpers.convert_id_to_email
+                helpers.convert_id_to_email,
+            'requestdata_has_query_param':
+                helpers.has_query_param
         }
 
     # IDatasetForm
