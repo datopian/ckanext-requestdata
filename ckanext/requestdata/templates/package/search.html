@@ -1,0 +1,9 @@
+{% ckan_extends %}
+
+{% block page_primary_action %}
+  {% if h.check_access('package_create') %}
+    <div class="page_primary_action">
+      {% snippet 'snippets/add_dataset.html', group=None %}
+    </div>
+  {% endif %}
+{% endblock %}
