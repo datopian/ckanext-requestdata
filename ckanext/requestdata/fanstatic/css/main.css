@@ -220,3 +220,7 @@
 .add-dataset-modal-backdrop {
   display: none;
 }
+
+.requested-data-container-item {
+  float: left;
+}
