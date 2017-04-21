@@ -15,17 +15,17 @@ Example usage:
 {% set package_url = h.url_for(controller='package', action='read', id=item.package_id) %}
 
 <div class="requested-data-container__content-item">
-  <p class="requested-data-container__content-item-info">
-    {# {{ h.gravatar((c.userobj.email_hash if c and c.userobj else ''), size=28) }} #}
-    <a href="{{ sender_profile }}" title="{{ _('View profile') }}">{{ item.sender_name }}</a> from the organization <b>{{ item.organization }}</b> requests new data for dataset <a href="{{ package_url }}" title="{{ _('View dataset') }}">{{ h.requestdata_get_package_title(item.package_id) }}</a>.
-  </p>
+ <div class="">
+    <p class="requested-data-container__content-item-info"><h4 style="width: 50%;">{{ item.title }}</h4></p>
+    <p class="requested-data-container__content-item-archive-maintainers">Requested by: {{ item.sender_name }}</p>
 
-  <blockquote class="requested-data-container__message">
+  </div>
+  <div>
+    <blockquote class="requested-data-container__message">
     <p>{{ item.message_content }}</p>
   </blockquote>
-
-  <p class="requested-data-container__date" title="{{ h.render_datetime(item.created_at, with_hours=True) }}">{{ h.requestdata_time_ago_from_datetime(item.created_at) }}</p>
-
+    <p class="requested-data-container__date" title="{{ h.render_datetime(item.created_at, with_hours=True) }}">{{ h.requestdata_time_ago_from_datetime(item.created_at) }}</p>
+  </div>
   {% set reply_action = h.url_for('requestdata_handle_new_request_action', username=c.userobj.name, request_action='reply') %}
   {% set reply_post_data = h.dump_json({'id': item.id, 'package_id': item.package_id, 'state': 'open', 'send_to': item.email_address}) %}
 
@@ -41,7 +41,19 @@ Example usage:
   {% set redirect_url = h.url_for(controller='user', action='login') %}
 
   <div class="requested-data-container__actions">
-    <button class="btn btn-success requested-data-container__actions--reply"
+    <div class="requested-data-container-inline">
+       <button class="btn btn-danger requested-data-container__actions--reject"
+            data-module="modal-form"
+            data-module-template_file="reject_request_form.html"
+            data-module-submit_action="{{ reject_action }}"
+            data-module-post_data="{{ reject_post_data }}"
+            data-module-is_logged_in="{{ is_logged_in }}"
+            data-module-redirect_url="{{ redirect_url }}"
+            data-module-refresh_on_success="1"
+            data-module-disable_action_buttons="1">Decline</button>
+    </div>
+    <div class="requested-data-container-inline">
+       <button class="btn btn-success requested-data-container__actions--reply"
             data-module="modal-form"
             data-module-template_file="reply_request_form.html"
             data-module-submit_action="{{ reply_action }}"
@@ -51,15 +63,6 @@ Example usage:
             data-module-refresh_on_success="1"
             data-module-disable_action_buttons="1"
             data-module-message_content="{{ item.message_content }}">Reply</button>
-    <br>
-    <button class="btn btn-danger requested-data-container__actions--reject"
-            data-module="modal-form"
-            data-module-template_file="reject_request_form.html"
-            data-module-submit_action="{{ reject_action }}"
-            data-module-post_data="{{ reject_post_data }}"
-            data-module-is_logged_in="{{ is_logged_in }}"
-            data-module-redirect_url="{{ redirect_url }}"
-            data-module-refresh_on_success="1"
-            data-module-disable_action_buttons="1">Reject</button>
+    </div>
   </div>
 </div>

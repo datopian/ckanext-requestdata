@@ -36,11 +36,6 @@
   width: 70px;
 }
 
-.requested-data-container__actions--reject,
-.requested-data-container__actions--data-notshared {
-  margin-top: 15px;
-}
-
 .requested-data-container__date {
   color: #9d9c9c;
   margin-top: 30px;
@@ -54,7 +49,7 @@
 }
 
 .requested-data-container__content-item-info {
-  width: 80%;
+  width: 75%;
 }
 
 .requested-data-container__content-item-info-separator {
@@ -70,8 +65,7 @@
 
 .requested-data-container__actions--data-shared .icon-thumbs-up,
 .requested-data-container__actions--data-notshared .icon-thumbs-down {
-  margin-left: 8px;
-  font-size: 18px;
+
 }
 
 .requested-data-container__status {
@@ -179,4 +173,7 @@
 }
 .requested-data-container-item{
     float:left
+}
+.requested-data-container-inline{
+   display:inline;
 }
