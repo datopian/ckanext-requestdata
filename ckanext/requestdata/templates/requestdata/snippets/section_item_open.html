@@ -19,12 +19,12 @@ Example usage:
     <p class="requested-data-container__content-item-archive-maintainers">Requested by: {{ item.sender_name }}</p>
      <p class="requested-data-container__date" title="{{ h.render_datetime(item.modified_at, with_hours=True) }}">{{ h.requestdata_time_ago_from_datetime(item.modified_at) }}</p>
   </div>
- <div>
-    <p class="requested-data-container__content-item-info">Keep track of who you share information with.
-    <br>
-   <a href="{{ package_url }}" title="{{ _('View dataset') }}">Has the dataset been shared?</a>
-   </p>
- </div>
+   <div class="requested-data-shared">
+      <p class="requested-data-container__content-item-info">Keep track of who you share information with.
+      <br>
+     <a href="{{ package_url }}" title="{{ _('View dataset') }}">Has the dataset been shared?</a>
+     </p>
+   </div>
 
   {% set action_shared = h.url_for('requestdata_handle_open_request_action', username=c.userobj.name, request_action='shared') %}
   {% set post_data_shared = h.dump_json({'id': item.id, 'package_id': item.package_id, 'state': 'archive', 'data_shared': True}) %}
@@ -33,18 +33,20 @@ Example usage:
   {% set post_data_notshared = h.dump_json({'id': item.id, 'package_id': item.package_id, 'state': 'archive', 'data_shared': False}) %}
 
   <div class="requested-data-container__actions">
-    <button class="btn btn-success requested-data-container__actions--data-shared"
+     <div class="requested-data-container-inline">
+        <button class="btn btn-success requested-data-container__actions--data-shared"
             data-module="handle-open-request"
             data-module-action="{{ action_shared }}"
             data-module-post_data="{{ post_data_shared }}"
             data-module-refresh_on_success="1"
             data-module-disable_action_buttons="1">Yes</button>
-    <br>
-    <button class="btn btn-info requested-data-container__actions--data-notshared"
+     </div>
+    <div class="requested-data-container-inline">
+       <button class="btn btn-info requested-data-container__actions--data-notshared"
             data-module="handle-open-request"
             data-module-action="{{ action_notshared }}"
             data-module-post_data="{{ post_data_notshared }}"
             data-module-refresh_on_success="1"
             data-module-disable_action_buttons="1">No</button>
-  </div>
+    </div>
 </div>
