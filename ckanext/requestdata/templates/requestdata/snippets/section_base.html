@@ -18,7 +18,7 @@ Example usage:
   {% if requests | length > 0 %}
     <div class="requested-data-container__content">
       {% for item in requests %}
-        {% snippet 'requestdata/snippets/section_item_' + state + '.html', item=item %}
+        {% snippet 'requestdata/snippets/section_item_' + state + '.html', item=item, template_type=template_type %}
       {% endfor %}
     </div>
   {% else %}

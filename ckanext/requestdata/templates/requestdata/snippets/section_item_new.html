@@ -18,7 +18,15 @@ Example usage:
  <div class="">
     <p class="requested-data-container__content-item-info"><h4 style="width: 50%;">{{ item.title }}</h4></p>
     <p class="requested-data-container__content-item-archive-maintainers">Requested by: {{ item.sender_name }}</p>
-
+     {% if template_type != 'user' %}
+      <p class="requested-data-container__content-item-archive-maintainers">
+        Maintainers:
+       {% for m in item.maintainers %}
+         {% set profile = h.url_for(controller='user', action='read', id=m.id) %}
+         <a href="{{ profile }}" title="{{ _('View profile') }}">{{ m.fullname }}</a>{% if not loop.last %}, {% endif %}
+       {% endfor %}
+      </p>
+      {% endif %}
   </div>
   <div>
     <blockquote class="requested-data-container__message">
