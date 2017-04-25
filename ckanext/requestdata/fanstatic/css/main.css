@@ -230,3 +230,6 @@
 .requested-data-order-btn{
     float:right;
 }
+.requested-data-counters-num{
+    width:12px !important;
+}
