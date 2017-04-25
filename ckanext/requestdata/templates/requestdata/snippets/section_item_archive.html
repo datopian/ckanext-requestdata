@@ -22,7 +22,9 @@ Example usage:
       <span><div class="counter-number">{{ counters.shared }}</div> Shared</span>
     </div>
   {% endblock %}
-  <i class="icon-chevron-down archive-requests-arrow" data-toggle="collapse" data-target="#{{ item.package_id }}"></i>
+  {% block collapse_icon %}
+     <i class="icon-chevron-down archive-requests-arrow" data-toggle="collapse" data-target="#{{ item.package_id }}"></i>
+  {% endblock %}
   <div id="{{ item.package_id }}" class="collapse">
     {% for x in item.requests_archived %}
     <div class="requested-data-container__content-item">
@@ -33,14 +35,20 @@ Example usage:
 
       <div class="requested-data-container__status">
         {% if x.rejected %}
+         {% block rejected_icon %}
           <i class="icon-remove-circle"></i>
           <p class="requested-data-container__status-text">Rejected</p>
+         {% endblock %}
         {% elif x.data_shared %}
+        {% block shared_icon %}
           <i class="icon-thumbs-up"></i>
           <p class="requested-data-container__status-text">Shared</p>
+        {% endblock %}
         {% elif not x.data_shared %}
+        {% block notshared_icon %}
            <i class="icon-thumbs-down"></i>
           <p class="requested-data-container__status-text">Not shared</p>
+        {% endblock %}
         {% endif %}
       </div>
     </div>
