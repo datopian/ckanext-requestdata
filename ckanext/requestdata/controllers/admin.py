@@ -139,7 +139,7 @@ class AdminController(AdminController):
             package_maintainer_ids = package['maintainer'].split(',')
             data_dict = {'id': package['owner_org']}
             org = _get_action('organization_show', data_dict)
-
+            item['title'] = package['title']
             if org['id'] in organizations_for_filters:
                 organizations_for_filters[org['id']]['requests'] += 1
             else:
