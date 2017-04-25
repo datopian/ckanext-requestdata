@@ -38,7 +38,8 @@
 
 .requested-data-container__date {
   color: #9d9c9c;
-  margin: 0px;
+  margin-top: 30px;
+  margin-bottom: 0px;
   font-size: 12px;
 }
 
@@ -166,7 +167,10 @@
   font-size: 16px;
   margin-top: 25px;
 }
-
+.total-requests-filter {
+  margin-top:20px;
+  float:right;
+}
 .sysadmin-requests-container .total-requests-counter {
   margin-bottom: 20px;
 }
@@ -220,3 +224,7 @@
 .requested-data-container-inline{
    display:inline;
 }
+.requested-data-org-title{
+    margin: 7px 15px 0px 0px;
+}
+

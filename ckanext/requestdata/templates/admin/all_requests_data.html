@@ -14,26 +14,33 @@
       <li><a href="{{ service_url }}{{ json }}">JSON</a></li>
     </ul>
   </div>
-  <div class="total-requests-counter">Total:
-    <span>{{ total_requests_counters.requests[0][0] }} requests,</span>
-    <span>{{ total_requests_counters.replied[0][0] }} replies,</span>
-    <span>{{ total_requests_counters.declined[0][0] }} declined,</span>
-    <span>{{ total_requests_counters.shared[0][0] }} shared</span>
+  <div>
+    <div class="total-requests-counter requested-data-container-item">Total:
+      <span>{{ total_requests_counters.requests[0][0] }} requests,</span>
+      <span>{{ total_requests_counters.replied[0][0] }} replies,</span>
+      <span>{{ total_requests_counters.declined[0][0] }} declined,</span>
+      <span>{{ total_requests_counters.shared[0][0] }} shared</span>
+    </div>
+    <div class="total-requests-filter">
+      {% snippet 'requestdata/snippets/filter_requests.html', title='Organization', filter_options=organizations_for_filters, type='maintainer', type='organization' %}
+    </div>
   </div>
+  <br><br>
   <div class="sysadmin-requests-container">
-    {% snippet 'requestdata/snippets/filter_requests.html', title='Organization', filter_options=organizations_for_filters, type='maintainer', type='organization' %}
-    <br><br>
-
     {% for org in organizations %}
-      <h2 data-id="{{ org.id }}">Organization: {{ org['title'] }}</h2>
-      <div class="total-requests-counter">
+    <div>
+      <div class="requested-data-org-title requested-data-container-item"> <h2 data-id="{{ org.id }}">{{ org['title'] }}</h2></div>
+       <div class="total-requests-counter requested-data-container-item">
         <span>{{ org.counters.requests[0][0] }} requests,</span>
         <span>{{ org.counters.replied[0][0] }} replies,</span>
         <span>{{ org.counters.declined[0][0] }} declined,</span>
         <span>{{ org.counters.shared[0][0] }} shared</span>
       </div>
+      <div class="total-requests-filter">
       {% snippet 'requestdata/snippets/filter_requests.html', org_name=org.name, title='Maintainer', filter_options=org.maintainers, type='maintainer' %}
-
+      </div>
+    </div>
+    <br><br>
       {% snippet 'requestdata/snippets/section_base.html', state='new', title='New', requests=org['requests_new'], template_type='admin'  %}
       {% snippet 'requestdata/snippets/section_base.html', state='open', title='Open', requests=org['requests_open'], template_type='admin' %}
 
