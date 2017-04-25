@@ -13,13 +13,15 @@ Example usage:
 
 <div class="requested-data-container__content-item">
   <p class="requested-data-container__content-item-info"><h3 style="width: 50%;">{{ item.title }}</h3></p>
-  {% set counters = h.requestdata_get_request_counters(item.package_id) %}
-  <div class="requested-data-container__content-item-counters">
-    <span><div class="counter-number">{{ counters.requests }}</div> Requests</span>
-    <span><div class="counter-number">{{ counters.replied }}</div> Replied</span>
-    <span><div class="counter-number">{{ counters.declined }}</div> Declined</span>
-    <span><div class="counter-number">{{ counters.shared }}</div> Shared</span>
-  </div>
+  {% block counters %}
+    {% set counters = h.requestdata_get_request_counters(item.package_id) %}
+    <div class="requested-data-container__content-item-counters">
+      <span><div class="counter-number">{{ counters.requests }}</div> Requests</span>
+      <span><div class="counter-number">{{ counters.replied }}</div> Replied</span>
+      <span><div class="counter-number">{{ counters.declined }}</div> Declined</span>
+      <span><div class="counter-number">{{ counters.shared }}</div> Shared</span>
+    </div>
+  {% endblock %}
   <i class="icon-chevron-down archive-requests-arrow" data-toggle="collapse" data-target="#{{ item.package_id }}"></i>
   <div id="{{ item.package_id }}" class="collapse">
     {% for x in item.requests_archived %}
