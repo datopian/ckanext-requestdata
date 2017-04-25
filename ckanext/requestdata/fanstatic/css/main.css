@@ -227,4 +227,6 @@
 .requested-data-org-title{
     margin: 7px 15px 0px 0px;
 }
-
+.requested-data-order-btn{
+    float:right;
+}

@@ -15,8 +15,8 @@
   {% set req = '?order_by=requests|org:' + o %}
   {% set shared = '?order_by=shared|org:' + o %}
 
-  <div class="dropdown">
-    <button class="btn btn-primary dropdown-toggle " type="button" data-toggle="dropdown">ORDER BY
+  <div class="dropdown requested-data-order-btn">
+    <button class="btn dropdown-toggle " type="button" data-toggle="dropdown">ORDER BY
     <span class="caret"></span></button>
     <ul class="dropdown-menu dropdown-menu-left">
       <li><a href="{{ service_url }}{{ asc }}">ALPHABETICAL(A-Z)</a></li>

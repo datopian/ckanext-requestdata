@@ -7,13 +7,14 @@
   {% set csv = '?format=csv'%}
   {% set json = '?format=json'%}
   <div class="dropdown">
-    <button class="btn btn-primary dropdown-toggle " type="button" data-toggle="dropdown">Download
+    <button class="btn dropdown-toggle " type="button" data-toggle="dropdown">Download
     <span class="caret"></span></button>
     <ul class="dropdown-menu dropdown-menu-left">
       <li><a href="{{ service_url }}{{ csv }}">CSV</a></li>
       <li><a href="{{ service_url }}{{ json }}">JSON</a></li>
     </ul>
   </div>
+    <br><br>
   <div>
     <div class="total-requests-counter requested-data-container-item">Total:
       <span>{{ total_requests_counters.requests[0][0] }} requests,</span>
@@ -50,8 +51,8 @@
             {% set desc = '?order_by=desc|org:' + o%}
             {% set req = '?order_by=requests|org:' + o %}
             {% set shared = '?order_by=shared|org:' + o %}
-          <div class="dropdown">
-            <button class="btn btn-primary dropdown-toggle " type="button" data-toggle="dropdown">ORDER BY
+          <div class="dropdown requested-data-order-btn">
+            <button class="btn dropdown-toggle " type="button" data-toggle="dropdown">ORDER BY
             <span class="caret"></span></button>
             <ul class="dropdown-menu dropdown-menu-left">
               <li><a href="{{ service_url }}{{ asc }}">ALPHABETICAL(A-Z)</a></li>
