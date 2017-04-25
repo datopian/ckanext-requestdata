@@ -16,7 +16,8 @@ Example usage:
 <div class="requested-data-container__content-item">
   <div class="requested-data-container-item">
     <p class="requested-data-container__content-item-info"><h4 style="width: 50%;">{{ item.title }}</h4></p>
-    <p class="requested-data-container__content-item-archive-maintainers">Requested by: {{ item.sender_name }}</p>
+      {% set sender_profile = h.url_for(controller='user', action='read', id=item.sender_user_id) %}
+    <p class="requested-data-container__content-item-archive-maintainers">Request by: <a href="{{ sender_profile }}" title="{{ _('View profile') }}">{{ item.sender_name }}</a></p>
       {% if template_type != 'user' %}
       <p class="requested-data-container__content-item-archive-maintainers">
         Maintainers:
