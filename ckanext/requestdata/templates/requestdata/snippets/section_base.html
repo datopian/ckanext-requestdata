@@ -13,7 +13,7 @@ Example usage:
 
 <section class="requested-data-container">
   <br>
-  <h3>{{ title }}</h3>
+  <h3 class="move-right">{{ title }}z</h3>
 
   {% if requests | length > 0 %}
     <div class="requested-data-container__content">
@@ -22,6 +22,6 @@ Example usage:
       {% endfor %}
     </div>
   {% else %}
-    <p>{{ _('No requests found.') }}</p>
+    <p class="move-right">{{ _('No requests found.') }}</p>
   {% endif %}
 </section>

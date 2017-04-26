@@ -3,14 +3,15 @@
 }
 
 .requested-data-container__content {
-  border: 1px solid #dddddd;
-  border-radius: 3px;
+
   }
 
 .requested-data-container__content-item {
-  border-bottom: 1px solid #dddddd;
   padding: 18px;
   position: relative;
+  border: 2px solid #dddddd;
+  border-radius: 10px;
+  margin: 5px 15px 10px 15px;
 }
 
 .requested-data-container__message {
@@ -222,14 +223,17 @@
   float: left;
 }
 .requested-data-container-inline{
-   display:inline;
+   display: inline;
 }
 .requested-data-org-title{
     margin: 7px 15px 0px 0px;
 }
 .requested-data-order-btn{
-    float:right;
+    float: right;
 }
 .requested-data-counters-num{
-    width:12px !important;
+    width: 12px !important;
+}
+.move-right{
+    margin-left: 15px;
 }

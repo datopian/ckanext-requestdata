@@ -12,7 +12,8 @@ Example usage:
 {% resource 'requestdata/expand-dataset.js' %}
 
 <div class="requested-data-container__content-item">
-  <p class="requested-data-container__content-item-info"><h3 style="width: 50%;">{{ item.title }}</h3></p>
+  <p class="requested-data-container__content-item-info">
+  <h3>{{ item.title }}</h3></p>
   {% block counters %}
     {% set counters = h.requestdata_get_request_counters(item.package_id) %}
     <div class="requested-data-container__content-item-counters">
