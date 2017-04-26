@@ -154,13 +154,18 @@
   width: 300px;
 }
 
-.requested-data-total-counters{
+.requested-data-total{
   font-size: 16px;
   margin-top: 25px;
 }
+.requested-data-total-counters{
+    font-size: 16px;
+    position: absolute;
+    top: 36px;
+    left: 116px;
+}
 .total-requests-filter {
-  margin-top:20px;
-  float:right;
+  margin-right: 20px;
 }
 .org-total-requests-filter{
   margin: 20px 15px;
@@ -213,9 +218,8 @@
 .add-dataset-modal-backdrop {
   display: none;
 }
-
 .requested-data-container-item {
-  float: left;
+
 }
 .requested-data-container-inline{
    display: inline;
@@ -242,8 +246,20 @@
     right: 30%;
 }
 .requested-data-total-content{
-    margin: 5px 15px 5px 10px;
+    padding: 18px;
+    position: relative;
+    border: 1px solid #dddddd;
+    background-color: #eeeeee;
+    font-size: 16px;
 }
 .requested-data-download-btn{
     margin:10px 0px 5px 10px;
+}
+.filter-requests{
+    position: absolute;
+    top: 35px;
+    right: 15px;
+}
+.btn-filter{
+    width: 100px !important;
 }

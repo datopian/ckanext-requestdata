@@ -15,7 +15,7 @@
     </ul>
   </div>
   <div class="requested-data-total-content">
-    <div class="requested-data-total-counters requested-data-container-item">Total:
+    <div class="requested-data-total requested-data-container-item">Total:
       <span>{{ total_requests_counters.requests[0][0] }} requests,</span>
       <span>{{ total_requests_counters.replied[0][0] }} replies,</span>
       <span>{{ total_requests_counters.declined[0][0] }} declined,</span>
@@ -25,12 +25,11 @@
       {% snippet 'requestdata/snippets/filter_requests.html', title='Organization', filter_options=organizations_for_filters, type='maintainer', type='organization' %}
     </div>
   </div>
-  <br><br>
   <div class="sysadmin-requests-container">
     {% for org in organizations %}
     <div class="requested-data-total-content">
       <div class="requested-data-org-title requested-data-container-item"> <h2 data-id="{{ org.id }}">{{ org['title'] }}</h2></div>
-       <div class="requested-data-total-counters requested-data-container-item">
+       <div class="requested-data-total-counters">
         <span>{{ org.counters.requests[0][0] }} requests,</span>
         <span>{{ org.counters.replied[0][0] }} replies,</span>
         <span>{{ org.counters.declined[0][0] }} declined,</span>
@@ -40,7 +39,6 @@
       {% snippet 'requestdata/snippets/filter_requests.html', org_name=org.name, title='Maintainer', filter_options=org.maintainers, type='maintainer' %}
       </div>
     </div>
-    <br><br>
       {% snippet 'requestdata/snippets/section_base.html', state='new', title='New', requests=org['requests_new'], template_type='admin'  %}
       {% snippet 'requestdata/snippets/section_base.html', state='open', title='Open', requests=org['requests_open'], template_type='admin' %}
 
