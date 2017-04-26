@@ -1,8 +1,8 @@
-{% extends "admin/base.html" %}
+{% extends "page.html" %}
 
 {% import 'macros/form.html' as form %}
 
-{% block primary_content_inner %}
+{% block primary %}
   {% set service_url = h.url_for('download_requests_data') %}
   {% set csv = '?format=csv'%}
   {% set json = '?format=json'%}
@@ -69,16 +69,5 @@
   </div>
 {% endblock %}
 
-{% block secondary_content %}
-  <div class="module module-narrow module-shallow">
-    <h2 class="module-heading">
-      <i class="icon-info-sign"></i>
-      {{ _('Data') }}
-    </h2>
-    <div class="module-content">
-      {% block admin_form_help %}
-        <p><strong>Requested data:</strong> We will add info for these page here</a>.</p>
-      {% endblock %}
-    </div>
-  </div>
-{% endblock %}
+{% block secondary %}{% endblock %}
+
