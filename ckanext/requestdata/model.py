@@ -118,7 +118,6 @@ class ckanextRequestdata(DomainObject):
         query = Session.query(self).autoflush(False)
         query = query.filter_by(**kwds)
         query = query.order_by(order)
-
         return query.all()
 
     @classmethod
@@ -285,7 +284,6 @@ def define_maintainers_table():
 
     maintainers_table = Table('ckanext_requestdata_maintainers', metadata,
                                 Column('id', types.UnicodeText, primary_key=True, default=make_uuid),
-
                                 Column('request_data_id', types.UnicodeText, ForeignKey('ckanext_requestdata_requests.id')),
                                 Column('maintainer_id', types.UnicodeText),
                                 Column('email', types.UnicodeText),
