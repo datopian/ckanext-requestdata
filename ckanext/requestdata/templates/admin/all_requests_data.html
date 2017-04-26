@@ -6,7 +6,7 @@
   {% set service_url = h.url_for('download_requests_data') %}
   {% set csv = '?format=csv'%}
   {% set json = '?format=json'%}
-  <div class="dropdown">
+  <div class="dropdown requested-data-download-btn">
     <button class="btn dropdown-toggle " type="button" data-toggle="dropdown">Download
     <span class="caret"></span></button>
     <ul class="dropdown-menu dropdown-menu-left">
@@ -14,9 +14,8 @@
       <li><a href="{{ service_url }}{{ json }}">JSON</a></li>
     </ul>
   </div>
-    <br><br>
-  <div>
-    <div class="total-requests-counter requested-data-container-item">Total:
+  <div class="requested-data-total-content">
+    <div class="requested-data-total-counters requested-data-container-item">Total:
       <span>{{ total_requests_counters.requests[0][0] }} requests,</span>
       <span>{{ total_requests_counters.replied[0][0] }} replies,</span>
       <span>{{ total_requests_counters.declined[0][0] }} declined,</span>
@@ -29,9 +28,9 @@
   <br><br>
   <div class="sysadmin-requests-container">
     {% for org in organizations %}
-    <div>
+    <div class="requested-data-total-content">
       <div class="requested-data-org-title requested-data-container-item"> <h2 data-id="{{ org.id }}">{{ org['title'] }}</h2></div>
-       <div class="total-requests-counter requested-data-container-item">
+       <div class="requested-data-total-counters requested-data-container-item">
         <span>{{ org.counters.requests[0][0] }} requests,</span>
         <span>{{ org.counters.replied[0][0] }} replies,</span>
         <span>{{ org.counters.declined[0][0] }} declined,</span>

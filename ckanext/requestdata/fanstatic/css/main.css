@@ -4,7 +4,7 @@
 
 .requested-data-container__content {
 
-  }
+ }
 
 .requested-data-container__content-item {
   padding: 18px;
@@ -49,10 +49,6 @@
   margin-right: 5px;
 }
 
-.requested-data-container__content-item-info {
-  width: 75%;
-}
-
 .requested-data-container__content-item-info-separator {
   color: #6f6b6b;
 }
@@ -63,12 +59,6 @@
   right: 25px;
   z-index: 10;
 }
-
-.requested-data-container__actions--data-shared .icon-thumbs-up,
-.requested-data-container__actions--data-notshared .icon-thumbs-down {
-
-}
-
 .requested-data-container__status {
   position: absolute;
   top: 50%;
@@ -164,7 +154,7 @@
   width: 300px;
 }
 
-.total-requests-counter {
+.requested-data-total-counters{
   font-size: 16px;
   margin-top: 25px;
 }
@@ -172,7 +162,7 @@
   margin-top:20px;
   float:right;
 }
-.sysadmin-requests-container .total-requests-counter {
+.sysadmin-requests-container .requested-data-total-counters {
   margin-bottom: 20px;
 }
 
@@ -230,6 +220,7 @@
 }
 .requested-data-order-btn{
     float: right;
+    margin-right: 15px;
 }
 .requested-data-counters-num{
     width: 12px !important;
@@ -239,4 +230,15 @@
 }
 .requested-data-container__collapse{
     margin-top:20px;
+}
+.requested-data-shared{
+    position: absolute;
+    top: 39%;
+    right: 30%;
+}
+.requested-data-total-content{
+    margin: 5px 15px 5px 10px;
+}
+.requested-data-download-btn{
+    margin:10px 0px 5px 10px;
 }
