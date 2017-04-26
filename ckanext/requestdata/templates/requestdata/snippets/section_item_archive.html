@@ -17,14 +17,14 @@ Example usage:
   {% block counters %}
     {% set counters = h.requestdata_get_request_counters(item.package_id) %}
     <div class="requested-data-container__content-item-counters">
-      <span><div class="counter-number"><span class="requested-data-counters-num">{{ counters.requests }}</span></div> Requests</span>
-      <span><div class="counter-number"><span class="requested-data-counters-num">{{ counters.replied }}</span></div> Replied</span>
-      <span><div class="counter-number"><span class="requested-data-counters-num">{{ counters.declined }}</span></div> Declined</span>
-      <span><div class="counter-number"><span class="requested-data-counters-num">{{ counters.shared }}</span></div> Shared</span>
+      <span><div class="counter-number"><span class="requested-data-counters-num">{{ counters.requests }}</span></div></span><span>Requests</span>
+      <span><div class="counter-number"><span class="requested-data-counters-num">{{ counters.replied }}</span></div> </span><span>Replied </span>
+      <span><div class="counter-number"><span class="requested-data-counters-num">{{ counters.declined }}</span></div></span><span>Declined</span>
+      <span><div class="counter-number"><span class="requested-data-counters-num">{{ counters.shared }}</span></div></span><span>Shared</span>
     </div>
   {% endblock %}
   {% block collapse_icon %}
-     <i class="icon-chevron-down archive-requests-arrow" data-toggle="collapse" data-target="#{{ item.package_id }}"></i>
+     <div><i class="icon-chevron-down archive-requests-arrow" data-toggle="collapse" data-target="#{{ item.package_id }}"></i></div>
   {% endblock %}
   <div id="{{ item.package_id }}" class="collapse requested-data-container__collapse">
     {% for x in item.requests_archived %}

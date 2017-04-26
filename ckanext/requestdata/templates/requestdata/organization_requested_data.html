@@ -3,7 +3,7 @@
 {% block subtitle %}{{ _('Requested Data') }} - {{ super() }}{% endblock %}
 
 {% block primary %}
-  <div class="total-requests-filter">
+  <div class="org-total-requests-filter">
   {% snippet 'requestdata/snippets/filter_requests.html', org_name=org_name, title='Maintainer', filter_options=maintainers, type='maintainer' %}
   </div>
   <br>

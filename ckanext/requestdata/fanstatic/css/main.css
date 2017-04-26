@@ -120,17 +120,17 @@
 }
 
 .requested-data-container__content-item-counters span {
-  margin-right: 50px;
+  margin-right: 40px;
   display: inline-block;
-  font-size: 13px;
+  font-size: 15px;
   width: 28px;
   height: 28px;
 }
 
 .counter-number {
   border-radius: 50%;
-  width: 12px;
-  height: 12px;
+  width: 16px;
+  height: 16px;
   padding: 8px;
   background: #d3d3d3;
   color: #606060;
@@ -162,6 +162,11 @@
   margin-top:20px;
   float:right;
 }
+.org-total-requests-filter{
+  margin: 20px 15px;
+  float:right
+}
+
 .sysadmin-requests-container .requested-data-total-counters {
   margin-bottom: 20px;
 }
