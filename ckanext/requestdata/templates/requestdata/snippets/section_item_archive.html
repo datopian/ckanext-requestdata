@@ -26,7 +26,7 @@ Example usage:
   {% block collapse_icon %}
      <i class="icon-chevron-down archive-requests-arrow" data-toggle="collapse" data-target="#{{ item.package_id }}"></i>
   {% endblock %}
-  <div id="{{ item.package_id }}" class="collapse">
+  <div id="{{ item.package_id }}" class="collapse requested-data-container__collapse">
     {% for x in item.requests_archived %}
     <div class="requested-data-container__content-item">
       {% set sender_profile = h.url_for(controller='user', action='read', id=x.sender_user_id) %}

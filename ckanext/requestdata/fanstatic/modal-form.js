@@ -165,9 +165,8 @@ this.ckan.module('modal-form', function($) {
             div.className = "alert alert-success alert-dismissable fade in";
             div.id = 'request-success-container'
             div.textContent = msg;
-            var currentDiv = document.getElementsByClassName("module-content");
-            // ckan main module content is 1 in the array
-            currentDiv[1].insertBefore(div, currentDiv[1].firstChild);
+            var currentDiv = document.getElementsByClassName("requested-data-message");
+            currentDiv[0].appendChild(div);
             this._resetModalForm();
         },
         _resetModalForm: function(){
