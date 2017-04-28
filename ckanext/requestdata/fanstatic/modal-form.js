@@ -39,7 +39,10 @@ this.ckan.module('modal-form', function($) {
             }
             var payload = {
                 message_content: this.options.message_content,
-                package_name: this.options.post_data.package_name
+                package_name: this.options.post_data.package_name,
+                maintainers: JSON.stringify(this.options.post_data.maintainers),
+                requested_by: this.options.post_data.requested_by,
+                sender_id: this.options.post_data.sender_id
             }
             if (!this._snippetReceived) {
                 this.sandbox.client.getTemplate(this.options.template_file, payload, this._onReceiveSnippet);

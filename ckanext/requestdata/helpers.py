@@ -2,6 +2,7 @@ import timeago
 import datetime
 import itertools
 from operator import itemgetter
+import json
 
 from ckan import model, logic
 from ckan.common import c, _, request
@@ -132,3 +133,10 @@ def has_query_param(param):
         return True
 
     return False
+
+
+def convert_str_to_json(data):
+    try:
+        return json.loads(data)
+    except Exception as e:
+        return 'string cannot be parsed'
