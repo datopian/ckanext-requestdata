@@ -37,8 +37,12 @@ this.ckan.module('modal-form', function($) {
               location.href = base_url + this.options.redirect_url
               return;
             }
+            var payload = {
+                message_content: this.options.message_content,
+                package_name: this.options.post_data.package_name
+            }
             if (!this._snippetReceived) {
-                this.sandbox.client.getTemplate(this.options.template_file, {message_content: this.options.message_content}, this._onReceiveSnippet);
+                this.sandbox.client.getTemplate(this.options.template_file, payload, this._onReceiveSnippet);
                 this._snippetReceived = true;
             } else if (this.modal) {
                 this.modal.modal('show');
