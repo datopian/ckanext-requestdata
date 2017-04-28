@@ -14,7 +14,6 @@ counters_validator = validators.request_counter_validator
 def request_create_schema():
     return {
         'sender_name': [not_empty, unicode],
-        'organization': [not_empty, unicode],
         'email_address': [not_empty, email_validator],
         'message_content': [not_empty, unicode],
         'package_id': [not_empty, package_id_exists]
