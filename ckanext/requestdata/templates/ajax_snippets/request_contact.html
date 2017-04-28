@@ -1,24 +1,58 @@
 {% import 'macros/form.html' as form %}
-
-<div class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
+{% block contact_form %}
+<div class="modal two-cols posfix">
+  <div class="modal-content">
+    <!-- <div class="modal-header">
             <h1>Contact the dataset owner</h1>
             <h3>Use the form to ask a question or provide comments about
                 this dataset to the owner.</h3>
+        </div> -->
+    <div class="modal-body">
+      <div class="row two-cols">
+        <div class="col-md-6 left-col">
+          <div class="large-title">
+            Request access to a dataset
+          </div>
+          <div class="large-text mTop20">
+            Get in touch with an organization to know more about its available datasets.
+          </div>
+          <div class="regular-text mTop20">
+            HDX enables you to contact organizations that have interesting datasets. We will encourage the contributor to answer your request within a week. Check your email for updates!
+          </div>
         </div>
-        <div class="modal-body">
-            <form class="form-horizontal col-sm-12" id="request-data-form">
+        <div class="col-md-6 right-col">
+          <div class="paddingfix">
+          <div class="ds-title">
+            Dataset Syria Border Crossing
+          </div>
+          <div class="ds-contrib mtop5">
+            Contributor: Joe Fletcher, US Government
+          </div>
+            <form class="form-horizontal" id="request-data-form">
               <div class="alert alert-error hide"></div>
-              {{ form.input('sender_name', id='field-name', label=_('Name'), placeholder=_('eg. Your name'), value='', error='', classes=['control-full'], is_required=true,attrs={'required': 'required', 'class': 'form-element'}) }}
-              {{ form.input('organization', id='field-organization', label=_('Organization'), placeholder=_('Organization name'), value='', error='', classes=['control-full'], is_required=true,attrs={'required': 'required', 'class': 'form-element'}) }}
-              {{ form.input('email_address', id='field-email', label=_('Email'), placeholder=_('Your email'), value='', error='', classes=['control-full'], is_required=true,attrs={'required': 'required', 'class': 'form-element'}) }}
-              {{ form.textarea('message_content', id='field-comments', label=_('Comments'), placeholder=_('eg. Message content'), value='', error='',is_required=true, attrs={'required': 'required', 'class': 'form-element'}  ) }}
+              <div class="mTop20">
+                {{ form.input('sender_name', id='field-name', label=_(''), placeholder=_('Your name'), value='', error='', classes=['control-full'], is_required=true,attrs={'required': 'required', 'class': 'form-element curvy-border form-fix'}) }}
+                {# {{ form.input('organization', id='field-organization', label=_('Organization'), placeholder=_('Organization name'), value='', error='', classes=['control-full'], is_required=true,attrs={'required': 'required', 'class': 'form-element'}) }} #}
+                {{ form.input('email_address', id='field-email', label=_(''), placeholder=_('Your email'), value='', error='', classes=['control-full'], is_required=true,attrs={'required': 'required', 'class': 'form-element curvy-border mtop5 form-fix'}) }}
+              </div>
+              <div class="mTop20 mbottom15">
+              <div class="redasterisk">
+                Why are you requesting access to this dataset?
+              </div>
+              <div class="mbottom10">
+                Leave a message for the contributor:
+              </div>
+            </div>
+              {{ form.textarea('message_content', id='field-comments', label=_(''), placeholder=_('Message content'), value='', error='',is_required=true, attrs={'required': 'required', 'class': 'form-element curvy-border form-fix'} ) }}
             </form>
         </div>
-        <div class="modal-footer">
-            <button class="btn btn-cancel">Cancel</button>
-            <button type="submit" class="btn btn-primary btn-submit">Submit</button>
-        </div>
+      </div>
     </div>
+    <div class="modal-footer bottom-actions">
+      <button class="btn btn-empty btn-empty-black btn-large btn-cancel">Cancel</button>
+      <button type="submit" class="btn btn-primary btn-submit">Send request</button>
+    </div>
+  </div>
+  </div>
 </div>
+{% endblock %}
