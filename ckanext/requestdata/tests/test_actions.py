@@ -52,7 +52,6 @@ class TestActions(ActionBase):
         assert len(ex.error_dict) == 5
 
         assert ex.error_dict['message_content'] == ['Missing value']
-        assert ex.error_dict['organization'] == ['Missing value']
         assert ex.error_dict['sender_name'] == ['Missing value']
         assert ex.error_dict['email_address'] == ['Missing value']
         assert ex.error_dict['package_id'] == ['Missing value']
@@ -129,7 +128,6 @@ class TestActions(ActionBase):
         assert result['package_id'] == data_dict['package_id']
         assert result['sender_name'] == data_dict['sender_name']
         assert result['message_content'] == data_dict['message_content']
-        assert result['organization'] == data_dict['organization']
         assert result['email_address'] == data_dict['email_address']
         assert result['data_shared'] is False
         assert result['state'] == 'new'
