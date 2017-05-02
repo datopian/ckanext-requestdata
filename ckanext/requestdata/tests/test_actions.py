@@ -49,7 +49,7 @@ class TestActions(ActionBase):
 
         ex = cm.exception
 
-        assert len(ex.error_dict) == 5
+        assert len(ex.error_dict) == 4
 
         assert ex.error_dict['message_content'] == ['Missing value']
         assert ex.error_dict['sender_name'] == ['Missing value']
