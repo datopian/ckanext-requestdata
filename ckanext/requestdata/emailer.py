@@ -2,7 +2,7 @@ import logging
 import smtplib
 import cgi
 import ckanext.hdx_users.controllers.mailer as hdx_mailer
-import paste.deploy.converters
+from paste.deploy.converters import asbool
 from socket import error as socket_error
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
@@ -33,52 +33,46 @@ def send_email(content, to, subject, file=None):
        :rtype: string
 
        '''
-    isHdx = paste.deploy.converters.asbool(
-        config.get('hdx_portal'))
-    if isHdx:
-        hdx_mailer.mail_recipient(to, subject, content)
-    else:
-        msg = MIMEMultipart()
 
-        from_ = SMTP_FROM
+    msg = MIMEMultipart()
 
-        if isinstance(to, basestring):
-            to = [to]
+    from_ = SMTP_FROM
 
-        msg['Subject'] = subject
-        msg['From'] = from_
-        msg['To'] = ','.join(to)
+    if isinstance(to, basestring):
+        to = [to]
 
-        msg.attach(MIMEText(content))
+    msg['Subject'] = subject
+    msg['From'] = from_
+    msg['To'] = ','.join(to)
 
-        if isinstance(file, cgi.FieldStorage):
-            part = MIMEBase('application', 'octet-stream')
-            part.set_payload(file.file.read())
-            Encoders.encode_base64(part)
+    msg.attach(MIMEText(content))
 
-            extension = file.filename.split('.')[-1]
+    if isinstance(file, cgi.FieldStorage):
+        part = MIMEBase('application', 'octet-stream')
+        part.set_payload(file.file.read())
+        Encoders.encode_base64(part)
 
-            part.add_header('Content-Disposition', 'attachment; filename=attachment.{0}'.format(extension))
+        extension = file.filename.split('.')[-1]
 
-            msg.attach(part)
+        part.add_header('Content-Disposition', 'attachment; filename=attachment.{0}'.format(extension))
 
-        try:
-            s = smtplib.SMTP(SMTP_SERVER)
+        msg.attach(part)
+
+    try:
+        s = smtplib.SMTP(SMTP_SERVER)
+        if SMTP_USER:
             s.login(SMTP_USER, SMTP_PASSWORD)
-            s.sendmail(from_, to, msg.as_string())
-
-            response_dict = {
-                'success' : True,
-                'message' : 'Email message was successfully sent.'
-            }
-            return response_dict
-        except socket_error:
-            log.critical('Could not connect to email server. Have you configured the SMTP settings?')
-            error_dict = {
-                'success': False,
-                'message' : 'An error occured while sending the email. Try again.'
-            }
-            return error_dict
-
-        finally:
-            s.quit()
+        s.sendmail(from_, to, msg.as_string())
+        s.quit()
+        response_dict = {
+            'success' : True,
+            'message' : 'Email message was successfully sent.'
+        }
+        return response_dict
+    except socket_error:
+        log.critical('Could not connect to email server. Have you configured the SMTP settings?')
+        error_dict = {
+            'success': False,
+            'message' : 'An error occured while sending the email. Try again.'
+        }
+        return error_dict
