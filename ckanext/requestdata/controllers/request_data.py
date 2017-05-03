@@ -4,6 +4,7 @@ from ckan import logic
 from ckanext.requestdata import emailer
 from ckan.plugins import toolkit
 from ckan.controllers.admin import get_sysadmins
+
 try:
     # CKAN 2.7 and later
     from ckan.common import config
@@ -32,11 +33,9 @@ def _get_action(action, data_dict):
     return toolkit.get_action(action)(_get_context(), data_dict)
 
 def _get_email_configuration(user_name,data_owner, dataset_name,email,message,organization):
-
     schema = logic.schema.update_configuration_schema()
     avaiable_terms =['{name}','{data_owner}','{dataset}','{organization}','{message}','{email}']
     new_terms = [user_name,data_owner,dataset_name,organization,message,email]
-
     for key in schema:
         ##get only email configuration
         if 'email_header' in key:
@@ -92,6 +91,7 @@ class RequestDataController(BaseController):
             'id': user_obj.id
         }
         organizations = _get_action('organization_list_for_user', data_dict)
+
         orgs = []
         for i in organizations:
                 orgs.append(i['display_name'])
@@ -99,7 +99,7 @@ class RequestDataController(BaseController):
         dataset_name = package['name']
         email = user_obj.email
         message = data['message_content']
-        data_owner = package['author']
+        data_owner = package['package_creator']
         content = _get_email_configuration(user_name,data_owner,dataset_name,email,message,org)
         if len(get_sysadmins()) > 0:
             sysadmin = get_sysadmins()[0].name
