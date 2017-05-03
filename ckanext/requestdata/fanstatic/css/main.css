@@ -272,3 +272,66 @@
   display: inline-block;
   margin-right: 5px;
 }
+
+.gray-bg {
+  background-color: #ececec;
+}
+
+.lg-title {
+  color: #828282;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 900 !important;
+  font-size: 25px !important;
+  line-height: 40px;
+  letter-spacing: 0.01em;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.neg-mb10 {
+  margin-bottom: -10px;
+}
+
+.new-msg {
+  background-color: #f7f7f7;
+  padding: 15px;
+  border-radius: 10px;
+  color: #a7a7a7;
+  font-size: medium;
+}
+
+.regular-text {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  color: #828282;
+}
+
+.new-bottom-actions {
+  position: static;
+}
+
+.new-bottom-actions button {
+  width: 180px;
+  height: 40px;
+}
+
+.new-bottom-actions div {
+  margin: 40px;
+}
+
+.new-bq {
+  padding: 10px 20px;
+  margin: 0 -25px 70px;
+  font-size: 17.5px;
+  width: 100%;
+}
+
+.requested-data-container-inline button[class="btn btn-empty btn-empty-black btn-large btn-cancel"] {
+/* reject_button_class block in template doesn't get overwritten, workaround^ */
+  margin-right: -60px;
+  text-align: center;
+}
