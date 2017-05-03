@@ -104,6 +104,13 @@ this.ckan.module('modal-form', function($) {
                 } else {
                     if (element.type == 'file') {
                       formData.append(element.name, element.files[0], element.value)
+
+                      // If a file has been attached, than move the request to archive
+                      // and mark it that data has been shared
+                      if (element.files.length > 0) {
+                          formData.append('state', 'archive')
+                          formData.append('data_shared', true)
+                      }
                     } else {
                       formData.append(element.name, element.value)
                     }
