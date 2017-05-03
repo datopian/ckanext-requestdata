@@ -150,7 +150,9 @@ class RequestdataPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
                 helpers.convert_id_to_email,
             'requestdata_has_query_param':
                 helpers.has_query_param,
-            'requestdata_convert_str_to_json': helpers.convert_str_to_json
+            'requestdata_convert_str_to_json': helpers.convert_str_to_json,
+            'requestdata_is_hdx_portal':
+                helpers.is_hdx_portal
         }
 
     # IDatasetForm

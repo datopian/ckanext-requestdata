@@ -4,11 +4,20 @@ import itertools
 from operator import itemgetter
 import json
 
+from paste.deploy.converters import asbool
+
 from ckan import model, logic
 from ckan.common import c, _, request
 from ckan.lib import base
 from ckan.plugins import toolkit
 from ckan.model.user import User
+
+try:
+    # CKAN 2.7 and later
+    from ckan.common import config
+except ImportError:
+    # CKAN 2.6 and earlier
+    from pylons import config
 
 NotFound = logic.NotFound
 NotAuthorized = logic.NotAuthorized
@@ -140,3 +149,7 @@ def convert_str_to_json(data):
         return json.loads(data)
     except Exception as e:
         return 'string cannot be parsed'
+
+
+def is_hdx_portal():
+    return asbool(config.get('hdx_portal', False))

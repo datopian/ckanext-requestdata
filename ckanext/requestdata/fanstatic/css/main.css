@@ -263,3 +263,12 @@
 .btn-filter{
     width: 100px;
 }
+
+.request-data-notification {
+  width: 10px;
+  height: 10px;
+  background: red;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 5px;
+}
