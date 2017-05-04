@@ -18,10 +18,10 @@
   {% endif %}
   <div class="requested-data-total-content">
     <div class="requested-data-total requested-data-container-item">Total:
-      <span>{{ total_requests_counters.requests[0][0] }} requests,</span>
-      <span>{{ total_requests_counters.replied[0][0] }} replies,</span>
-      <span>{{ total_requests_counters.declined[0][0] }} declined,</span>
-      <span>{{ total_requests_counters.shared[0][0] }} shared</span>
+      <span>{{ total_requests_counters.requests[0][0] or 0 }} requests,</span>
+      <span>{{ total_requests_counters.replied[0][0] or 0 }} replies,</span>
+      <span>{{ total_requests_counters.declined[0][0] or 0 }} declined,</span>
+      <span>{{ total_requests_counters.shared[0][0] or 0 }} shared</span>
     </div>
       {% if organizations %}
         <div class="total-requests-filter">
