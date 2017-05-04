@@ -226,6 +226,8 @@
 }
 .requested-data-org-title{
     margin: 7px 15px 0px 0px;
+    width: 23%;
+    word-wrap: break-word;
 }
 .requested-data-order-btn{
     float: right;
