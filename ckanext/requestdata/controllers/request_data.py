@@ -36,6 +36,7 @@ def _get_email_configuration(user_name,data_owner, dataset_name,email,message,or
     schema = logic.schema.update_configuration_schema()
     avaiable_terms =['{name}','{data_owner}','{dataset}','{organization}','{message}','{email}']
     new_terms = [user_name,data_owner,dataset_name,organization,message,email]
+
     for key in schema:
         ##get only email configuration
         if 'email_header' in key:
@@ -48,10 +49,26 @@ def _get_email_configuration(user_name,data_owner, dataset_name,email,message,or
         email_body += message
         return email_body
     for i in range(0,len(avaiable_terms)):
-            email_header = email_header.replace(avaiable_terms[i],new_terms[i])
-            email_body = email_body.replace(avaiable_terms[i],new_terms[i])
-            email_footer = email_footer.replace(avaiable_terms[i],new_terms[i])
-    result = email_header + '\n\n' + email_body + '\n\n' + email_footer
+        if avaiable_terms[i] == '{dataset}' and new_terms[i]:
+            url = toolkit.url_for(controller='package', action='read', id=new_terms[i], qualified=True)
+            new_terms[i] = '<a href="' + url + '">' + new_terms[i] + '</a>'
+
+        email_header = email_header.replace(avaiable_terms[i],new_terms[i])
+        email_body = email_body.replace(avaiable_terms[i],new_terms[i])
+        email_footer = email_footer.replace(avaiable_terms[i],new_terms[i])
+
+    url = toolkit.url_for('requestdata_my_requests', id=data_owner, qualified=True)
+    email_body += '<br><br> Go to your <a href="' + url + '">My Requests</a> page to see the new request.'
+    organizations = _get_action('organization_list_for_user', {'id': data_owner})
+
+    package = _get_action('package_show', {'id': dataset_name})
+
+    for org in organizations:
+        if org['name'] in organization and package['owner_org'] == org['id']:
+            url = toolkit.url_for('requestdata_organization_requests', id=org['name'], qualified=True)
+            email_body += '<br><br> Go to <a href="' + url + '">Requested data</a> page in organization admin.'
+
+    result = email_header + '<br><br>' + email_body + '<br><br>' + email_footer
     return result
 
 class RequestDataController(BaseController):

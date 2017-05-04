@@ -45,7 +45,16 @@ def send_email(content, to, subject, file=None):
     msg['From'] = from_
     msg['To'] = ','.join(to)
 
-    msg.attach(MIMEText(content, _charset='utf-8'))
+    content = """\
+        <html>
+          <head></head>
+          <body>
+            <p>""" + content + """</p>
+          </body>
+        </html>
+    """
+
+    msg.attach(MIMEText(content, 'html', _charset='utf-8'))
 
     if isinstance(file, cgi.FieldStorage):
         part = MIMEBase('application', 'octet-stream')
