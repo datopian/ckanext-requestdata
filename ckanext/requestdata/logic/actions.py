@@ -374,7 +374,10 @@ def increment_request_data_counters(context, data_dict):
         elif flag == 'declined':
             data_request.declined += 1
         elif flag == 'shared':
-             data_request.shared += 1
+            data_request.shared += 1
+        elif flag == 'shared and replied':
+            data_request.shared += 1
+            data_request.replied += 1
 
         data_request.save()
         return data_request
