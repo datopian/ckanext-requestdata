@@ -44,6 +44,13 @@
   font-size: 12px;
 }
 
+.requested-data-container__new-date {
+  color: #9d9c9c;
+  margin-top: 30px;
+  margin-bottom: 0px;
+}
+
+
 .requested-data-container__content-item .gravatar {
   border-radius: 100px;
   margin-right: 5px;
