@@ -167,8 +167,11 @@ class UserController(BaseController):
         if 'rejected' in data:
             data['rejected'] = asbool(data['rejected'])
             counters_data_dict['flag'] = 'declined'
+        elif 'data_shared' in data:
+            counters_data_dict['flag'] = 'shared and replied'
         else:
             counters_data_dict['flag'] = 'replied'
+
         message_content = data.get('message_content')
 
         if message_content is None or message_content == '':
@@ -220,7 +223,6 @@ class UserController(BaseController):
             'success': True,
             'message': 'Message was sent successfully'
         }
-
         get_action('requestdata_increment_request_data_counters')({}, counters_data_dict)
 
         return json.dumps(success)

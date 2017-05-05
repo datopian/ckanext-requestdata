@@ -1,7 +1,6 @@
 import logging
 import smtplib
 import cgi
-import ckanext.hdx_users.controllers.mailer as hdx_mailer
 from paste.deploy.converters import asbool
 from socket import error as socket_error
 from email.mime.text import MIMEText
