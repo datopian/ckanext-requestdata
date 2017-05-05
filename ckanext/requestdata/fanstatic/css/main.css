@@ -9,7 +9,7 @@
 .requested-data-container__content-item {
   padding: 18px;
   position: relative;
-  border: 2px solid #dddddd;
+  border: 1px solid #828282 !important;
   border-radius: 10px;
   margin: 5px 15px 10px 15px;
 }
@@ -308,7 +308,7 @@
   padding: 15px;
   border-radius: 10px;
   color: #a7a7a7;
-  font-size: medium;
+  font-size: small;
 }
 
 .regular-text {
@@ -321,15 +321,18 @@
 
 .new-bottom-actions {
   position: static;
+  margin-right: 45px;
+
 }
 
-.new-bottom-actions button {
-  width: 180px;
+.new-bottom-actions a {
+  width: 160px;
   height: 40px;
+  text-align: center;
+  vertical-align: middle;
 }
 
 .new-bottom-actions div {
-  margin: 40px;
 }
 
 .new-bq {
@@ -339,8 +342,11 @@
   width: 100%;
 }
 
-.requested-data-container-inline button[class="btn btn-empty btn-empty-black btn-large btn-cancel"] {
+.requested-data-container-inline a[class="btn btn-empty btn-empty-black btn-large btn-cancel"] {
 /* reject_button_class block in template doesn't get overwritten, workaround^ */
-  margin-right: -60px;
   text-align: center;
+}
+
+.requested-data-container-inline a {
+padding-top: 10px;
 }
