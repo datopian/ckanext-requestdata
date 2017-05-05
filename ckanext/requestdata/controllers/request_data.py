@@ -116,7 +116,8 @@ class RequestDataController(BaseController):
         dataset_name = package['name']
         email = user_obj.email
         message = data['message_content']
-        data_owner = package['package_creator']
+        creator_user_id = package['creator_user_id']
+        data_owner = _get_action('user_show', {'id': creator_user_id}).get('name')
         content = _get_email_configuration(user_name,data_owner,dataset_name,email,message,org)
         if len(get_sysadmins()) > 0:
             sysadmin = get_sysadmins()[0].name
