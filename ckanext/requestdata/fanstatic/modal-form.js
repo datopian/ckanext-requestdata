@@ -37,8 +37,15 @@ this.ckan.module('modal-form', function($) {
               location.href = base_url + this.options.redirect_url
               return;
             }
+            var payload = {
+                message_content: this.options.message_content,
+                package_name: this.options.post_data.package_name,
+                maintainers: JSON.stringify(this.options.post_data.maintainers),
+                requested_by: this.options.post_data.requested_by,
+                sender_id: this.options.post_data.sender_id
+            }
             if (!this._snippetReceived) {
-                this.sandbox.client.getTemplate(this.options.template_file, {message_content: this.options.message_content}, this._onReceiveSnippet);
+                this.sandbox.client.getTemplate(this.options.template_file, payload, this._onReceiveSnippet);
                 this._snippetReceived = true;
             } else if (this.modal) {
                 this.modal.modal('show');
@@ -96,7 +103,15 @@ this.ckan.module('modal-form', function($) {
                     submit = false
                 } else {
                     if (element.type == 'file') {
-                      formData.append(element.name, element.files[0], element.value)
+                       if (element.files.length > 0) {
+                             formData.append(element.name, element.files[0], element.value)
+
+                             // If a file has been attached, than move the request to archive
+                            // and mark it that data has been shared
+
+                             formData.append('state', 'archive')
+                             formData.append('data_shared', true)
+                      }
                     } else {
                       formData.append(element.name, element.value)
                     }
@@ -165,9 +180,8 @@ this.ckan.module('modal-form', function($) {
             div.className = "alert alert-success alert-dismissable fade in";
             div.id = 'request-success-container'
             div.textContent = msg;
-            var currentDiv = document.getElementsByClassName("module-content");
-            // ckan main module content is 1 in the array
-            currentDiv[1].insertBefore(div, currentDiv[1].firstChild);
+            var currentDiv = document.getElementsByClassName("requested-data-message");
+            currentDiv[0].appendChild(div);
             this._resetModalForm();
         },
         _resetModalForm: function(){

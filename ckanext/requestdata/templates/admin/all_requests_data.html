@@ -1,41 +1,50 @@
-{% extends "admin/base.html" %}
+{% extends "page.html" %}
 
 {% import 'macros/form.html' as form %}
 
-{% block primary_content_inner %}
+{% block primary %}
   {% set service_url = h.url_for('download_requests_data') %}
   {% set csv = '?format=csv'%}
   {% set json = '?format=json'%}
-  <div class="dropdown">
-    <button class="btn btn-primary dropdown-toggle " type="button" data-toggle="dropdown">Download
+  {% if organizations %}
+  <div class="dropdown requested-data-download-btn">
+    <button class="btn dropdown-toggle " type="button" data-toggle="dropdown">Download
     <span class="caret"></span></button>
     <ul class="dropdown-menu dropdown-menu-left">
       <li><a href="{{ service_url }}{{ csv }}">CSV</a></li>
       <li><a href="{{ service_url }}{{ json }}">JSON</a></li>
     </ul>
   </div>
-  <div class="total-requests-counter">Total:
-    <span>{{ total_requests_counters.requests[0][0] }} requests,</span>
-    <span>{{ total_requests_counters.replied[0][0] }} replies,</span>
-    <span>{{ total_requests_counters.declined[0][0] }} declined,</span>
-    <span>{{ total_requests_counters.shared[0][0] }} shared</span>
+  {% endif %}
+  <div class="requested-data-total-content">
+    <div class="requested-data-total requested-data-container-item">Total:
+      <span>{{ total_requests_counters.requests[0][0] or 0 }} requests,</span>
+      <span>{{ total_requests_counters.replied[0][0] or 0 }} replies,</span>
+      <span>{{ total_requests_counters.declined[0][0] or 0 }} declined,</span>
+      <span>{{ total_requests_counters.shared[0][0] or 0 }} shared</span>
+    </div>
+      {% if organizations %}
+        <div class="total-requests-filter">
+          {% snippet 'requestdata/snippets/filter_requests.html', title='Organization', filter_options=organizations_for_filters, type='maintainer', type='organization' %}
+        </div>
+      {% endif %}
   </div>
   <div class="sysadmin-requests-container">
-    {% snippet 'requestdata/snippets/filter_requests.html', title='Organization', filter_options=organizations_for_filters, type='maintainer', type='organization' %}
-    <br><br>
-
     {% for org in organizations %}
-      <h2 data-id="{{ org.id }}">Organization: {{ org['title'] }}</h2>
-      <div class="total-requests-counter">
+    <div class="requested-data-total-content">
+      <div class="requested-data-org-title requested-data-container-item"> <h2 data-id="{{ org.id }}">{{ org['title'] }}</h2></div>
+       <div class="requested-data-total-counters">
         <span>{{ org.counters.requests[0][0] }} requests,</span>
         <span>{{ org.counters.replied[0][0] }} replies,</span>
         <span>{{ org.counters.declined[0][0] }} declined,</span>
         <span>{{ org.counters.shared[0][0] }} shared</span>
       </div>
+      <div class="total-requests-filter">
       {% snippet 'requestdata/snippets/filter_requests.html', org_name=org.name, title='Maintainer', filter_options=org.maintainers, type='maintainer' %}
-
-      {% snippet 'requestdata/snippets/section_base.html', state='new', title='New', requests=org['requests_new'] %}
-      {% snippet 'requestdata/snippets/section_base.html', state='open', title='Open', requests=org['requests_open'] %}
+      </div>
+    </div>
+      {% snippet 'requestdata/snippets/section_base.html', state='new', title='New', requests=org['requests_new'], template_type='admin'  %}
+      {% snippet 'requestdata/snippets/section_base.html', state='open', title='Open', requests=org['requests_open'], template_type='admin' %}
 
             {% set service_url = h.url_for('ckanadmin_requests_data') %}
             {% set o = org['name']%}
@@ -43,8 +52,8 @@
             {% set desc = '?order_by=desc|org:' + o%}
             {% set req = '?order_by=requests|org:' + o %}
             {% set shared = '?order_by=shared|org:' + o %}
-          <div class="dropdown">
-            <button class="btn btn-primary dropdown-toggle " type="button" data-toggle="dropdown">ORDER BY
+          <div class="dropdown requested-data-order-btn">
+            <button class="btn dropdown-toggle " type="button" data-toggle="dropdown">ORDER BY
             <span class="caret"></span></button>
             <ul class="dropdown-menu dropdown-menu-left">
               <li><a href="{{ service_url }}{{ asc }}">ALPHABETICAL(A-Z)</a></li>
@@ -53,7 +62,7 @@
                <li><a href="{{ service_url }}{{ shared }}">SHARING RATE</a></li>
             </ul>
           </div>
-      {% snippet 'requestdata/snippets/section_base.html', state='archive', title='Archive', requests=org['requests_archive'] %}
+      {% snippet 'requestdata/snippets/section_base.html', state='archive', title='Archive', requests=org['requests_archive'], template_type='admin'  %}
     {% endfor %}
   </div>
   <div class="alert alert-dismissible request-message-alert hide" role="alert">
@@ -61,16 +70,4 @@
   </div>
 {% endblock %}
 
-{% block secondary_content %}
-  <div class="module module-narrow module-shallow">
-    <h2 class="module-heading">
-      <i class="icon-info-sign"></i>
-      {{ _('Data') }}
-    </h2>
-    <div class="module-content">
-      {% block admin_form_help %}
-        <p><strong>Requested data:</strong> We will add info for these page here</a>.</p>
-      {% endblock %}
-    </div>
-  </div>
-{% endblock %}
+{% block secondary %}{% endblock %}

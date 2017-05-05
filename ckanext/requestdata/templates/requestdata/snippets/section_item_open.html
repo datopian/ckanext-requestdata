@@ -14,13 +14,24 @@ Example usage:
 {% set package_url = h.url_for(controller='package', action='read', id=item.package_id) %}
 
 <div class="requested-data-container__content-item">
-  <div class="requested-data-container-item">
-    <p class="requested-data-container__content-item-info"><h4 style="width: 50%;">{{ item.title }}</h4></p>
-    <p class="requested-data-container__content-item-archive-maintainers">Requested by: {{ item.sender_name }}</p>
+  <div class="">
+    <p class="requested-data-container__content-item-info">
+      <h4>{{ item.title }}</h4></p>
+      {% set sender_profile = h.url_for(controller='user', action='read', id=item.sender_user_id) %}
+    <p class="requested-data-container__content-item-archive-maintainers">Request by: <a href="{{ sender_profile }}" title="{{ _('View profile') }}">{{ item.sender_name }}</a></p>
+      {% if template_type != 'user' %}
+      <p class="requested-data-container__content-item-archive-maintainers">
+        Maintainers:
+       {% for m in item.maintainers %}
+         {% set profile = h.url_for(controller='user', action='read', id=m.id) %}
+         <a href="{{ profile }}" title="{{ _('View profile') }}">{{ m.fullname }}</a>{% if not loop.last %}, {% endif %}
+       {% endfor %}
+      </p>
+      {% endif %}
      <p class="requested-data-container__date" title="{{ h.render_datetime(item.modified_at, with_hours=True) }}">{{ h.requestdata_time_ago_from_datetime(item.modified_at) }}</p>
   </div>
    <div class="requested-data-shared">
-      <p class="requested-data-container__content-item-info">Keep track of who you share information with.
+      <p>Keep track of who you share information with.
       <br>
      <a href="{{ package_url }}" title="{{ _('View dataset') }}">Has the dataset been shared?</a>
      </p>
@@ -49,4 +60,5 @@ Example usage:
             data-module-refresh_on_success="1"
             data-module-disable_action_buttons="1">No</button>
     </div>
+</div>
 </div>

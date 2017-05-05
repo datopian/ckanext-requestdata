@@ -118,7 +118,6 @@ class ckanextRequestdata(DomainObject):
         query = Session.query(self).autoflush(False)
         query = query.filter_by(**kwds)
         query = query.order_by(order)
-
         return query.all()
 
     @classmethod
@@ -141,7 +140,6 @@ class ckanextRequestdata(DomainObject):
                 'id': r.ckanextRequestdata.id,
                 'sender_name':r.ckanextRequestdata.sender_name,
                 'sender_user_id':r.ckanextRequestdata.sender_user_id,
-                'organization':r.ckanextRequestdata.organization,
                 'email_address':r.ckanextRequestdata.email_address,
                 'message_content': r.ckanextRequestdata.message_content,
                 'package_id':r.ckanextRequestdata.package_id,
@@ -167,8 +165,6 @@ def define_request_data_table():
                                Column('sender_name', types.UnicodeText,
                                       nullable=False),
                                Column('sender_user_id', types.UnicodeText,
-                                      nullable=False),
-                               Column('organization', types.UnicodeText,
                                       nullable=False),
                                Column('email_address', types.UnicodeText,
                                       nullable=False),
@@ -285,7 +281,6 @@ def define_maintainers_table():
 
     maintainers_table = Table('ckanext_requestdata_maintainers', metadata,
                                 Column('id', types.UnicodeText, primary_key=True, default=make_uuid),
-
                                 Column('request_data_id', types.UnicodeText, ForeignKey('ckanext_requestdata_requests.id')),
                                 Column('maintainer_id', types.UnicodeText),
                                 Column('email', types.UnicodeText),

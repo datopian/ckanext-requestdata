@@ -20,6 +20,7 @@ pip install -r requirements.txt
 
 These are the required configuration options used by the extension:
 ```
+hdx_portal = False
 smtp.server=YOUR_SMTP_SERVER
 smtp.user=YOUR_SMTP_USERNAME
 smtp.password=YOUR_SMTP_PASSWORD

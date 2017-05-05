@@ -139,7 +139,7 @@ class AdminController(AdminController):
             package_maintainer_ids = package['maintainer'].split(',')
             data_dict = {'id': package['owner_org']}
             org = _get_action('organization_show', data_dict)
-
+            item['title'] = package['title']
             if org['id'] in organizations_for_filters:
                 organizations_for_filters[org['id']]['requests'] += 1
             else:
@@ -151,15 +151,21 @@ class AdminController(AdminController):
 
             if len(filtered_organizations) > 0 and org['name'] not in filtered_organizations:
                 continue
-
+            maintainers = []
             for id in package_maintainer_ids:
                 user = _get_action('user_show', {'id': id})
                 username = user['name']
                 name = user['fullname']
 
+                payload = {
+                    id : id,
+                    'fullname': user['fullname']
+                }
+                maintainers.append(payload)
+
                 if not name:
                     name = username
-
+            item['maintainers'] = maintainers
             counters = _get_action('requestdata_request_data_counters_get_by_org', {'org_id': org['id']})
 
             if org['id'] not in tmp_orgs:

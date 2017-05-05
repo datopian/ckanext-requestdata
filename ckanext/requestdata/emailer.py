@@ -1,7 +1,8 @@
 import logging
 import smtplib
 import cgi
-
+import ckanext.hdx_users.controllers.mailer as hdx_mailer
+from paste.deploy.converters import asbool
 from socket import error as socket_error
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
@@ -44,7 +45,16 @@ def send_email(content, to, subject, file=None):
     msg['From'] = from_
     msg['To'] = ','.join(to)
 
-    msg.attach(MIMEText(content))
+    content = """\
+        <html>
+          <head></head>
+          <body>
+            <p>""" + content + """</p>
+          </body>
+        </html>
+    """
+
+    msg.attach(MIMEText(content, 'html', _charset='utf-8'))
 
     if isinstance(file, cgi.FieldStorage):
         part = MIMEBase('application', 'octet-stream')
@@ -59,10 +69,10 @@ def send_email(content, to, subject, file=None):
 
     try:
         s = smtplib.SMTP(SMTP_SERVER)
-        s.login(SMTP_USER, SMTP_PASSWORD)
+        if SMTP_USER:
+            s.login(SMTP_USER, SMTP_PASSWORD)
         s.sendmail(from_, to, msg.as_string())
         s.quit()
-
         response_dict = {
             'success' : True,
             'message' : 'Email message was successfully sent.'

@@ -45,6 +45,7 @@ class OrganizationController(organization.OrganizationController):
         try:
             requests = _get_action('requestdata_request_list_for_organization',
                                    {'org_id': id})
+
         except NotAuthorized:
             abort(403, _('Not authorized to see this page.'))
 
@@ -108,8 +109,7 @@ class OrganizationController(organization.OrganizationController):
         for item in requests:
             package = _get_action('package_show', {'id': item['package_id']})
             package_maintainer_ids = package['maintainer'].split(',')
-            data_dict = {'id': package['owner_org']}
-            org = _get_action('organization_show', data_dict)
+            item['title'] = package['title']
 
             for maint_id in package_maintainer_ids:
                 user = _get_action('user_show', {'id': maint_id})

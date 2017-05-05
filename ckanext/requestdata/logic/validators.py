@@ -1,4 +1,5 @@
 from email_validator import validate_email
+from paste.deploy.converters import asbool
 
 from ckan.plugins.toolkit import _
 from ckan.plugins.toolkit import get_action
@@ -23,6 +24,7 @@ def state_validator(key, data, errors, context):
 
 
 def boolean_validator(key, data, errors, context):
+    data[key] = asbool(data[key])
     if not isinstance(data[key], bool):
         message = _('The {0} parameter must be a Boolean value.'
                     .format(key[0]))
@@ -77,7 +79,7 @@ def members_in_org_validator(key, data, errors, context):
 
 
 def request_counter_validator(key, data, errors, context):
-    counters = ['request','replied','declined','shared']
+    counters = ['request','replied','declined','shared','shared and replied']
     if data[key] not in counters:
         message = _('The flag parameter must be request, replied, declined, or shared')
         errors[key].append(message)

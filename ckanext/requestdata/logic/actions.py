@@ -3,7 +3,6 @@ import datetime
 from ckan.plugins import toolkit
 from ckan.logic import check_access, NotFound
 import ckan.lib.navl.dictization_functions as df
-from ckan.common import request
 from ckan.model.user import User
 from ckanext.requestdata.logic import schema
 from ckanext.requestdata.model import ckanextRequestdata, ckanextUserNotification, ckanextMaintainers, ckanextRequestDataCounters
@@ -88,18 +87,6 @@ def request_show(context, data_dict):
 
     '''
 
-    # This code is in a try/except clause because when running the tests it
-    # gives the error "TypeError: No object (name: request) has been
-    # registered for this thread"
-    try:
-        if request.method != 'GET':
-            return {
-                'error': {
-                    'message': 'Please use HTTP method GET for this action.'
-                }
-            }
-    except TypeError:
-        pass
 
     data, errors = df.validate(data_dict, schema.request_show_schema(),
                                context)
@@ -128,19 +115,6 @@ def request_list_for_sysadmin(context, data_dict):
 
     '''
 
-    # This code is in a try/except clause because when running the tests it
-    # gives the error "TypeError: No object (name: request) has been
-    # registered for this thread"
-    try:
-        if request.method != 'GET':
-            return {
-                'error': {
-                    'message': 'Please use HTTP method GET for this action.'
-                }
-            }
-    except TypeError:
-        pass
-
     check_access('requestdata_request_list_for_sysadmin',
                  context, data_dict)
 
@@ -164,19 +138,6 @@ def request_list_for_organization(context, data_dict):
 
     '''
 
-    # This code is in a try/except clause because when running the tests it
-    # gives the error "TypeError: No object (name: request) has been
-    # registered for this thread"
-    try:
-        if request.method != 'GET':
-            return {
-                'error': {
-                    'message': 'Please use HTTP method GET for this action.'
-                }
-            }
-    except TypeError:
-        pass
-
     data, errors = df.validate(data_dict,
                                schema.request_list_for_organization_schema(),
                                context)
@@ -197,13 +158,11 @@ def request_list_for_organization(context, data_dict):
 
     packages = toolkit.get_action('package_search')(context, data_dict)
     total_requests = []
-
     for package in packages['results']:
         data = {
             'package_id': package['id']
         }
         requests = ckanextRequestdata.search(**data)
-
         for item in requests:
             total_requests.append(item.as_dict())
 
@@ -220,19 +179,6 @@ def request_list_for_current_user(context, data_dict):
     :rtype: list of dictionaries
 
     '''
-
-    # This code is in a try/except clause because when running the tests it
-    # gives the error "TypeError: No object (name: request) has been
-    # registered for this thread"
-    try:
-        if request.method != 'GET':
-            return {
-                'error': {
-                    'message': 'Please use HTTP method GET for this action.'
-                }
-            }
-    except TypeError:
-        pass
 
     check_access('requestdata_request_list_for_current_user',
                  context, data_dict)
@@ -388,7 +334,6 @@ def notification_change(context, data_dict):
         return notification
 
 
-@toolkit.side_effect_free
 def increment_request_data_counters(context, data_dict):
     '''
        Increment the counter for the requested data depending on the flag
@@ -429,7 +374,10 @@ def increment_request_data_counters(context, data_dict):
         elif flag == 'declined':
             data_request.declined += 1
         elif flag == 'shared':
-             data_request.shared += 1
+            data_request.shared += 1
+        elif flag == 'shared and replied':
+            data_request.shared += 1
+            data_request.replied += 1
 
         data_request.save()
         return data_request
