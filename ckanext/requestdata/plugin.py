@@ -50,6 +50,8 @@ class RequestdataPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
             'ckanext.requestdata.controllers.admin:AdminController'
         organization_controller =\
             'ckanext.requestdata.controllers.organization:OrganizationController'
+        search_controller =\
+            'ckanext.requestdata.controllers.search:SearchController'
 
         map.connect('/dataset/new',
                     controller=package_controller,
@@ -87,6 +89,11 @@ class RequestdataPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
                     '/organization/requested_data/{id}',
                     controller=organization_controller,
                     action='requested_data', ckan_icon='list')
+
+        map.connect('simple_search',
+                    '/dataset', controller=search_controller, action='search')
+        map.connect('search', '/search',
+                    controller=search_controller, action='search_datasets')
 
         return map
 
