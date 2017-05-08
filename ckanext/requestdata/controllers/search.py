@@ -5,17 +5,17 @@ except ImportError:
     # CKAN 2.6 and earlier
     from pylons import config
 
-is_hdx = config.get('hdx_portal')
+from paste.deploy.converters import asbool
+
+is_hdx = asbool(config.get('hdx_portal', False))
 
 if is_hdx:
-    from ckanext.hdx_search.controllers.search_controller import HDXSearchController as PackageController
+    from ckanext.hdx_search.controllers.search_controller\
+        import HDXSearchController as PackageController
 else:
     from ckan.controllers.package import PackageController
 
 
 class SearchController(PackageController):
     def search_datasets(self):
-        if is_hdx:
-            return self.search()
-        else:
-            pass
+        return self.search()
