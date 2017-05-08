@@ -16,6 +16,7 @@ class RequestdataPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
     plugins.implements(plugins.IAuthFunctions)
     plugins.implements(plugins.ITemplateHelpers)
     plugins.implements(plugins.IDatasetForm)
+    plugins.implements(plugins.IPackageController, inherit=True)
 
     # IConfigurer
 
@@ -90,10 +91,10 @@ class RequestdataPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
                     controller=organization_controller,
                     action='requested_data', ckan_icon='list')
 
-        map.connect('simple_search',
-                    '/dataset', controller=search_controller, action='search')
-        map.connect('search', '/search',
-                    controller=search_controller, action='search_datasets')
+        map.connect('simple_search', '/dataset', controller=search_controller,
+                    action='search_datasets')
+        map.connect('search', '/search', controller=search_controller,
+                    action='search_datasets')
 
         return map
 
@@ -206,3 +207,11 @@ class RequestdataPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
 
     def package_types(self):
         return ['requestdata-metadata-only']
+
+    # IPackageController
+
+    def before_search(self, search_params):
+        fq = {'fq': '+dataset_type:dataset OR requestdata-metadata-only'}
+        search_params.update(fq)
+
+        return search_params
