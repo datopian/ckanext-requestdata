@@ -34,7 +34,7 @@ this.ckan.module('modal-form', function($) {
             var base_url = ckan.sandbox().client.endpoint;
 
             if (!this.options.is_logged_in) {
-                if(this.options.is_hdx){
+                if(this.options.is_hdx == 'True'){
                     showOnboardingWidget('#loginPopup');
                     return;
                  }
