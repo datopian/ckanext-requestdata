@@ -105,6 +105,8 @@ def convert_id_to_email(ids):
 
         if user:
             emails.append(user.email)
+        else:
+            emails.append(id)
 
     return ','.join(emails)
 

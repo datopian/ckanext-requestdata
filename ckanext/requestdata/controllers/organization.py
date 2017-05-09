@@ -110,6 +110,7 @@ class OrganizationController(organization.OrganizationController):
             package = _get_action('package_show', {'id': item['package_id']})
             package_maintainer_ids = package['maintainer'].split(',')
             item['title'] = package['title']
+            package_maintainers = []
 
             for maint_id in package_maintainer_ids:
                 user = _get_action('user_show', {'id': maint_id})
@@ -119,8 +120,11 @@ class OrganizationController(organization.OrganizationController):
                 if not name:
                     name = username
 
-            payload = {'id': maint_id, 'name': name, 'username': username}
-            maintainers.append(payload)
+                payload = {'id': maint_id, 'fullname': name}
+                maintainers.append(payload)
+                package_maintainers.append(payload)
+
+            item['maintainers'] = package_maintainers
 
         copy_of_maintainers = maintainers
         maintainers = dict((item['id'], item) for item in maintainers).values()

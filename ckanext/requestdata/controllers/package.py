@@ -62,13 +62,10 @@ class PackageController(_PackageController):
                         'dataset_type': package_type,
                         'action': 'new',
                         'error_summary': error_summary,
-                        'data': {
-                            'tag_string': '',
-                            'group_id': None,
-                            'type': package_type
-                        },
                         'stage': ['active']
                     }
+
+                    form_vars['data'] = data_dict
 
                     extra_vars = {
                         'form_vars': form_vars,
