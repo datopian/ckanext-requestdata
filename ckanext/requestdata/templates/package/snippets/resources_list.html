@@ -3,7 +3,7 @@
 {% resource 'requestdata/modal-form.js' %}
 
 <section id="dataset-resources" class="resources">
-  <h3>{{ _('Data and Resources') }}</h3>
+  <h3 class="uppercase">{{ _('Data and Resources') }}</h3>
     <div class="requested-data-message"></div>
   {% block resource_list %}
     {% if resources %}
@@ -25,8 +25,8 @@
            {% set requestdata_action = h.url_for('requestdata_send_request') %}
            {% set request_post_data = h.dump_json({'package_id':pkg.id, 'package_name': pkg.name}) %}
            {% trans url=h.url_for(controller='package', action='new_resource', id=pkg.name) %}
-              <p class="empty">Unfortunately the actual data isn't available right now. If you are interested to receive it you can request data</p>
-              <a href="#" class="btn pull-right"
+              <p class="empty">The metadata is available for this dataset. To request the full dataset, please contact the contributor.</p>
+              <a href="#" class="btn pull-right" style="margin-top: 10px;"
                  data-module="modal-form"
                  data-module-template_file="request_contact.html"
                  data-module-submit_action="{{ requestdata_action }}"
@@ -34,8 +34,18 @@
                  data-module-is_logged_in="{{ is_logged_in }}"
                  data-module-is_hdx="{{ is_hdx }}"
                  data-module-redirect_url="{{ redirect_url }}"
-              >Request data resource</a>
+              >Request data</a>
           {% endtrans %}
     {% endif %}
+    <div class="container-subpanel">
+
+      <div class="circle gray-bg"></div>
+      <div class="lines">
+        <div class="upper gray-bg"></div>
+        <div class="lower gray-bg"></div>
+      </div>
+
+    </div>
+
     {% endblock %}
 </section>

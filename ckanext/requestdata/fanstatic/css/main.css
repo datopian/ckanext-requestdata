@@ -283,7 +283,7 @@
 }
 
 .gray-bg {
-  background-color: #ececec;
+  background-color: #eeeeee;
 }
 
 .lg-title {
@@ -350,4 +350,43 @@
 
 .requested-data-container-inline a {
 padding-top: 10px;
+}
+
+.circle {
+width:55px;
+height:55px;
+border-radius:50px;
+}
+
+.upper {
+  width: 350px;
+  height: 12px;
+  margin-bottom: 10px;
+}
+.lower {
+  width: 475px;
+  height: 12px;
+}
+
+.lines {
+  margin-top: -55px;
+padding: 10px;
+margin-left: 55px;
+padding-bottom: 20px;
+}
+
+h3 {
+  /* h3 overwritten in request-data.css (?) */
+  font-size: 18px !important;
+}
+
+.container-subpanel {
+  margin-top: 20px;
+}
+
+.empty {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: #888888;
 }
