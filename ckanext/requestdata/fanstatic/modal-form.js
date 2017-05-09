@@ -34,6 +34,10 @@ this.ckan.module('modal-form', function($) {
             var base_url = ckan.sandbox().client.endpoint;
 
             if (!this.options.is_logged_in) {
+                if(this.options.is_hdx){
+                    showOnboardingWidget('#loginPopup');
+                    return;
+                 }
               location.href = base_url + this.options.redirect_url
               return;
             }
