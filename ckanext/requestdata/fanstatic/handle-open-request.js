@@ -69,7 +69,6 @@ this.ckan.module('handle-open-request', function($) {
               className = 'icon-thumbs-down'
             }
 
-            this.el.html('<i class="' + className + '"></i>')
             this._disableActionButtons(payload.data_shared)
 
             if (this.options.refresh_on_success) {
