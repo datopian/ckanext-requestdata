@@ -226,6 +226,12 @@ class AdminController(AdminController):
                 package = _get_action('package_show', {'id': r['package_id']})
                 package_maintainer_ids = package['maintainer'].split(',')
 
+                #Quick fix for hdx portal
+                maintainer_ids = []
+                for maintainer_name in package_maintainer_ids:
+                    main_ids = _get_action('user_show', {'id': maintainer_name})
+                    maintainer_ids.append(main_ids['id'])
+
                 data_dict = {'id': package['owner_org']}
                 organ = _get_action('organization_show', data_dict)
 
@@ -233,7 +239,7 @@ class AdminController(AdminController):
                 for x in filtered_maintainers:
                     if x['org'] == organ['name']:
                         for maint in x['maintainers']:
-                            if maint in package_maintainer_ids:
+                            if maint in maintainer_ids:
                                 maintainer_found = True
 
                         if not maintainer_found:
