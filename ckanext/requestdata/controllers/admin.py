@@ -10,6 +10,7 @@ from ckan import  model
 from ckan.common import c, _
 import ckan.lib.base as base
 import ckan.lib.helpers as h
+import ckanext.requestdata.helpers as requestdata_helper
 import ckan.logic as logic
 import csv
 import json
@@ -225,12 +226,14 @@ class AdminController(AdminController):
 
                 package = _get_action('package_show', {'id': r['package_id']})
                 package_maintainer_ids = package['maintainer'].split(',')
+                is_hdx = requestdata_helper.is_hdx_portal()
 
-                #Quick fix for hdx portal
-                maintainer_ids = []
-                for maintainer_name in package_maintainer_ids:
-                    main_ids = _get_action('user_show', {'id': maintainer_name})
-                    maintainer_ids.append(main_ids['id'])
+                if is_hdx:
+                    #Quick fix for hdx portal
+                    maintainer_ids = []
+                    for maintainer_name in package_maintainer_ids:
+                        main_ids = _get_action('user_show', {'id': maintainer_name})
+                        maintainer_ids.append(main_ids['id'])
 
                 data_dict = {'id': package['owner_org']}
                 organ = _get_action('organization_show', data_dict)
@@ -239,8 +242,12 @@ class AdminController(AdminController):
                 for x in filtered_maintainers:
                     if x['org'] == organ['name']:
                         for maint in x['maintainers']:
-                            if maint in maintainer_ids:
-                                maintainer_found = True
+                            if is_hdx:
+                                if maint in maintainer_ids:
+                                    maintainer_found = True
+                            else:
+                                if maint in package_maintainer_ids:
+                                    maintainer_found = True
 
                         if not maintainer_found:
                             if r['state'] == 'new':
