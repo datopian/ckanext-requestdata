@@ -6,6 +6,7 @@ from ckan.controllers import organization
 from collections import Counter
 from ckanext.requestdata import helpers
 
+
 get_action = logic.get_action
 NotFound = logic.NotFound
 NotAuthorized = logic.NotAuthorized
@@ -112,6 +113,7 @@ class OrganizationController(organization.OrganizationController):
             item['title'] = package['title']
             package_maintainers = []
 
+
             for maint_id in package_maintainer_ids:
                 user = _get_action('user_show', {'id': maint_id})
                 username = user['name']
@@ -120,7 +122,7 @@ class OrganizationController(organization.OrganizationController):
                 if not name:
                     name = username
 
-                payload = {'id': maint_id, 'fullname': name}
+                payload = {'id': maint_id, 'name': name, 'username' : username}
                 maintainers.append(payload)
                 package_maintainers.append(payload)
 
@@ -143,6 +145,14 @@ class OrganizationController(organization.OrganizationController):
 
             package = _get_action('package_show', {'id': r['package_id']})
             package_maintainer_ids = package['maintainer'].split(',')
+            is_hdx = helpers.is_hdx_portal()
+
+            if is_hdx:
+                # Quick fix for hdx portal
+                maintainer_ids = []
+                for maintainer_name in package_maintainer_ids:
+                    main_ids = _get_action('user_show', {'id': maintainer_name})
+                    maintainer_ids.append(main_ids['id'])
 
             data_dict = {'id': package['owner_org']}
             organ = _get_action('organization_show', data_dict)
@@ -151,8 +161,12 @@ class OrganizationController(organization.OrganizationController):
             for x in filtered_maintainers:
                 if x['org'] == organ['name']:
                     for maint in x['maintainers']:
-                        if maint in package_maintainer_ids:
-                            maintainer_found = True
+                        if is_hdx:
+                            if maint in maintainer_ids:
+                                maintainer_found = True
+                        else:
+                            if maint in package_maintainer_ids:
+                                maintainer_found = True
 
                     if not maintainer_found:
                         requests.remove(r)
