@@ -64,6 +64,12 @@ this.ckan.module('modal-form', function($) {
         _onReceiveSnippet: function(html) {
             this.sandbox.body.append(this.createModal(html));
             this.modal.modal('show');
+
+            var backdrop = $('.modal-backdrop');
+
+            if (backdrop) {
+                backdrop.on('click', this._onCancel);
+            }
         },
         createModal: function(html) {
             if (!this.modal) {
