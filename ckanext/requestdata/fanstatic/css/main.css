@@ -390,3 +390,11 @@ h3 {
   font-weight: 400;
   color: #888888;
 }
+
+#dataset-resources h3 {
+  margin-left: 0px; 
+}
+
+.additional-info h3 {
+  margin-left: 5px;
+}
