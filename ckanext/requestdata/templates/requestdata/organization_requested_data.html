@@ -4,7 +4,9 @@
 
 {% block primary %}
   <div class="org-total-requests-filter">
-  {% snippet 'requestdata/snippets/filter_requests.html', org_name=org_name, title='Maintainer', filter_options=maintainers, type='maintainer' %}
+  {% if maintainers %}
+      {% snippet 'requestdata/snippets/filter_requests.html', org_name=org_name, title='Maintainer', filter_options=maintainers, type='maintainer' %}
+  {% endif %}
   </div>
   <br>
   {% snippet 'requestdata/snippets/section_base.html', state='new', title='New', requests=requests_new %}
@@ -17,17 +19,18 @@
   {% set req = '?order_by=requests|org:' + o %}
   {% set shared = '?order_by=shared|org:' + o %}
 
-  <div class="dropdown requested-data-order-btn">
-    <button class="btn dropdown-toggle " type="button" data-toggle="dropdown">ORDER BY
-    <span class="caret"></span></button>
-    <ul class="dropdown-menu dropdown-menu-left">
-      <li><a href="{{ service_url }}{{ asc }}">ALPHABETICAL(A-Z)</a></li>
-      <li><a href="{{ service_url }}{{ desc }}">ALPHABETICAL (Z-A)</a></li>
-       <li><a href="{{ service_url }}{{ req }}">REQUESTS RATE</a></li>
-       <li><a href="{{ service_url }}{{ shared }}">SHARING RATE</a></li>
-    </ul>
-  </div>
-
+  {% if requests_archive %}
+    <div class="dropdown requested-data-order-btn">
+      <button class="btn dropdown-toggle " type="button" data-toggle="dropdown">ORDER BY
+      <span class="caret"></span></button>
+      <ul class="dropdown-menu dropdown-menu-left">
+        <li><a href="{{ service_url }}{{ asc }}">ALPHABETICAL(A-Z)</a></li>
+        <li><a href="{{ service_url }}{{ desc }}">ALPHABETICAL (Z-A)</a></li>
+         <li><a href="{{ service_url }}{{ req }}">REQUESTS RATE</a></li>
+         <li><a href="{{ service_url }}{{ shared }}">SHARING RATE</a></li>
+      </ul>
+    </div>
+  {% endif %}
   {% snippet 'requestdata/snippets/section_base.html', state='archive', title='Archive', requests=requests_archive %}
 
   <div class="alert alert-dismissible request-message-alert hide" role="alert">
