@@ -27,6 +27,14 @@ smtp.password=YOUR_SMTP_PASSWORD
 smtp.mail_from =SENDER_MAIL
 ```
 
+You can add these additional options in the config for footer links in the email
+when new data request is sent:
+```
+ckanext.requestdata.newsletter_url
+ckanext.requestdata.twitter_url
+ckanext.requestdata.contact_email
+```
+
 ## Running the Tests
 
 To run the tests, first make sure that you have installed the required
