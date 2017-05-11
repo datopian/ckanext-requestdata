@@ -37,6 +37,8 @@ def _get_email_configuration(user_name,data_owner, dataset_name,email,message,or
     avaiable_terms =['{name}','{data_owner}','{dataset}','{organization}','{message}','{email}']
     new_terms = [user_name,data_owner,dataset_name,organization,message,email]
 
+    is_user_sysadmin = _get_action('user_show', {'id': c.user}).get('sysadmin')
+
     for key in schema:
         ##get only email configuration
         if 'email_header' in key:
@@ -52,6 +54,8 @@ def _get_email_configuration(user_name,data_owner, dataset_name,email,message,or
         if avaiable_terms[i] == '{dataset}' and new_terms[i]:
             url = toolkit.url_for(controller='package', action='read', id=new_terms[i], qualified=True)
             new_terms[i] = '<a href="' + url + '">' + new_terms[i] + '</a>'
+        elif avaiable_terms[i] == '{organization}' and is_user_sysadmin:
+            new_terms[i] = config.get('ckan.site_title')
 
         email_header = email_header.replace(avaiable_terms[i],new_terms[i])
         email_body = email_body.replace(avaiable_terms[i],new_terms[i])
@@ -68,7 +72,25 @@ def _get_email_configuration(user_name,data_owner, dataset_name,email,message,or
             url = toolkit.url_for('requestdata_organization_requests', id=org['name'], qualified=True)
             email_body += '<br><br> Go to <a href="' + url + '">Requested data</a> page in organization admin.'
 
+    site_url = config.get('ckan.site_url')
+    site_title = config.get('ckan.site_title')
+    newsletter_url = config.get('ckanext.requestdata.newsletter_url', site_url)
+    twitter_url = config.get('ckanext.requestdata.twitter_url', 'https://twitter.com')
+    contact_email = config.get('ckanext.requestdata.contact_email', '')
+
+    email_footer += """
+        <br><br>
+        <div style="text-align: center;">
+            <a href=" """ + site_url + """ ">""" + site_title + """</a><br><br>
+            <a href=" """ + newsletter_url + """ ">Sign up for our newsletter</a><br><br>
+            <span>Follow us on <a href=" """ + twitter_url + """ ">Twitter</a></span> | <span>Contact us <a href=" """ + contact_email + """ ">""" + contact_email + """</a></span>
+        </div>
+
+    """
+
     result = email_header + '<br><br>' + email_body + '<br><br>' + email_footer
+
+
     return result
 
 class RequestDataController(BaseController):
@@ -105,8 +127,10 @@ class RequestDataController(BaseController):
         user_obj = context['auth_user_obj']
         user_name = user_obj.fullname
         data_dict = {
-            'id': user_obj.id
+            'id': user_obj.id,
+            'permission': 'read'
         }
+  
         organizations = _get_action('organization_list_for_user', data_dict)
 
         orgs = []
@@ -150,7 +174,7 @@ class RequestDataController(BaseController):
                 if user:
                     data_dict['users'].append(user)
                     users_email.append(user['email'])
-            mail_subject = config.get('ckan.site_title') + ': New data request'
+            mail_subject = config.get('ckan.site_title') + ': New data request "' + dataset_name + '"'
             response_message = emailer.send_email(content, users_email, mail_subject)
 
             #notify package creator that new data request was made
