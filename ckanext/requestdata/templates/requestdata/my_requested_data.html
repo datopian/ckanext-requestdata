@@ -1,5 +1,11 @@
 {% extends "page.html" %}
 
+{% block breadcrumb_content %}
+  <li>{% link_for _('Users'), controller='user', action='index' %}</li>
+  <li class="active">
+    <a href="{{ h.url_for('requestdata_my_requests', id=c.userobj.name) }}">My Requests</a>
+  </li>
+{% endblock %}
 
 {% block subtitle %}{{ _('My Requests') }} - {{ super() }}{% endblock %}
 
