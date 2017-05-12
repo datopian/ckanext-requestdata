@@ -46,22 +46,11 @@
       {% snippet 'requestdata/snippets/section_base.html', state='new', title='New', requests=org['requests_new'], template_type='admin'  %}
       {% snippet 'requestdata/snippets/section_base.html', state='open', title='Open', requests=org['requests_open'], template_type='admin' %}
 
-            {% set service_url = h.url_for('ckanadmin_requests_data') %}
-            {% set o = org['name']%}
-            {% set asc = "?order_by=asc|org:"+ o%}
-            {% set desc = '?order_by=desc|org:' + o%}
-            {% set req = '?order_by=requests|org:' + o %}
-            {% set shared = '?order_by=shared|org:' + o %}
-          <div class="dropdown requested-data-order-btn">
-            <button class="btn dropdown-toggle " type="button" data-toggle="dropdown">ORDER BY
-            <span class="caret"></span></button>
-            <ul class="dropdown-menu dropdown-menu-left">
-              <li><a href="{{ service_url }}{{ asc }}">ALPHABETICAL(A-Z)</a></li>
-              <li><a href="{{ service_url }}{{ desc }}">ALPHABETICAL (Z-A)</a></li>
-               <li><a href="{{ service_url }}{{ req }}">REQUESTS RATE</a></li>
-               <li><a href="{{ service_url }}{{ shared }}">SHARING RATE</a></li>
-            </ul>
-          </div>
+      {% if org['requests_archive'] %}
+        {% set service_url = h.url_for('ckanadmin_requests_data') %}
+        {% snippet 'requestdata/snippets/order_requests.html', service_url=service_url, org_name=org.name %}
+      {% endif %}
+
       {% snippet 'requestdata/snippets/section_base.html', state='archive', title='Archive', requests=org['requests_archive'], template_type='admin'  %}
     {% endfor %}
   </div>
