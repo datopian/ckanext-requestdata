@@ -50,3 +50,8 @@ After that just type this command to actually run the tests in the extension.
 ```
 nosetests --ckan --with-pylons=test.ini
 ```
+To run the tests and produce a coverage report, first make sure you have coverage installed in your virtualenv (pip install coverage) then run:
+
+```
+nosetests --nologcapture --with-pylons=test.ini --with-coverage --cover-package=ckanext.requestdata --cover-inclusive --cover-erase --cover-tests
+```
