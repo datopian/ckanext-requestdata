@@ -8,17 +8,26 @@ belongs to can take actions on these requests and decide what to share.
 ## Full Documentation
 See the [Wiki]() for full documentation, examples, operational details and other information.
 
-## Development Installation
+##Installation
 
-To install ckanext-requestdata for development, activate your CKAN virtualenv
-and do:
+To install ckanext-requestdata:
 
-```
-git clone https://github.com/ViderumGlobal/ckanext-requestdata.git
-cd ckanext-requestdata
-python setup.py develop
-pip install -r requirements.txt
-```
+1. Activate your CKAN virtual environment, for example::
+
+     . /usr/lib/ckan/default/bin/activate
+
+2. Install the ckanext-requestdata Python package into your virtual environment::
+
+     pip install ckanext-requestdata
+
+3. Add ``requestdata`` to the ``ckan.plugins`` setting in your CKAN
+   config file (by default the config file is located at
+   ``/etc/ckan/default/production.ini``).
+
+4. Restart CKAN. For example if you've deployed CKAN with Apache on Ubuntu::
+
+     sudo service apache2 reload
+
 
 ## Config Settings
 
@@ -37,6 +46,18 @@ when new data request is sent:
 ckanext.requestdata.newsletter_url
 ckanext.requestdata.twitter_url
 ckanext.requestdata.contact_email
+```
+
+## Development Installation
+
+To install ckanext-requestdata for development, activate your CKAN virtualenv
+and do:
+
+```
+git clone https://github.com/ViderumGlobal/ckanext-requestdata.git
+cd ckanext-requestdata
+python setup.py develop
+pip install -r requirements.txt
 ```
 
 ## Running the Tests
