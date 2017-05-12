@@ -8,7 +8,7 @@ belongs to can take actions on these requests and decide what to share.
 ## Full Documentation
 See the [Wiki]() for full documentation, examples, operational details and other information.
 
-##Installation
+## Installation
 
 To install ckanext-requestdata:
 
