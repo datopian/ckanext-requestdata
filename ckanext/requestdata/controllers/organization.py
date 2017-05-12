@@ -35,12 +35,9 @@ class OrganizationController(organization.OrganizationController):
     def requested_data(self, id):
         '''Handles creating template for 'Requested Data' page in the
         organization's dashboard.
-
         :param id: The organization's id.
         :type id: string
-
         :returns: template
-
         '''
 
         try:
@@ -122,7 +119,7 @@ class OrganizationController(organization.OrganizationController):
                 if not name:
                     name = username
 
-                payload = {'id': maint_id, 'name': name, 'username' : username}
+                payload = {'id': maint_id, 'name': name, 'username' : username, 'fullname': name}
                 maintainers.append(payload)
                 package_maintainers.append(payload)
 
@@ -187,7 +184,6 @@ class OrganizationController(organization.OrganizationController):
 
         if organ['name'] == q_organization:
             grouped_requests_archive = sorted(grouped_requests_archive, key=lambda x: x[order], reverse=reverse)
-
         extra_vars = {
             'requests_new': requests_new,
             'requests_open': requests_open,
