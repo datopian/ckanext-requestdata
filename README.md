@@ -12,11 +12,11 @@ See the [Wiki](https://github.com/ViderumGlobal/ckanext-requestdata/wiki) for fu
 
 To install ckanext-requestdata:
 
-1. Activate your CKAN virtual environment, for example::
+1. Activate your CKAN virtual environment, for example:
 
      . /usr/lib/ckan/default/bin/activate
 
-2. Install the ckanext-requestdata Python package into your virtual environment::
+2. Install the ckanext-requestdata Python package into your virtual environment:
 
      pip install ckanext-requestdata
 
@@ -24,7 +24,7 @@ To install ckanext-requestdata:
    config file (by default the config file is located at
    ``/etc/ckan/default/production.ini``).
 
-4. Restart CKAN. For example if you've deployed CKAN with Apache on Ubuntu::
+4. Restart CKAN. For example if you've deployed CKAN with Apache on Ubuntu:
 
      sudo service apache2 reload
 
@@ -57,7 +57,7 @@ and do:
 git clone https://github.com/ViderumGlobal/ckanext-requestdata.git
 cd ckanext-requestdata
 python setup.py develop
-pip install -r requirements.txt
+pip install -r dev-requirements.txt
 ```
 
 ## Running the Tests
