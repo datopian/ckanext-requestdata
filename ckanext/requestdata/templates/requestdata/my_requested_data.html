@@ -1,9 +1,11 @@
 {% extends "page.html" %}
 
+{% set my_requests_url = h.url_for('requestdata_my_requests', id=c.userobj.name) %}
+
 {% block breadcrumb_content %}
   <li>{% link_for _('Users'), controller='user', action='index' %}</li>
   <li class="active">
-    <a href="{{ h.url_for('requestdata_my_requests', id=c.userobj.name) }}">My Requests</a>
+    <a href="{{ my_requests_url }}">My Requests</a>
   </li>
 {% endblock %}
 
@@ -12,6 +14,11 @@
 {% block primary %}
   {% snippet 'requestdata/snippets/section_base.html', state='new', title='New', requests=requests_new, template_type='user' %}
   {% snippet 'requestdata/snippets/section_base.html', state='open', title='Open', requests=requests_open, template_type='user' %}
+
+  {% if requests_archive %}
+    {% snippet 'requestdata/snippets/order_requests.html', service_url=my_requests_url %}
+  {% endif %}
+
   {% snippet 'requestdata/snippets/section_base.html', state='archive', title='Archive', requests=requests_archive, template_type='user' %}
 
   <div class="alert alert-dismissible request-message-alert hide" role="alert">
