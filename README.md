@@ -1,8 +1,12 @@
 ## Request data &middot; [![Build Status](https://travis-ci.org/ViderumGlobal/ckanext-requestdata.svg?branch=master)](https://travis-ci.org/ViderumGlobal/ckanext-requestdata)
 
-This extension allows users to request data to be added to datasets. The owner
-of the dataset as well as the admins of the organization that the dataset
-belongs to can take actions on these requests.
+These extension allow users to publish  dataset metadata without
+uploading any file(s). The owner
+of the dataset, as well as the admins of the organization that the dataset
+belongs to can take actions on these requests and decide what to share.
+
+## Full Documentation
+See the [Wiki]() for full documentation, examples, operational details and other information.
 
 ## Development Installation
 
