@@ -1,0 +1,22 @@
+{% if org_name %}
+  {% set asc = "?order_by=asc|org:"+ org_name %}
+  {% set desc = '?order_by=desc|org:' + org_name %}
+  {% set req = '?order_by=requests|org:' + org_name %}
+  {% set shared = '?order_by=shared|org:' + org_name %}
+{% else %}
+  {% set asc = "?order_by=asc" %}
+  {% set desc = '?order_by=desc' %}
+  {% set req = '?order_by=requests' %}
+  {% set shared = '?order_by=shared' %}
+{% endif %}
+
+<div class="dropdown requested-data-order-btn">
+  <button class="btn dropdown-toggle " type="button" data-toggle="dropdown">ORDER BY
+  <span class="caret"></span></button>
+  <ul class="dropdown-menu dropdown-menu-left">
+    <li><a href="{{ service_url }}{{ asc }}">ALPHABETICAL(A-Z)</a></li>
+    <li><a href="{{ service_url }}{{ desc }}">ALPHABETICAL (Z-A)</a></li>
+     <li><a href="{{ service_url }}{{ req }}">REQUESTS RATE</a></li>
+     <li><a href="{{ service_url }}{{ shared }}">SHARING RATE</a></li>
+  </ul>
+</div>
