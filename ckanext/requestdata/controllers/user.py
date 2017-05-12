@@ -86,7 +86,6 @@ class UserController(BaseController):
                 item['shared'] = count.shared
                 item['requests'] = count.requests
 
-            requests = sorted(requests, key=lambda x: x[order], reverse=reverse)
         #TODO simplify these
         for item in requests:
             package = _get_action('package_show', {'id': item['package_id']})
@@ -108,12 +107,15 @@ class UserController(BaseController):
             elif item['state'] == 'archive':
                 requests_archive.append(item)
 
-        grouped_requests_archive = helpers.group_archived_requests_by_dataset(requests_archive)
+        requests_archive = helpers.group_archived_requests_by_dataset(requests_archive)
+
+        if order:
+            requests_archive = sorted(requests_archive, key=lambda x: x[order], reverse=reverse)
 
         extra_vars = {
             'requests_new': requests_new,
             'requests_open': requests_open,
-            'requests_archive': grouped_requests_archive
+            'requests_archive': requests_archive
         }
 
         context = _get_context()
