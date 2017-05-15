@@ -14,6 +14,8 @@ Example usage:
 
 {% set is_hdx_portal = h.requestdata_is_hdx_portal() %}
 
+{{'is_hdx_portal', is_hdx_portal}}
+
 {% if not is_hdx_portal %}
   {% resource 'requestdata/css/new-requests.css' %}
 {% endif %}
@@ -23,7 +25,6 @@ Example usage:
 
 <div class="requested-data-container__content-item gray-bg" style="padding-bottom: 0px; padding-top: 0px;">
   <div class="row">
-
     <div class="col-sm-6">
       <div class="">
         <div class="">
