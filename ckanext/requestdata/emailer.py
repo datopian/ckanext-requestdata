@@ -7,7 +7,7 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.MIMEBase import MIMEBase
 from email import Encoders
-
+from smtplib import SMTPRecipientsRefused
 from pylons import config
 
 
@@ -77,6 +77,14 @@ def send_email(content, to, subject, file=None):
             'message' : 'Email message was successfully sent.'
         }
         return response_dict
+    except SMTPRecipientsRefused:
+        error = {
+            'success': False,
+            'error': {
+                'fields': {'recepient' : 'Invalid email recepient, maintainer not found'}
+            }
+        }
+        return error
     except socket_error:
         log.critical('Could not connect to email server. Have you configured the SMTP settings?')
         error_dict = {
