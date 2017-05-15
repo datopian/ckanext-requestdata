@@ -30,10 +30,14 @@ Example usage:
         {#  {% if template_type != 'user' %} #}
            <p class="requested-data-container__content-item-archive-maintainers bold">
              Maintainers:
-            {% for m in item.maintainers %}
-              {% set profile = h.url_for(controller='user', action='read', id=m.id) %}
-              <a href="{{ profile }}" title="{{ _('View profile') }}">{{ m.fullname }}</a>{% if not loop.last %}, {% endif %}
-            {% endfor %}
+             {% if item.maintainers %}
+                {% for m in item.maintainers %}
+                  {% set profile = h.url_for(controller='user', action='read', id=m.id) %}
+                  <a href="{{ profile }}" title="{{ _('View profile') }}">{{ m.fullname }}</a>{% if not loop.last %}, {% endif %}
+                {% endfor %}
+              {% else %}
+                 <span>Not found</span>
+             {% endif %}
            </p>
         {#  {% endif %} #}
        </div>
