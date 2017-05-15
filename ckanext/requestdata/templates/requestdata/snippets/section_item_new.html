@@ -12,6 +12,12 @@ Example usage:
 
 {% resource 'requestdata/modal-form.js' %}
 
+{% set is_hdx_portal = h.requestdata_is_hdx_portal() %}
+
+{% if not is_hdx_portal %}
+  {% resource 'requestdata/css/new-requests.css' %}
+{% endif %}
+
 {% set sender_profile = h.url_for(controller='user', action='read', id=item.sender_user_id) %}
 {% set package_url = h.url_for(controller='package', action='read', id=item.package_id) %}
 
@@ -63,7 +69,7 @@ Example usage:
 
    {% set redirect_url = h.url_for(controller='user', action='login') %}
 
-   <div class="requested-data-container__actions text-right new-bottom-actions">
+   <div class="requested-data-container__actions text-right {% if is_hdx_portal %}new-bottom-actions{% endif %}">
      <div class="requested-data-container-inline">
         <a {% block reject_buttton_class %} class="btn btn-danger requested-data-container__actions--reject" {% endblock %}
              data-module="modal-form"
