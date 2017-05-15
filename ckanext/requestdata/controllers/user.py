@@ -93,12 +93,15 @@ class UserController(BaseController):
             item['title'] = package['title']
             maintainers = []
             for i in package_maintainers_ids:
-                user = _get_action('user_show', {'id': i})
-                payload = {
-                    'id': i,
-                    'fullname': user['fullname']
-                }
-                maintainers.append(payload)
+                try:
+                    user = _get_action('user_show', {'id': i})
+                    payload = {
+                        'id': i,
+                        'fullname': user['fullname']
+                    }
+                    maintainers.append(payload)
+                except NotFound:
+                    pass
             item['maintainers'] = maintainers
             if item['state'] == 'new':
                 requests_new.append(item)
