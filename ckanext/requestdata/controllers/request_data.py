@@ -40,7 +40,10 @@ def _get_email_configuration(user_name,data_owner, dataset_name,email,message,or
     avaiable_terms =['{name}','{data_owner}','{dataset}','{organization}','{message}','{email}']
     new_terms = [user_name,data_owner,dataset_name,organization,message,email]
 
-    is_user_sysadmin = _get_action('user_show', {'id': c.user}).get('sysadmin')
+    try:
+        is_user_sysadmin = _get_action('user_show', {'id': c.user}).get('sysadmin')
+    except NotFound:
+        pass
 
     for key in schema:
         ##get only email configuration
@@ -174,20 +177,23 @@ class RequestDataController(BaseController):
             users_email = []
             #Get users objects from maintainers list
             for id in maintainers:
-                user = toolkit.get_action('user_show')(context_sysadmin, {'id': id})
-                if user:
+                try:
+                    user = toolkit.get_action('user_show')(context_sysadmin, {'id': id})
                     data_dict['users'].append(user)
                     users_email.append(user['email'])
+                except NotFound:
+                    pass
             mail_subject = config.get('ckan.site_title') + ': New data request "' + dataset_name + '"'
             response_message = emailer.send_email(content, users_email, mail_subject)
+            if response_message['success'] == True:
+                #notify package creator that new data request was made
+                _get_action('requestdata_notification_create', data_dict)
+                data_dict = {
+                    'package_id' : data['package_id'],
+                    'flag' : 'request'
+                }
+                _get_action('requestdata_increment_request_data_counters',data_dict)
 
-            #notify package creator that new data request was made
-            _get_action('requestdata_notification_create', data_dict)
-            data_dict = {
-                'package_id' : data['package_id'],
-                'flag' : 'request'
-            }
-            _get_action('requestdata_increment_request_data_counters',data_dict)
             return json.dumps(response_message)
         else:
             message = {
