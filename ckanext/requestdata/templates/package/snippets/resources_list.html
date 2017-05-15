@@ -37,15 +37,17 @@
               >Request data</a>
           {% endtrans %}
     {% endif %}
-    <div class="container-subpanel">
+    {% if pkg.type == 'hdx-requestdata-metadata-only' %}
+      <div class="container-subpanel">
 
-      <div class="circle gray-bg"></div>
-      <div class="lines">
-        <div class="upper gray-bg"></div>
-        <div class="lower gray-bg"></div>
+        <div class="circle gray-bg"></div>
+        <div class="lines">
+          <div class="upper gray-bg"></div>
+          <div class="lower gray-bg"></div>
+        </div>
+
       </div>
-
-    </div>
+    {% endif %}
 
     {% endblock %}
 </section>
