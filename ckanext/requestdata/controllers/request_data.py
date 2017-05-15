@@ -21,6 +21,7 @@ ValidationError = logic.ValidationError
 abort = base.abort
 BaseController = base.BaseController
 
+
 def _get_context():
     return {
         'model': model,
@@ -29,8 +30,10 @@ def _get_context():
         'auth_user_obj': c.userobj
     }
 
+
 def _get_action(action, data_dict):
     return toolkit.get_action(action)(_get_context(), data_dict)
+
 
 def _get_email_configuration(user_name,data_owner, dataset_name,email,message,organization):
     schema = logic.schema.update_configuration_schema()
@@ -92,6 +95,7 @@ def _get_email_configuration(user_name,data_owner, dataset_name,email,message,or
 
 
     return result
+
 
 class RequestDataController(BaseController):
 

@@ -110,7 +110,6 @@ class OrganizationController(organization.OrganizationController):
             item['title'] = package['title']
             package_maintainers = []
 
-
             for maint_id in package_maintainer_ids:
                 user = _get_action('user_show', {'id': maint_id})
                 username = user['name']
