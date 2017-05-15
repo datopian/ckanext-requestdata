@@ -12,12 +12,17 @@ Example usage:
 
 {% resource 'requestdata/modal-form.js' %}
 
+{% set is_hdx_portal = h.requestdata_is_hdx_portal() %}
+
+{% if not is_hdx_portal %}
+  {% resource 'requestdata/css/new-requests.css' %}
+{% endif %}
+
 {% set sender_profile = h.url_for(controller='user', action='read', id=item.sender_user_id) %}
 {% set package_url = h.url_for(controller='package', action='read', id=item.package_id) %}
 
 <div class="requested-data-container__content-item gray-bg" style="padding-bottom: 0px; padding-top: 0px;">
   <div class="row">
-
     <div class="col-sm-6">
       <div class="">
         <div class="">
@@ -54,10 +59,12 @@ Example usage:
    </div>
    {% set reply_action = h.url_for('requestdata_handle_new_request_action', username=c.userobj.name, request_action='reply') %}
 
-   {% set reply_post_data = h.dump_json({'id': item.id, 'package_id': item.package_id, 'state': 'open', 'send_to': item.email_address, 'package_name': item.title, 'maintainers': item.maintainers, 'requested_by': item.sender_name, 'sender_id': item.sender_user_id}) %}
+   {% set maintainers = item.maintainers or [] %}
+
+   {% set reply_post_data = h.dump_json({'id': item.id, 'package_id': item.package_id, 'state': 'open', 'send_to': item.email_address, 'package_name': item.title, 'maintainers': maintainers, 'requested_by': item.sender_name, 'sender_id': item.sender_user_id}) %}
 
    {% set reject_action = h.url_for('requestdata_handle_new_request_action', username=c.userobj.name, request_action='reject') %}
-   {% set reject_post_data = h.dump_json({'id': item.id, 'package_id': item.package_id, 'state': 'archive', 'send_to': item.email_address, 'rejected': True, 'package_name': item.title, 'maintainers': item.maintainers, 'requested_by': item.sender_name, 'sender_id': item.sender_user_id}) %}
+   {% set reject_post_data = h.dump_json({'id': item.id, 'package_id': item.package_id, 'state': 'archive', 'send_to': item.email_address, 'rejected': True, 'package_name': item.title, 'maintainers': maintainers, 'requested_by': item.sender_name, 'sender_id': item.sender_user_id}) %}
 
    {% if c.userobj %}
      {% set is_logged_in = 'true' %}
@@ -67,7 +74,7 @@ Example usage:
 
    {% set redirect_url = h.url_for(controller='user', action='login') %}
 
-   <div class="requested-data-container__actions text-right new-bottom-actions">
+   <div class="requested-data-container__actions text-right {% if is_hdx_portal %}new-bottom-actions{% endif %}">
      <div class="requested-data-container-inline">
         <a {% block reject_buttton_class %} class="btn btn-danger requested-data-container__actions--reject" {% endblock %}
              data-module="modal-form"
