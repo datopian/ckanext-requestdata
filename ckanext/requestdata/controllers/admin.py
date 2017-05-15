@@ -35,8 +35,10 @@ def _get_context():
         'auth_user_obj': c.userobj
     }
 
+
 def _get_action(action, data_dict):
     return toolkit.get_action(action)(_get_context(), data_dict)
+
 
 class AdminController(AdminController):
     ctrl = 'ckanext.requestdata.controllers.admin:AdminController'
@@ -153,20 +155,24 @@ class AdminController(AdminController):
             if len(filtered_organizations) > 0 and org['name'] not in filtered_organizations:
                 continue
             maintainers = []
+            name = ''
+            username = ''
             for id in package_maintainer_ids:
-                user = _get_action('user_show', {'id': id})
-                username = user['name']
-                name = user['fullname']
+                try:
+                    user = _get_action('user_show', {'id': id})
+                    username = user['name']
+                    name = user['fullname']
 
-                payload = {
-                    id : id,
-                    'fullname': user['fullname']
-                }
-                maintainers.append(payload)
+                    payload = {
+                        id : id,
+                        'fullname': user['fullname']
+                    }
+                    maintainers.append(payload)
 
-                if not name:
-                    name = username
-            item['maintainers'] = maintainers
+                    if not name:
+                        name = username
+                except NotFound:
+                    pass
             counters = _get_action('requestdata_request_data_counters_get_by_org', {'org_id': org['id']})
 
             if org['id'] not in tmp_orgs:
@@ -232,9 +238,11 @@ class AdminController(AdminController):
                     #Quick fix for hdx portal
                     maintainer_ids = []
                     for maintainer_name in package_maintainer_ids:
-                        main_ids = _get_action('user_show', {'id': maintainer_name})
-                        maintainer_ids.append(main_ids['id'])
-
+                        try:
+                            main_ids = _get_action('user_show', {'id': maintainer_name})
+                            maintainer_ids.append(main_ids['id'])
+                        except NotFound:
+                            pass
                 data_dict = {'id': package['owner_org']}
                 organ = _get_action('organization_show', data_dict)
 
@@ -265,7 +273,6 @@ class AdminController(AdminController):
         organizations_for_filters = sorted(organizations_for_filters.iteritems(), key=lambda (x, y): y['requests'], reverse=True)
 
         total_requests_counters = _get_action('requestdata_request_data_counters_get_all', {})
-
         extra_vars = {
             'organizations': organizations,
             'organizations_for_filters': organizations_for_filters,
