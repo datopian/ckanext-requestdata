@@ -132,9 +132,10 @@ class AdminController(AdminController):
                 for x in requests:
                     package = _get_action('package_show', {'id': x['package_id']})
                     count = _get_action('requestdata_request_data_counters_get', {'package_id': x['package_id']})
+                    if count:
+                        x['shared'] = count.shared
+                        x['requests'] = count.requests
                     x['title'] = package['title']
-                    x['shared'] = count.shared
-                    x['requests'] = count.requests
                     data_dict = {'id': package['owner_org']}
                     current_org = _get_action('organization_show', data_dict)
                     x['name'] = current_org['name']
