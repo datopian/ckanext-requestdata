@@ -103,7 +103,6 @@ class OrganizationController(organization.OrganizationController):
                     x['name'] = current_org['name']
 
         maintainers = []
-
         for item in requests:
             package = _get_action('package_show', {'id': item['package_id']})
             package_maintainer_ids = package['maintainer'].split(',')
@@ -111,17 +110,19 @@ class OrganizationController(organization.OrganizationController):
             package_maintainers = []
 
             for maint_id in package_maintainer_ids:
-                user = _get_action('user_show', {'id': maint_id})
-                username = user['name']
-                name = user['fullname']
+                try:
+                    user = _get_action('user_show', {'id': maint_id})
+                    username = user['name']
+                    name = user['fullname']
 
-                if not name:
-                    name = username
+                    if not name:
+                        name = username
 
-                payload = {'id': maint_id, 'name': name, 'username' : username, 'fullname': name}
-                maintainers.append(payload)
-                package_maintainers.append(payload)
-
+                    payload = {'id': maint_id, 'name': name, 'username' : username, 'fullname': name}
+                    maintainers.append(payload)
+                    package_maintainers.append(payload)
+                except NotFound:
+                    pass
             item['maintainers'] = package_maintainers
 
         copy_of_maintainers = maintainers
@@ -147,9 +148,11 @@ class OrganizationController(organization.OrganizationController):
                 # Quick fix for hdx portal
                 maintainer_ids = []
                 for maintainer_name in package_maintainer_ids:
-                    main_ids = _get_action('user_show', {'id': maintainer_name})
-                    maintainer_ids.append(main_ids['id'])
-
+                    try:
+                        main_ids = _get_action('user_show', {'id': maintainer_name})
+                        maintainer_ids.append(main_ids['id'])
+                    except NotFound:
+                        pass
             data_dict = {'id': package['owner_org']}
             organ = _get_action('organization_show', data_dict)
 
