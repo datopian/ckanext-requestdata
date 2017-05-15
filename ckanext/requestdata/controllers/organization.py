@@ -71,8 +71,11 @@ class OrganizationController(organization.OrganizationController):
 
                     if maintainers[0] != '*all*':
                         for i in maintainers:
-                            user = _get_action('user_show', {'id': i})
-                            maintainers_ids.append(user['id'])
+                            try:
+                                user = _get_action('user_show', {'id': i})
+                                maintainers_ids.append(user['id'])
+                            except NotFound:
+                                pass
 
                         data = {
                             'org': org,
