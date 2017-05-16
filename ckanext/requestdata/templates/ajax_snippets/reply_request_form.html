@@ -3,14 +3,17 @@
 <div class="modal">
   <div class="modal-content">
     <div class="modal-header">
-      <h2>Reject the request</h2>
+      <h2>Reply to the request</h2>
     </div>
     <div class="modal-body">
-      <form class="form-horizontal col-sm-12">
+      <blockquote class="requested-data-container__message--modal">
+        <p>{{ message_content }}</p>
+      </blockquote>
+      <form class="form-horizontal col-sm-12" enctype="multipart/form-data">
         <div class="alert alert-error hide"></div>
         {{ form.textarea('message_content', label=_('Message content'), is_required=true, attrs={'required': 'required', 'class': 'form-element'}) }}
 
-        {{ form.input('file_upload', type='file', label=_('Share File')) }}
+        {{ form.input('file_upload', type='file', label=_('Upload file')) }}
       </form>
     </div>
     <div class="modal-footer">
