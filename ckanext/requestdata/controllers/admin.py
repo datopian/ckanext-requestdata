@@ -168,8 +168,7 @@ class AdminController(AdminController):
                     name = user['fullname']
 
                     payload = {
-                        id : id,
-                        'fullname': user['fullname']
+                        'id' : id,'name': name, 'username' : username, 'fullname': name
                     }
                     maintainers.append(payload)
 
@@ -177,6 +176,7 @@ class AdminController(AdminController):
                         name = username
                 except NotFound:
                     pass
+            item['maintainers'] = maintainers
             counters = _get_action('requestdata_request_data_counters_get_by_org', {'org_id': org['id']})
 
             if org['id'] not in tmp_orgs:
