@@ -1,5 +1,9 @@
 {% ckan_extends %}
 
 {% block page_primary_action %}
-  {% snippet 'snippets/add_dataset.html', group=c.group_dict.id %}
+  {% set is_hdx_portal = h.requestdata_is_hdx_portal() %}
+
+  {% if not is_hdx_portal %}
+    {% snippet 'snippets/add_dataset.html', group=c.group_dict.id %}
+  {% endif %}
 {% endblock %}
