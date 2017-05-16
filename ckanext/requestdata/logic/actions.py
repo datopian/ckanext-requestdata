@@ -8,7 +8,6 @@ from ckanext.requestdata.logic import schema
 from ckanext.requestdata.model import ckanextRequestdata, ckanextUserNotification, ckanextMaintainers, ckanextRequestDataCounters
 from ckanext.requestdata import helpers
 
-
 def request_create(context, data_dict):
     '''Create new request data.
 
@@ -60,22 +59,26 @@ def request_create(context, data_dict):
         'message_content': message_content,
         'package_id': package_id
     }
+
     requestdata = ckanextRequestdata(**data)
     requestdata.save()
     maintainers_list = []
     is_hdx = helpers.is_hdx_portal()
 
     for id in maintainers:
-        if is_hdx:
-            main_ids = toolkit.get_action('user_show')(context, {'id': id})
-            user = User.get(main_ids['id'])
-        else:
-            user = User.get(id)
-        data = ckanextMaintainers()
-        data.maintainer_id = user.id
-        data.request_data_id = requestdata.id
-        data.email = user.email
-        maintainers_list.append(data)
+        try:
+            if is_hdx:
+                main_ids = toolkit.get_action('user_show')(context, {'id': id})
+                user = User.get(main_ids['id'])
+            else:
+                user = User.get(id)
+            data = ckanextMaintainers()
+            data.maintainer_id = user.id
+            data.request_data_id = requestdata.id
+            data.email = user.email
+            maintainers_list.append(data)
+        except NotFound:
+            pass
 
     out = ckanextMaintainers.insert_all(maintainers_list, requestdata.id)
 

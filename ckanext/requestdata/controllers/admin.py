@@ -103,8 +103,11 @@ class AdminController(AdminController):
 
                     if maintainers[0] != '*all*':
                         for i in maintainers:
-                            user = _get_action('user_show', {'id': i})
-                            maintainers_ids.append(user['id'])
+                            try:
+                                user = _get_action('user_show', {'id': i})
+                                maintainers_ids.append(user['id'])
+                            except NotFound:
+                                pass
 
                         data = {
                             'org': org,
@@ -129,9 +132,10 @@ class AdminController(AdminController):
                 for x in requests:
                     package = _get_action('package_show', {'id': x['package_id']})
                     count = _get_action('requestdata_request_data_counters_get', {'package_id': x['package_id']})
+                    if count:
+                        x['shared'] = count.shared
+                        x['requests'] = count.requests
                     x['title'] = package['title']
-                    x['shared'] = count.shared
-                    x['requests'] = count.requests
                     data_dict = {'id': package['owner_org']}
                     current_org = _get_action('organization_show', data_dict)
                     x['name'] = current_org['name']
