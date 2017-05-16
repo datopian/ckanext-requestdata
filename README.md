@@ -6,7 +6,7 @@ of the dataset, as well as the admins of the organization that the dataset
 belongs to can take actions on these requests and decide what to share.
 
 ## Full Documentation
-See the [Wiki](https://github.com/ViderumGlobal/ckanext-requestdata/wiki) for full documentation, examples, operational details and other information.
+See our [Wiki](https://github.com/ViderumGlobal/ckanext-requestdata/wiki) for full documentation, examples, operational details and other information.
 
 ## Installation
 
