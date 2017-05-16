@@ -34,10 +34,10 @@
     <div class="requested-data-total-content">
       <div class="requested-data-org-title requested-data-container-item"> <h2 data-id="{{ org.id }}">{{ org['title'] }}</h2></div>
        <div class="requested-data-total-counters">
-        <span>{{ org.counters.requests[0][0] }} requests,</span>
-        <span>{{ org.counters.replied[0][0] }} replies,</span>
-        <span>{{ org.counters.declined[0][0] }} declined,</span>
-        <span>{{ org.counters.shared[0][0] }} shared</span>
+        <span>{{ org.counters.requests[0][0] or 0 }} requests,</span>
+        <span>{{ org.counters.replied[0][0] or 0 }} replies,</span>
+        <span>{{ org.counters.declined[0][0] or 0 }} declined,</span>
+        <span>{{ org.counters.shared[0][0] or 0 }} shared</span>
       </div>
       <div class="total-requests-filter">
       {% snippet 'requestdata/snippets/filter_requests.html', org_name=org.name, title='Maintainer', filter_options=org.maintainers, type='maintainer' %}
