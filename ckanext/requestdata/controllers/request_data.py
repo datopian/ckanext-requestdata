@@ -185,14 +185,14 @@ class RequestDataController(BaseController):
                     pass
             mail_subject = config.get('ckan.site_title') + ': New data request "' + dataset_name + '"'
             response_message = emailer.send_email(content, users_email, mail_subject)
-            if response_message['success'] == True:
-                #notify package creator that new data request was made
-                _get_action('requestdata_notification_create', data_dict)
-                data_dict = {
-                    'package_id' : data['package_id'],
-                    'flag' : 'request'
-                }
-                _get_action('requestdata_increment_request_data_counters',data_dict)
+
+            #notify package creator that new data request was made
+            _get_action('requestdata_notification_create', data_dict)
+            data_dict = {
+                'package_id' : data['package_id'],
+                'flag' : 'request'
+            }
+            _get_action('requestdata_increment_request_data_counters',data_dict)
 
             return json.dumps(response_message)
         else:
