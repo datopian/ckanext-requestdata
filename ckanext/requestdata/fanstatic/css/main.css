@@ -398,3 +398,7 @@ h3 {
 .additional-info h3 {
   margin-left: 5px;
 }
+
+.requested-data-container .requested-data-message {
+  margin-top: 60px;
+}
