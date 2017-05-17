@@ -127,23 +127,25 @@
 }
 
 .requested-data-container__content-item-counters span {
-  margin-right: 40px;
-  display: inline-block;
+  margin-right: 80px;
   font-size: 15px;
-  width: 28px;
-  height: 28px;
+}
+
+.counter-container {
+  float: left;
 }
 
 .counter-number {
+  height: 30px;
+  width: 30px;
+  display: table-cell;
+  text-align: center;
+  vertical-align: middle;
   border-radius: 50%;
-  width: 16px;
-  height: 16px;
-  padding: 8px;
   background: #d3d3d3;
   color: #606060;
-  text-align: center;
-  font: 12px Arial, sans-serif;
-  margin-left: 8px;
+  position: relative;
+  left: 8px;
   font-weight: bold;
 }
 
