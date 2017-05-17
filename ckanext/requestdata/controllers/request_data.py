@@ -145,6 +145,7 @@ class RequestDataController(BaseController):
                 orgs.append(i['display_name'])
         org = ','.join(orgs)
         dataset_name = package['name']
+        dataset_title = package['title']
         email = user_obj.email
         message = data['message_content']
         creator_user_id = package['creator_user_id']
@@ -183,7 +184,11 @@ class RequestDataController(BaseController):
                     users_email.append(user['email'])
                 except NotFound:
                     pass
-            mail_subject = config.get('ckan.site_title') + ': New data request "' + dataset_name + '"'
+            mail_subject = config.get('ckan.site_title') + ': New data request "' + dataset_title + '"'
+
+            if len(users_email) == 0:
+                users_email = self._org_admins_for_dataset(dataset_name)
+
             response_message = emailer.send_email(content, users_email, mail_subject)
 
             #notify package creator that new data request was made
@@ -202,3 +207,17 @@ class RequestDataController(BaseController):
             }
 
             return json.dumps(message)
+
+    def _org_admins_for_dataset(self, dataset_name):
+        package = _get_action('package_show', {'id': dataset_name})
+        owner_org = package['owner_org']
+        users_email = []
+
+        org = _get_action('organization_show', {'id': owner_org})
+
+        for user in org['users']:
+            if user['sysadmin'] is True:
+                db_user = model.User.get(user['id'])
+                users_email.append(db_user.email)
+
+        return users_email
