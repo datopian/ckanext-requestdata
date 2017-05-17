@@ -3,6 +3,7 @@ from operator import attrgetter
 
 from paste.deploy.converters import asbool
 from pylons import config
+from email_validator import validate_email
 
 from ckan.lib import base
 from ckan import logic, model
@@ -165,6 +166,23 @@ class UserController(BaseController):
         '''
 
         data = dict(toolkit.request.POST)
+
+        reply_email = data['email']
+
+        try:
+            validate_email(reply_email)
+        except Exception:
+            error = {
+                'success': False,
+                'error': {
+                    'fields': {
+                        'email': 'The email you provided is invalid.'
+                    }
+                }
+            }
+
+            return json.dumps(error)
+
         counters_data_dict = {
             'package_id': data['package_id'],
             'flag': ''
@@ -209,6 +227,9 @@ class UserController(BaseController):
             request_action
 
         file = data.get('file_upload')
+
+        message_content += '<br><br> You can contact the maintainer on this '\
+            'email address: ' + reply_email
 
         response = send_email(message_content, to, subject, file=file)
 
