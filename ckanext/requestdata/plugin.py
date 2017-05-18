@@ -211,7 +211,9 @@ class RequestdataPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
     # IPackageController
 
     def before_search(self, search_params):
-        fq = {'fq': '+dataset_type:dataset OR requestdata-metadata-only'}
-        search_params.update(fq)
+        fq = search_params.get('fq', '')
+
+        if '+dataset_type' in fq:
+            search_params.update({'fq': fq + ' OR requestdata-metadata-only'})
 
         return search_params
