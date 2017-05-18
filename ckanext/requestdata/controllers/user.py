@@ -167,21 +167,22 @@ class UserController(BaseController):
 
         data = dict(toolkit.request.POST)
 
-        reply_email = data['email']
+        if request_action == 'reply':
+            reply_email = data.get('email')
 
-        try:
-            validate_email(reply_email)
-        except Exception:
-            error = {
-                'success': False,
-                'error': {
-                    'fields': {
-                        'email': 'The email you provided is invalid.'
+            try:
+                validate_email(reply_email)
+            except Exception:
+                error = {
+                    'success': False,
+                    'error': {
+                        'fields': {
+                            'email': 'The email you provided is invalid.'
+                        }
                     }
                 }
-            }
 
-            return json.dumps(error)
+                return json.dumps(error)
 
         counters_data_dict = {
             'package_id': data['package_id'],
@@ -228,8 +229,9 @@ class UserController(BaseController):
 
         file = data.get('file_upload')
 
-        message_content += '<br><br> You can contact the maintainer on this '\
-            'email address: ' + reply_email
+        if request_action == 'reply':
+            message_content += '<br><br> You can contact the maintainer on '\
+                'this email address: ' + reply_email
 
         response = send_email(message_content, to, subject, file=file)
 
