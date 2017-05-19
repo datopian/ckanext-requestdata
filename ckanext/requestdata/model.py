@@ -21,77 +21,77 @@ def setup():
         define_request_data_table()
         log.debug('Requestdata table defined in memory.')
 
-        if not request_data_table.exists():
-            request_data_table.create()
+    if not request_data_table.exists():
+        request_data_table.create()
     else:
         log.debug('Requestdata table already exists.')
-        inspector = Inspector.from_engine(engine)
+    inspector = Inspector.from_engine(engine)
 
-        index_names =\
-            [index['name'] for index in
-                inspector.get_indexes('ckanext_requestdata_requests')]
+    index_names =\
+        [index['name'] for index in
+            inspector.get_indexes('ckanext_requestdata_requests')]
 
-        if 'ckanext_requestdata_requests_id_idx' not in index_names:
-            log.debug('Creating index for ckanext_requestdata.')
-            Index('ckanext_requestdata_requests_id_idx',
-                  request_data_table.c.id).create()
+    if 'ckanext_requestdata_requests_id_idx' not in index_names:
+        log.debug('Creating index for ckanext_requestdata.')
+        Index('ckanext_requestdata_requests_id_idx',
+              request_data_table.c.id).create()
 
     if user_notification_table is None:
         define_user_notification_table()
         log.debug('UserNotification table defined in memory.')
 
-        if not user_notification_table.exists():
-            user_notification_table.create()
+    if not user_notification_table.exists():
+        user_notification_table.create()
     else:
         log.debug('UserNotification table already exists.')
-        inspector = Inspector.from_engine(engine)
+    inspector = Inspector.from_engine(engine)
 
-        index_names = \
-            [index['name'] for index in
-             inspector.get_indexes('ckanext_requestdata_user_notification')]
+    index_names = \
+        [index['name'] for index in
+         inspector.get_indexes('ckanext_requestdata_user_notification')]
 
-        if 'ckanext_requestdata_user_notification_id_idx' not in index_names:
-            log.debug('Creating index for ckanext_user_notification.')
-            Index('ckanext_requestdata_user_notification_id_idx',
-                  user_notification_table.c.id).create()
+    if 'ckanext_requestdata_user_notification_id_idx' not in index_names:
+        log.debug('Creating index for ckanext_user_notification.')
+        Index('ckanext_requestdata_user_notification_id_idx',
+              user_notification_table.c.id).create()
 
     if maintainers_table is None:
         define_maintainers_table()
         log.debug('Maintainers table defined in memory.')
 
-        if not maintainers_table.exists():
-            maintainers_table.create()
+    if not maintainers_table.exists():
+        maintainers_table.create()
     else:
         log.debug('Maintainers table already exists.')
-        inspector = Inspector.from_engine(engine)
+    inspector = Inspector.from_engine(engine)
 
-        index_names = \
-            [index['name'] for index in
-             inspector.get_indexes('ckanext_requestdata_maintainers')]
+    index_names = \
+        [index['name'] for index in
+         inspector.get_indexes('ckanext_requestdata_maintainers')]
 
-        if 'ckanext_requestdata_maintainers_id_idx' not in index_names:
-            log.debug('Creating index for ckanext_user_notification.')
-            Index('ckanext_requestdata_maintainers_id_idx',
-                  maintainers_table.c.id).create()
+    if 'ckanext_requestdata_maintainers_id_idx' not in index_names:
+        log.debug('Creating index for ckanext_user_notification.')
+        Index('ckanext_requestdata_maintainers_id_idx',
+              maintainers_table.c.id).create()
 
     if request_data_counters_table is None:
         define_request_data_counters_table()
         log.debug('Request data counters table defined in memory.')
 
-        if not request_data_counters_table.exists():
-            request_data_counters_table.create()
+    if not request_data_counters_table.exists():
+        request_data_counters_table.create()
     else:
         log.debug('Request data counters table already exists.')
-        inspector = Inspector.from_engine(engine)
+    inspector = Inspector.from_engine(engine)
 
-        index_names = \
-            [index['name'] for index in
-             inspector.get_indexes('ckanext_requestdata_counters')]
+    index_names = \
+        [index['name'] for index in
+         inspector.get_indexes('ckanext_requestdata_counters')]
 
-        if 'ckanext_requestdata_counters_id_idx' not in index_names:
-            log.debug('Creating index for ckanext_request_data_counters.')
-            Index('ckanext_requestdata_counters_id_idx',
-                  request_data_counters_table.c.id).create()
+    if 'ckanext_requestdata_counters_id_idx' not in index_names:
+        log.debug('Creating index for ckanext_request_data_counters.')
+        Index('ckanext_requestdata_counters_id_idx',
+              request_data_counters_table.c.id).create()
 
 
 class ckanextRequestdata(DomainObject):
