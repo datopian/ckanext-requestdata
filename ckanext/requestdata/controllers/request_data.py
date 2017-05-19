@@ -35,7 +35,7 @@ def _get_action(action, data_dict):
     return toolkit.get_action(action)(_get_context(), data_dict)
 
 
-def _get_email_configuration(user_name,data_owner, dataset_name,email,message,organization):
+def _get_email_configuration(user_name,data_owner, dataset_name,email,message,organization, only_org_admins=False):
     schema = logic.schema.update_configuration_schema()
     avaiable_terms =['{name}','{data_owner}','{dataset}','{organization}','{message}','{email}']
     new_terms = [user_name,data_owner,dataset_name,organization,message,email]
@@ -67,8 +67,10 @@ def _get_email_configuration(user_name,data_owner, dataset_name,email,message,or
         email_body = email_body.replace(avaiable_terms[i],new_terms[i])
         email_footer = email_footer.replace(avaiable_terms[i],new_terms[i])
 
-    url = toolkit.url_for('requestdata_my_requests', id=data_owner, qualified=True)
-    email_body += '<br><br> Go to your <a href="' + url + '">My Requests</a> page to see the new request.'
+
+    if not only_org_admins:
+        url = toolkit.url_for('requestdata_my_requests', id=data_owner, qualified=True)
+        email_body += '<br><br> Go to your <a href="' + url + '">My Requests</a> page to see the new request.'
     organizations = _get_action('organization_list_for_user', {'id': data_owner})
 
     package = _get_action('package_show', {'id': dataset_name})
@@ -150,7 +152,6 @@ class RequestDataController(BaseController):
         message = data['message_content']
         creator_user_id = package['creator_user_id']
         data_owner = _get_action('user_show', {'id': creator_user_id}).get('name')
-        content = _get_email_configuration(user_name,data_owner,dataset_name,email,message,org)
         if len(get_sysadmins()) > 0:
             sysadmin = get_sysadmins()[0].name
             context_sysadmin = {
@@ -176,6 +177,7 @@ class RequestDataController(BaseController):
                 'users' : []
             }
             users_email = []
+            only_org_admins = False
             #Get users objects from maintainers list
             for id in maintainers:
                 try:
@@ -188,6 +190,9 @@ class RequestDataController(BaseController):
 
             if len(users_email) == 0:
                 users_email = self._org_admins_for_dataset(dataset_name)
+                only_org_admins = True
+
+            content = _get_email_configuration(user_name,data_owner,dataset_name,email,message,org, only_org_admins=only_org_admins)
 
             response_message = emailer.send_email(content, users_email, mail_subject)
 
