@@ -3,18 +3,20 @@
   {% set desc = '?order_by=desc|org:' + org_name %}
   {% set req = '?order_by=requests|org:' + org_name %}
   {% set shared = '?order_by=shared|org:' + org_name %}
+  {% set most_recent = '?order_by=most_recent|org:' + org_name %}
 {% else %}
   {% set asc = "?order_by=asc" %}
   {% set desc = '?order_by=desc' %}
   {% set req = '?order_by=requests' %}
   {% set shared = '?order_by=shared' %}
+  {% set most_recent = '?order_by=most_recent' %}
 {% endif %}
 
 <div class="dropdown requested-data-order-btn">
   <button class="btn dropdown-toggle " type="button" data-toggle="dropdown">ORDER BY
   <span class="caret"></span></button>
   <ul class="dropdown-menu dropdown-menu-left">
-    <li><a href="{{ service_url }}">MOST RECENT</a></li>
+    <li><a href="{{ service_url }}{{ most_recent }}">MOST RECENT</a></li>
     <li><a href="{{ service_url }}{{ asc }}">ALPHABETICAL (A-Z)</a></li>
     <li><a href="{{ service_url }}{{ desc }}">ALPHABETICAL (Z-A)</a></li>
     <li><a href="{{ service_url }}{{ req }}">REQUESTS RATE</a></li>

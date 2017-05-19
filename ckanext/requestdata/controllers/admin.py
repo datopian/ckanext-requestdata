@@ -92,6 +92,7 @@ class AdminController(AdminController):
         reverse = True
         q_organization = ''
         request_params = request.params.dict_of_lists()
+        order = ''
 
         for item in request_params:
             if item == 'filter_by_maintainers':
@@ -128,6 +129,9 @@ class AdminController(AdminController):
                 elif 'desc' in order:
                     reverse = True
                     order = 'title'
+                elif 'most_recent' in order:
+                    reverse = True
+                    order = 'last_request_created_at'
 
                 for x in requests:
                     package = _get_action('package_show', {'id': x['package_id']})
@@ -271,8 +275,17 @@ class AdminController(AdminController):
 
             org['requests_archive'] = helpers.group_archived_requests_by_dataset(org['requests_archive'])
 
+            if order == 'last_request_created_at':
+                for dataset in org['requests_archive']:
+                    created_at = dataset.get('requests_archived')[0].get('created_at')
+                    data = {
+                        'last_request_created_at': created_at
+                    }
+                    dataset.update(data)
+
             if org['name'] == q_organization:
                 org['requests_archive'] = sorted( org['requests_archive'], key=lambda x: x[order], reverse=reverse)
+
 
         organizations_for_filters = sorted(organizations_for_filters.iteritems(), key=lambda (x, y): y['requests'], reverse=True)
 

@@ -94,6 +94,9 @@ class OrganizationController(organization.OrganizationController):
                 elif 'desc' in order:
                     reverse = True
                     order = 'title'
+                elif 'most_recent' in order:
+                    reverse = True
+                    order = 'last_request_created_at'
 
                 for x in requests:
                     package = _get_action('package_show', {'id': x['package_id']})
@@ -186,6 +189,13 @@ class OrganizationController(organization.OrganizationController):
                 requests_archive.append(item)
 
         grouped_requests_archive = helpers.group_archived_requests_by_dataset(requests_archive)
+
+        if order == 'last_request_created_at':
+            for dataset in grouped_requests_archive:
+                created_at = dataset.get('requests_archived')[0].get('created_at')
+                data = {
+                    'last_request_created_at': created_at
+                }
 
         if organ['name'] == q_organization:
             grouped_requests_archive = sorted(grouped_requests_archive, key=lambda x: x[order], reverse=reverse)

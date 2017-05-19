@@ -79,6 +79,9 @@ class UserController(BaseController):
             elif 'desc' in order_by:
                 reverse = True
                 order = 'title'
+            elif 'most_recent' in order_by:
+                reverse = True
+                order = 'last_request_created_at'
 
             for item in requests:
                 package = _get_action('package_show', {'id': item['package_id']})
@@ -112,6 +115,14 @@ class UserController(BaseController):
                 requests_archive.append(item)
 
         requests_archive = helpers.group_archived_requests_by_dataset(requests_archive)
+
+        if order == 'last_request_created_at':
+            for dataset in requests_archive:
+                created_at = dataset.get('requests_archived')[0].get('created_at')
+                data = {
+                    'last_request_created_at': created_at
+                }
+                dataset.update(data)
 
         if order:
             requests_archive = sorted(requests_archive, key=lambda x: x[order], reverse=reverse)

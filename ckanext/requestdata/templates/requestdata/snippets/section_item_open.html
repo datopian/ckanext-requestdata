@@ -28,7 +28,7 @@ Example usage:
        {% endfor %}
       </p>
       {% endif %}
-     <p class="requested-data-container__date" title="{{ h.render_datetime(item.modified_at, with_hours=True) }}">{{ h.requestdata_time_ago_from_datetime(item.modified_at) }}</p>
+     <p class="requested-data-container__date" title="{{ h.render_datetime(item.created_at, with_hours=True) }}">{{ h.requestdata_time_ago_from_datetime(item.created_at) }}</p>
   </div>
    <div class="requested-data-shared">
       <p>Keep track of who you share information with.

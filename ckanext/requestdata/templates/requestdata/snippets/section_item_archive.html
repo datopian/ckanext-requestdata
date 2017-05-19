@@ -40,7 +40,7 @@ Example usage:
       {% set sender_profile = h.url_for(controller='user', action='read', id=x.sender_user_id) %}
       <p class="requested-data-container__content-item-info">Request by: <a href="{{ sender_profile }}" title="{{ _('View profile') }}">{{ x.sender_name }}</a></p>
 
-      <p class="requested-data-container__date" title="{{ h.render_datetime(x.modified_at, with_hours=True) }}">{{ h.requestdata_time_ago_from_datetime(x.modified_at) }}</p>
+      <p class="requested-data-container__date" title="{{ h.render_datetime(x.created_at, with_hours=True) }}">{{ h.requestdata_time_ago_from_datetime(x.created_at) }}</p>
 
       <div class="requested-data-container__status">
         {% if x.rejected %}
