@@ -6,7 +6,6 @@
  *
  */
 
-
 this.ckan.module('modal-form', function($) {
     var api = {
         get: function(action, params, api_ver = 3) {
@@ -190,6 +189,7 @@ this.ckan.module('modal-form', function($) {
             div.className = "alert alert-success alert-dismissable fade in";
             div.id = 'request-success-container'
             div.textContent = msg;
+            div.style.marginTop = '25px';
             var currentDiv = document.getElementsByClassName("requested-data-message");
             currentDiv[0].appendChild(div);
             this._resetModalForm();
