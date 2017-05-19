@@ -216,7 +216,7 @@ class RequestDataController(BaseController):
         org = _get_action('organization_show', {'id': owner_org})
 
         for user in org['users']:
-            if user['sysadmin'] is True:
+            if user['capacity'] == 'admin':
                 db_user = model.User.get(user['id'])
                 users_email.append(db_user.email)
 
