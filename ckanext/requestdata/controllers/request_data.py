@@ -89,7 +89,7 @@ def _get_email_configuration(user_name,data_owner, dataset_name,email,message,or
         <div style="text-align: center;">
             <a href=" """ + site_url + """ ">""" + site_title + """</a><br><br>
             <a href=" """ + newsletter_url + """ ">Sign up for our newsletter</a><br><br>
-            <span>Follow us on <a href=" """ + twitter_url + """ ">Twitter</a></span> | <span>Contact us <a href=" """ + contact_email + """ ">""" + contact_email + """</a></span>
+            <span>Follow us on <a href=" """ + twitter_url + """ ">Twitter</a></span> | <span>Contact us <a href="mailto:""" + contact_email + """ ">""" + contact_email + """</a></span>
         </div>
 
     """
