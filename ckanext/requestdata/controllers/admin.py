@@ -55,6 +55,7 @@ class AdminController(AdminController):
                 data_dict = dict(request.POST)
                 del data_dict['save']
                 data = _get_action('config_option_update',data_dict)
+                h.flash_success(_('Successfully updated.'))
             except logic.ValidationError, e:
                 errors = e.error_dict
                 error_summary = e.error_summary
