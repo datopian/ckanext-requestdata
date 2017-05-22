@@ -67,18 +67,23 @@ def _get_email_configuration(user_name,data_owner, dataset_name,email,message,or
         email_body = email_body.replace(avaiable_terms[i],new_terms[i])
         email_footer = email_footer.replace(avaiable_terms[i],new_terms[i])
 
-
-    if not only_org_admins:
+    if only_org_admins:
+        owner_org = _get_action('package_show', {'id': dataset_name}).get('owner_org')
+        url = toolkit.url_for('requestdata_organization_requests', id=owner_org, qualified=True)
+        email_body += '<br><br> This dataset\'s maintainer does not exist. Go to your organisation\'s <a href="' + url + '">Requested Data</a> page to see the new request. Please also edit the dataset and assign a new maintainer.'
+    else:
         url = toolkit.url_for('requestdata_my_requests', id=data_owner, qualified=True)
         email_body += '<br><br> Go to your <a href="' + url + '">My Requests</a> page to see the new request.'
+
     organizations = _get_action('organization_list_for_user', {'id': data_owner})
 
     package = _get_action('package_show', {'id': dataset_name})
 
-    for org in organizations:
-        if org['name'] in organization and package['owner_org'] == org['id']:
-            url = toolkit.url_for('requestdata_organization_requests', id=org['name'], qualified=True)
-            email_body += '<br><br> Go to <a href="' + url + '">Requested data</a> page in organization admin.'
+    if not only_org_admins:
+        for org in organizations:
+            if org['name'] in organization and package['owner_org'] == org['id']:
+                url = toolkit.url_for('requestdata_organization_requests', id=org['name'], qualified=True)
+                email_body += '<br><br> Go to <a href="' + url + '">Requested data</a> page in organization admin.'
 
     site_url = config.get('ckan.site_url')
     site_title = config.get('ckan.site_title')
