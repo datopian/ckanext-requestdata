@@ -66,7 +66,7 @@ class UserController(BaseController):
         requests_open = []
         requests_archive = []
         reverse = True
-        order = ''
+        order = 'last_request_created_at'
 
         if order_by is not '':
             if 'shared' in order_by:

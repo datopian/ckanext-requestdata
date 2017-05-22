@@ -58,7 +58,7 @@ class OrganizationController(organization.OrganizationController):
         request_params = request.params.dict_of_lists()
         filtered_maintainers = []
         reverse = True
-        order = ''
+        order = 'last_request_created_at'
         q_organization = ''
 
         for item in request_params:

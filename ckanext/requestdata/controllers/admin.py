@@ -92,7 +92,7 @@ class AdminController(AdminController):
         reverse = True
         q_organization = ''
         request_params = request.params.dict_of_lists()
-        order = ''
+        order = 'last_request_created_at'
 
         for item in request_params:
             if item == 'filter_by_maintainers':
