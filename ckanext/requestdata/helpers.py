@@ -155,3 +155,15 @@ def convert_str_to_json(data):
 
 def is_hdx_portal():
     return asbool(config.get('hdx_portal', False))
+
+
+def is_current_user_a_maintainer(maintainers):
+    if c.user:
+        current_user = _get_action('user_show', {'id': c.user})
+        user_id = current_user.get('id')
+        user_name = current_user.get('name')
+
+        if user_id in maintainers or user_name in maintainers:
+            return True
+
+    return False

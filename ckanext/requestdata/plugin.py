@@ -160,7 +160,9 @@ class RequestdataPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
                 helpers.has_query_param,
             'requestdata_convert_str_to_json': helpers.convert_str_to_json,
             'requestdata_is_hdx_portal':
-                helpers.is_hdx_portal
+                helpers.is_hdx_portal,
+            'requestdata_is_current_user_a_maintainer':
+                helpers.is_current_user_a_maintainer
         }
 
     # IDatasetForm

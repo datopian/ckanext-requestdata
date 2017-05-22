@@ -30,34 +30,43 @@ this.ckan.module('modal-form', function($) {
         // Whether or not the rendered snippet has already been received from CKAN.
         _snippetReceived: false,
         _onClick: function(event) {
-            var base_url = ckan.sandbox().client.endpoint;
+            var is_current_user_a_maintainer = this.options.is_current_user_a_maintainer
+            var dialogResult = true
 
-            if (!this.options.is_logged_in) {
-                if(this.options.is_hdx == 'True'){
-                    showOnboardingWidget('#loginPopup');
-                    return;
-                 }
-              location.href = base_url + this.options.redirect_url
-              return;
-            }
-            var payload = {
-                message_content: this.options.message_content,
-                package_name: this.options.post_data.package_name,
-                maintainers: JSON.stringify(this.options.post_data.maintainers),
-                requested_by: this.options.post_data.requested_by,
-                sender_id: this.options.post_data.sender_id
-            }
-            if (!this._snippetReceived) {
-                this.sandbox.client.getTemplate(this.options.template_file, payload, this._onReceiveSnippet);
-                this._snippetReceived = true;
-            } else if (this.modal) {
-                this.modal.modal('show');
+            if (is_current_user_a_maintainer === 'True') {
+                var dialogResult = window.confirm('Request own dataset\n\nWARNING: You are a maintainer of the dataset you are requesting. Do you wish to continue making this request?')
             }
 
-            var success_msg = document.querySelector('#request-success-container');
+            if (dialogResult) {
+                var base_url = ckan.sandbox().client.endpoint;
 
-            if (success_msg) {
-                success_msg.parentElement.removeChild(success_msg);
+                if (!this.options.is_logged_in) {
+                    if(this.options.is_hdx == 'True'){
+                        showOnboardingWidget('#loginPopup');
+                        return;
+                     }
+                  location.href = base_url + this.options.redirect_url
+                  return;
+                }
+                var payload = {
+                    message_content: this.options.message_content,
+                    package_name: this.options.post_data.package_name,
+                    maintainers: JSON.stringify(this.options.post_data.maintainers),
+                    requested_by: this.options.post_data.requested_by,
+                    sender_id: this.options.post_data.sender_id
+                }
+                if (!this._snippetReceived) {
+                    this.sandbox.client.getTemplate(this.options.template_file, payload, this._onReceiveSnippet);
+                    this._snippetReceived = true;
+                } else if (this.modal) {
+                    this.modal.modal('show');
+                }
+
+                var success_msg = document.querySelector('#request-success-container');
+
+                if (success_msg) {
+                    success_msg.parentElement.removeChild(success_msg);
+                }
             }
         },
         _onReceiveSnippet: function(html) {
