@@ -12,7 +12,7 @@ import ckan.lib.base as base
 import ckan.lib.helpers as h
 import ckanext.requestdata.helpers as requestdata_helper
 import ckan.logic as logic
-import csv
+import unicodecsv as csv
 import json
 from cStringIO import StringIO
 from collections import Counter
@@ -318,7 +318,7 @@ class AdminController(AdminController):
 
         if 'csv' in file_format.lower():
             response.headerlist = [('Content-Type','text/csv'),('Content-Disposition', 'attachment;filename="data_requests.csv"')]
-            writer = csv.writer(s)
+            writer = csv.writer(s, encoding='utf-8')
             header = True
             for k in requests:
                 if header:
