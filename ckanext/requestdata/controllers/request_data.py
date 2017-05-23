@@ -135,8 +135,10 @@ class RequestDataController(BaseController):
 
             return json.dumps(error)
 
+
         data_dict = {'id': data['package_id']}
         package = _get_action('package_show', data_dict)
+        sender_name = data.get('sender_name', '')
 
         user_obj = context['auth_user_obj']
         user_name = user_obj.fullname
@@ -144,7 +146,7 @@ class RequestDataController(BaseController):
             'id': user_obj.id,
             'permission': 'read'
         }
-  
+
         organizations = _get_action('organization_list_for_user', data_dict)
 
         orgs = []
@@ -197,7 +199,7 @@ class RequestDataController(BaseController):
                 users_email = self._org_admins_for_dataset(dataset_name)
                 only_org_admins = True
 
-            content = _get_email_configuration(user_name,data_owner,dataset_name,email,message,org, only_org_admins=only_org_admins)
+            content = _get_email_configuration(sender_name,data_owner,dataset_name,email,message,org, only_org_admins=only_org_admins)
 
             response_message = emailer.send_email(content, users_email, mail_subject)
 
