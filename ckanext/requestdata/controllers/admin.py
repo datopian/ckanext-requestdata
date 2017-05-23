@@ -91,7 +91,7 @@ class AdminController(AdminController):
         filtered_organizations = []
         organizations_for_filters = {}
         reverse = True
-        q_organization = ''
+        q_organizations = []
         request_params = request.params.dict_of_lists()
         order = 'last_request_created_at'
 
@@ -124,15 +124,24 @@ class AdminController(AdminController):
                     params = x.split('|')
                     q_organization = params[1].split(':')[1]
                     order = params[0]
-                if 'asc' in order:
-                    reverse = False
-                    order = 'title'
-                elif 'desc' in order:
-                    reverse = True
-                    order = 'title'
-                elif 'most_recent' in order:
-                    reverse = True
-                    order = 'last_request_created_at'
+
+                    if 'asc' in order:
+                        reverse = False
+                        order = 'title'
+                    elif 'desc' in order:
+                        reverse = True
+                        order = 'title'
+                    elif 'most_recent' in order:
+                        reverse = True
+                        order = 'last_request_created_at'
+
+                    data = {
+                        'org': q_organization,
+                        'order': order,
+                        'reverse': reverse
+                    }
+
+                    q_organizations.append(data)
 
                 for x in requests:
                     package = _get_action('package_show', {'id': x['package_id']})
@@ -276,6 +285,16 @@ class AdminController(AdminController):
 
             org['requests_archive'] = helpers.group_archived_requests_by_dataset(org['requests_archive'])
 
+            q_org = [x for x in q_organizations if x.get('org') == org['name']]
+
+            if q_org:
+                q_org = q_org[0]
+                order = q_org.get('order')
+                reverse = q_org.get('reverse')
+            else:
+                order = 'last_request_created_at'
+                reverse = True
+
             if order == 'last_request_created_at':
                 for dataset in org['requests_archive']:
                     created_at = dataset.get('requests_archived')[0].get('created_at')
@@ -284,8 +303,7 @@ class AdminController(AdminController):
                     }
                     dataset.update(data)
 
-            if org['name'] == q_organization:
-                org['requests_archive'] = sorted( org['requests_archive'], key=lambda x: x[order], reverse=reverse)
+            org['requests_archive'] = sorted(org['requests_archive'], key=lambda x: x[order], reverse=reverse)
 
 
         organizations_for_filters = sorted(organizations_for_filters.iteritems(), key=lambda (x, y): y['requests'], reverse=True)
