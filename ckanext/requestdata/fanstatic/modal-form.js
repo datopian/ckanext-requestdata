@@ -200,6 +200,7 @@ this.ckan.module('modal-form', function($) {
             div.textContent = msg;
             div.style.marginTop = '25px';
             var currentDiv = document.getElementsByClassName("requested-data-message");
+            currentDiv[0].style.display = 'block';
             currentDiv[0].appendChild(div);
             this._resetModalForm();
         },

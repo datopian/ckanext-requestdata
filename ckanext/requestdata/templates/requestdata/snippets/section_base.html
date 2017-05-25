@@ -14,12 +14,16 @@ Example usage:
 <section class="requested-data-container">
   <div class="requested-data-message"></div>
   <br>
-  <h3 class="move-right">{{ title }}</h3>
+  <div class="requested-data-container__header">
+    <span class="requested-data-container__header--title">{{ title }} [{{ requests | length }}]</span>
+    <span style="position: absolute; left: 32%;">{{ _('Requested by') }}:</span>
+    <span style="float: right; margin-right: 133px;">{{ _('Actions') }}</span>
+  </div>
 
   {% if requests | length > 0 %}
     <div class="requested-data-container__content">
       {% for item in requests %}
-        {% snippet 'requestdata/snippets/section_item_' + state + '.html', item=item, template_type=template_type %}
+        {% snippet 'requestdata/snippets/section_item_' + state + '.html', item=item, template_type=template_type, index=loop.index %}
       {% endfor %}
     </div>
   {% else %}

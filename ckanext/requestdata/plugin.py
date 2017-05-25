@@ -162,7 +162,9 @@ class RequestdataPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
             'requestdata_is_hdx_portal':
                 helpers.is_hdx_portal,
             'requestdata_is_current_user_a_maintainer':
-                helpers.is_current_user_a_maintainer
+                helpers.is_current_user_a_maintainer,
+            'requestdata_get_owner_org_for_package':
+                helpers.get_owner_org_for_package
         }
 
     # IDatasetForm

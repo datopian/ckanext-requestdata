@@ -167,3 +167,14 @@ def is_current_user_a_maintainer(maintainers):
             return True
 
     return False
+
+
+def get_owner_org_for_package(package_id):
+    try:
+        package = _get_action('package_show', {'id': package_id})
+        data = {'id': package.get('owner_org')}
+        org = _get_action('organization_show', data)
+
+        return org
+    except Exception:
+        return ''

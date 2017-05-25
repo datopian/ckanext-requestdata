@@ -2,16 +2,24 @@
   margin-bottom: 50px;
 }
 
-.requested-data-container__content {
+.requested-data-container h3 {
+  text-transform: uppercase;
+}
 
- }
+.requested-data-container__content {
+  margin-top: 8px;
+}
 
 .requested-data-container__content-item {
-  padding: 18px;
   position: relative;
-  border: 1px solid #828282 !important;
-  border-radius: 10px;
-  margin: 5px 15px 10px 15px;
+  border-bottom: 1px solid #CCCCCC !important;
+}
+
+.requested-data-container__content-item h4 {
+  padding-left: 18px;
+  width: 30%;
+  word-wrap: break-word;
+  margin-top: -5px;
 }
 
 .requested-data-container__message {
@@ -24,17 +32,6 @@
   margin-top: 0;
   width: 96%;
   color: #5f5f5f;
-}
-
-.requested-data-container__actions {
-  position: absolute;
-  top: 50%;
-  right: 18px;
-  transform: translateY(-50%);
-}
-
-.requested-data-container__actions button {
-  width: 70px;
 }
 
 .requested-data-container__date {
@@ -52,8 +49,7 @@
 
 
 .requested-data-container__content-item .gravatar {
-  border-radius: 100px;
-  margin-right: 5px;
+  float: left;
 }
 
 .requested-data-container__content-item-info-separator {
@@ -350,10 +346,6 @@
   text-align: center;
 }
 
-.requested-data-container-inline a {
-padding-top: 10px;
-}
-
 .circle {
 width:55px;
 height:55px;
@@ -394,7 +386,7 @@ h3 {
 }
 
 #dataset-resources h3 {
-  margin-left: 0px; 
+  margin-left: 0px;
 }
 
 .additional-info h3 {
@@ -403,4 +395,71 @@ h3 {
 
 .requested-data-container .requested-data-message {
   margin-top: 60px;
+  display: none;
+}
+
+.requests-header {
+  height: 50px;
+  border-bottom: 1px solid #cccccc;
+  vertical-align: middle;
+  line-height: 49px;
+  padding: 0;
+  padding-right: 15px;
+  background-color: #edf6fd;
+  margin-bottom: 20px;
+}
+
+.requests-header__title {
+  margin-left: 15px;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.requested-data-container__header {
+  position: relative;
+  color: #888888;
+}
+
+.requested-data-container__header--title {
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.requested-data-container__content-item--requested-by {
+  margin-left: -10%;
+  width: 37%;
+}
+
+.requested-data-container__content-item--sections {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 15px;
+}
+
+.requested-data-container__content-item--actions {
+  margin-right: 5%;
+}
+
+.requested-data-container__content-item--requested-by-info {
+  width: 85%;
+  float: left;
+  margin-left: 10px;
+  margin-top: -4px;
+}
+
+.requested-data-container__content-item--requested-by-date   {
+  font-size: 12px;
+  color: #757575;
+}
+
+.requested-data-container__content-item--requested-by-message {
+  color: #757575;
+  word-break: break-word;
+  width: 125%;
+}
+
+.requested-data-container__content-item--actions-text {
+  font-size: 12px;
+  margin-bottom: 7px;
 }
