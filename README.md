@@ -1,5 +1,4 @@
 ## Request data &middot; [![Build Status](https://travis-ci.org/ViderumGlobal/ckanext-requestdata.svg?branch=master)](https://travis-ci.org/ViderumGlobal/ckanext-requestdata)
-[![Coverage Status](https://coveralls.io/repos/github/ViderumGlobal/ckanext-requestdata/badge.svg?branch=master)](https://coveralls.io/github/ViderumGlobal/ckanext-requestdata?branch=master)
 
 These extension allow users to publish  dataset metadata without
 uploading any file(s). The owner
