@@ -41,7 +41,6 @@ class PackageController(_PackageController):
                            'user': c.user, 'auth_user_obj': c.userobj}
 
                 data_dict = dict(toolkit.request.POST)
-
                 data_dict['type'] = package_type
 
                 try:
