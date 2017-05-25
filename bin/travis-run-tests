@@ -5,4 +5,4 @@ sudo cp ckan/ckan/config/solr/schema.xml /etc/solr/conf/schema.xml
 sudo service jetty restart
 
 nosetests --ckan --with-pylons=test.travis.ini
-coverage run --source=requestdata/tests test_actions.py test
+coverage run --source=requestdata/tests
