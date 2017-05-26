@@ -169,12 +169,21 @@ def is_current_user_a_maintainer(maintainers):
     return False
 
 
-def get_owner_org_for_package(package_id):
+def get_orgs_for_user(user_id):
     try:
-        package = _get_action('package_show', {'id': package_id})
-        data = {'id': package.get('owner_org')}
-        org = _get_action('organization_show', data)
+        orgs = _get_action('organization_list_for_user', {'id': user_id})
 
-        return org
+        return orgs
     except Exception:
+        return []
+
+
+def role_in_org(user_id, org_name):
+    try:
+        org = _get_action('organization_show', {'id': org_name})
+    except NotFound:
         return ''
+
+    for user in org.get('users', []):
+        if user.get('id') == user_id:
+            return user.get('capacity')

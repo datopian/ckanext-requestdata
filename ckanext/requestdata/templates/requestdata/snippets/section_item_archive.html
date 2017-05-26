@@ -11,56 +11,63 @@ Example usage:
 
 {% resource 'requestdata/expand-dataset.js' %}
 
-<div class="requested-data-container__content-item">
-  <p class="requested-data-container__content-item-info">
-  <h3>{{ item.title }}</h3></p>
-  {% block counters %}
+<div class="requested-data-container__content-item" style="height: 50px; {% if index == 1 %} border-top: 1px solid #CCCCCC; {% endif %}">
+  <div class="requested-data-container__content-item--sections">
+    <h4>
+      <a href="{{ package_url }}">{{ item.title }}</a>
+    </h4>
+
     {% set counters = h.requestdata_get_request_counters(item.package_id) %}
     <div class="requested-data-container__content-item-counters">
-      <div class="counter-container">
-        <div class="counter-number">{{ counters.requests }}</div><span>Requests</span>
-      </div>
-      <div class="counter-container">
-        <div class="counter-number">{{ counters.replied }}</div><span>Replied</span>
-      </div>
-      <div class="counter-container">
-        <div class="counter-number">{{ counters.declined }}</div><span>Declined</span>
-      </div>
-      <div class="counter-container">
-        <div class="counter-number">{{ counters.shared }}</div><span>Shared</span>
-      </div>
-    </div>
-  {% endblock %}
-  {% block collapse_icon %}
-     <div><i class="icon-chevron-down archive-requests-arrow" data-toggle="collapse" data-target="#{{ item.package_id }}"></i></div>
-  {% endblock %}
-  <div id="{{ item.package_id }}" class="collapse requested-data-container__collapse">
-    {% for x in item.requests_archived %}
-    <div class="requested-data-container__content-item">
-      {% set sender_profile = h.url_for(controller='user', action='read', id=x.sender_user_id) %}
-      <p class="requested-data-container__content-item-info">Request by: <a href="{{ sender_profile }}" title="{{ _('View profile') }}">{{ x.sender_name }}</a></p>
+      <span><span style="font-size: 20px;">{{ counters.requests }}</span> Requests</span>
+      <span>
+        <img src="/images/icons/reply.svg" class="requested-data-container__content-item-counters--icon requested-data-container__content-item-counters--replied" />
+        <span>{{ counters.replied }} Replied</span>
+      </span>
 
-      <p class="requested-data-container__date" title="{{ h.render_datetime(x.created_at, with_hours=True) }}">{{ h.requestdata_time_ago_from_datetime(x.created_at) }}</p>
+      <span>
+        <img src="/images/icons/declined.svg" class="requested-data-container__content-item-counters--icon" />
+        <span>{{ counters.declined }} Declined</span>
+      </span>
 
-      <div class="requested-data-container__status">
-        {% if x.rejected %}
-         {% block rejected_icon %}
-          <i class="icon-remove-circle"></i>
-          <p class="requested-data-container__status-text">Rejected</p>
-         {% endblock %}
-        {% elif x.data_shared %}
-        {% block shared_icon %}
-          <i class="icon-thumbs-up"></i>
-          <p class="requested-data-container__status-text">Shared</p>
-        {% endblock %}
-        {% elif not x.data_shared %}
-        {% block notshared_icon %}
-           <i class="icon-thumbs-down"></i>
-          <p class="requested-data-container__status-text">Not shared</p>
-        {% endblock %}
-        {% endif %}
-      </div>
+      <span>
+        <img src="/images/icons/shared.svg" class="requested-data-container__content-item-counters--icon" />
+        <span>{{ counters.shared }} Shared</span>
+      </span>
     </div>
-    {% endfor %}
+
+    <i class="icon-chevron-right archive-requests-arrow" data-toggle="collapse" data-target="#{{ item.package_id }}"></i>
+
   </div>
+</div>
+<div id="{{ item.package_id }}" class="collapse requested-data-container__collapse">
+    {% for x in item.requests_archived %}
+      <div class="requested-data-container__collapse--sections">
+
+        {% snippet 'requestdata/snippets/requested_by_container.html', item=x, type='archive' %}
+
+        <div class="requested-data-container__collapse--request-status">
+          {% if x.rejected %}
+            <div style="margin-right: -8px;">
+              <img src="/images/icons/declined.svg" class="requested-data-container__content-item-counters--icon" />
+              <span class="requested-data-container__collapse--status-text">Declined ({{ h.render_datetime(x.modified_at, date_format='%-d %B %Y') }})</span>
+            </div>
+          {% else %}
+            <img src="/images/icons/reply.svg" class="requested-data-container__content-item-counters--icon requested-data-container__content-item-counters--replied" />
+            <span class="requested-data-container__collapse--status-text">Replied ({{ h.render_datetime(x.modified_at, date_format='%-d %B %Y') }})</span>
+
+            <div style="margin-top: 8px;">
+            {% if x.data_shared %}
+              <img src="/images/icons/shared.svg" class="requested-data-container__content-item-counters--icon" />
+              <span class="requested-data-container__collapse--status-text">Dataset Shared</span>
+            {% else %}
+              <img src="/images/icons/declined.svg" class="requested-data-container__content-item-counters--icon" />
+              <span class="requested-data-container__collapse--status-text">Dataset Not Shared</span>
+            {% endif %}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    {% endfor %}
+  <div class=" requested-data-container__collapse--line"></div>
 </div>

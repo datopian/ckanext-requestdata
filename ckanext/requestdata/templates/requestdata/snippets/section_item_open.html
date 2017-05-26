@@ -20,22 +20,7 @@ Example usage:
       <a href="{{ package_url }}">{{ item.title }}</a>
     </h4>
 
-    <div class="requested-data-container__content-item--requested-by">
-      <a href="{{ sender_profile }}">
-        {{ h.gravatar((c.userobj.email_hash if c and c.userobj else ''), size=24) }}
-      </a>
-
-      {% set org = h.requestdata_get_owner_org_for_package(item.package_id) %}
-      {% set org_url = h.url_for(controller='organization', action='read', id=org.id) %}
-
-      <div class="requested-data-container__content-item--requested-by-info">
-        <a href="{{ sender_profile }}" title="{{ _('View profile') }}">{{ item.sender_name }}</a>
-
-        <p class="requested-data-container__content-item--requested-by-date">Requested on {{ h.render_datetime(item.created_at, date_format='%-d %B %Y') }}</p>
-
-        <p class="requested-data-container__content-item--requested-by-message">{{ item.message_content }}</p>
-      </div>
-    </div>
+    {% snippet 'requestdata/snippets/requested_by_container.html', item=item %}
 
     <div class="requested-data-container__content-item--actions" style="margin-right: 20px; margin-top: -4px;">
       {% set action_shared = h.url_for('requestdata_handle_open_request_action', username=c.userobj.name, request_action='shared') %}

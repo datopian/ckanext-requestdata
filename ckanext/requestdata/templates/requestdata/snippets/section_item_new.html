@@ -18,7 +18,6 @@ Example usage:
   {% resource 'requestdata/css/new-requests.css' %}
 {% endif %}
 
-{% set sender_profile = h.url_for(controller='user', action='read', id=item.sender_user_id) %}
 {% set package_url = h.url_for(controller='package', action='read', id=item.package_id) %}
 
 <div class="requested-data-container__content-item" style="background-color: #FEFBED; {% if index == 1 %} border-top: 1px solid #CCCCCC {% endif %}">
@@ -27,22 +26,7 @@ Example usage:
       <a href="{{ package_url }}">{{ item.title }}</a>
     </h4>
 
-    <div class="requested-data-container__content-item--requested-by">
-      <a href="{{ sender_profile }}">
-        {{ h.gravatar((c.userobj.email_hash if c and c.userobj else ''), size=24) }}
-      </a>
-
-      {% set org = h.requestdata_get_owner_org_for_package(item.package_id) %}
-      {% set org_url = h.url_for(controller='organization', action='read', id=org.id) %}
-
-      <div class="requested-data-container__content-item--requested-by-info">
-        <a href="{{ sender_profile }}" title="{{ _('View profile') }}">{{ item.sender_name }}</a>
-
-        <p class="requested-data-container__content-item--requested-by-date">Requested on {{ h.render_datetime(item.created_at, date_format='%-d %B %Y') }}</p>
-
-        <p class="requested-data-container__content-item--requested-by-message">{{ item.message_content }}</p>
-      </div>
-    </div>
+    {% snippet 'requestdata/snippets/requested_by_container.html', item=item %}
 
     <div class="requested-data-container__content-item--actions">
       {% set reply_action = h.url_for('requestdata_handle_new_request_action', username=c.userobj.name, request_action='reply') %}

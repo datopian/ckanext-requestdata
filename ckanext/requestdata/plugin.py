@@ -163,8 +163,10 @@ class RequestdataPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
                 helpers.is_hdx_portal,
             'requestdata_is_current_user_a_maintainer':
                 helpers.is_current_user_a_maintainer,
-            'requestdata_get_owner_org_for_package':
-                helpers.get_owner_org_for_package
+            'requestdata_get_orgs_for_user':
+                helpers.get_orgs_for_user,
+            'requestdata_role_in_org':
+                helpers.role_in_org
         }
 
     # IDatasetForm

@@ -15,9 +15,12 @@ Example usage:
   <div class="requested-data-message"></div>
   <br>
   <div class="requested-data-container__header">
-    <span class="requested-data-container__header--title">{{ title }} [{{ requests | length }}]</span>
-    <span style="position: absolute; left: 32%;">{{ _('Requested by') }}:</span>
-    <span style="float: right; margin-right: 133px;">{{ _('Actions') }}</span>
+    <span class="requested-data-container__header--title">{{ title }} [{{ total_requests }}]</span>
+
+    {% if total_requests > 0 and state != 'archive' %}
+      <span style="position: absolute; left: 32%;">{{ _('Requested by') }}:</span>
+      <span style="float: right; margin-right: 133px;">{{ _('Actions') }}</span>
+    {% endif %}
   </div>
 
   {% if requests | length > 0 %}
@@ -27,6 +30,6 @@ Example usage:
       {% endfor %}
     </div>
   {% else %}
-    <p class="move-right">{{ _('No requests found.') }}</p>
+    <p>{{ _('No requests found.') }}</p>
   {% endif %}
 </section>
