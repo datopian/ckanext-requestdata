@@ -12,53 +12,43 @@ Example usage:
 {% resource 'requestdata/handle-open-request.js' %}
 
 {% set package_url = h.url_for(controller='package', action='read', id=item.package_id) %}
+{% set sender_profile = h.url_for(controller='user', action='read', id=item.sender_user_id) %}
 
-<div class="requested-data-container__content-item">
-  <div class="">
-    <p class="requested-data-container__content-item-info">
-      <h4>{{ item.title }}</h4></p>
-      {% set sender_profile = h.url_for(controller='user', action='read', id=item.sender_user_id) %}
-    <p class="requested-data-container__content-item-archive-maintainers">Request by: <a href="{{ sender_profile }}" title="{{ _('View profile') }}">{{ item.sender_name }}</a></p>
-      {% if template_type != 'user' %}
-      <p class="requested-data-container__content-item-archive-maintainers">
-        Maintainers:
-       {% for m in item.maintainers %}
-         {% set profile = h.url_for(controller='user', action='read', id=m.id) %}
-         <a href="{{ profile }}" title="{{ _('View profile') }}">{{ m.fullname }}</a>{% if not loop.last %}, {% endif %}
-       {% endfor %}
-      </p>
-      {% endif %}
-     <p class="requested-data-container__date" title="{{ h.render_datetime(item.created_at, with_hours=True) }}">{{ h.requestdata_time_ago_from_datetime(item.created_at) }}</p>
-  </div>
-   <div class="requested-data-shared">
-      <p>Keep track of who you share information with.
-      <br>
-     <a href="{{ package_url }}" title="{{ _('View dataset') }}">Has the dataset been shared?</a>
-     </p>
-   </div>
+<div class="requested-data-container__content-item" style="{% if index == 1 %} border-top: 1px solid #CCCCCC {% endif %}">
+  <div class="requested-data-container__content-item--sections">
+    <h4>
+      <a href="{{ package_url }}">{{ item.title }}</a>
+    </h4>
 
-  {% set action_shared = h.url_for('requestdata_handle_open_request_action', username=c.userobj.name, request_action='shared') %}
-  {% set post_data_shared = h.dump_json({'id': item.id, 'package_id': item.package_id, 'state': 'archive', 'data_shared': True}) %}
+    {% snippet 'requestdata/snippets/requested_by_container.html', item=item %}
 
-  {% set action_notshared = h.url_for('requestdata_handle_open_request_action', username=c.userobj.name, request_action='shared') %}
-  {% set post_data_notshared = h.dump_json({'id': item.id, 'package_id': item.package_id, 'state': 'archive', 'data_shared': False}) %}
+    <div class="requested-data-container__content-item--actions" style="margin-right: 20px; margin-top: -4px;">
+      {% set action_shared = h.url_for('requestdata_handle_open_request_action', username=c.userobj.name, request_action='shared') %}
+      {% set post_data_shared = h.dump_json({'id': item.id, 'package_id': item.package_id, 'state': 'archive', 'data_shared': True}) %}
 
-  <div class="requested-data-container__actions">
-     <div class="requested-data-container-inline">
-        <a class="btn btn-success requested-data-container__actions--data-shared"
-            data-module="handle-open-request"
-            data-module-action="{{ action_shared }}"
-            data-module-post_data="{{ post_data_shared }}"
-            data-module-refresh_on_success="1"
-            data-module-disable_action_buttons="1">Yes</a>
-     </div>
-    <div class="requested-data-container-inline">
-       <a class="btn btn-info requested-data-container__actions--data-notshared"
-            data-module="handle-open-request"
-            data-module-action="{{ action_notshared }}"
-            data-module-post_data="{{ post_data_notshared }}"
-            data-module-refresh_on_success="1"
-            data-module-disable_action_buttons="1">No</a>
+      {% set action_notshared = h.url_for('requestdata_handle_open_request_action', username=c.userobj.name, request_action='shared') %}
+      {% set post_data_notshared = h.dump_json({'id': item.id, 'package_id': item.package_id, 'state': 'archive', 'data_shared': False}) %}
+
+      <div class="requested-data-container__content-item--actions-text">Has the dataset been shared?</div>
+
+      <div class="requested-data-container-inline">
+        <a class="btn btn-primary requested-data-container__actions--data-shared"
+          style="margin-right: 8px;"
+          data-module="handle-open-request"
+          data-module-action="{{ action_shared }}"
+          data-module-post_data="{{ post_data_shared }}"
+          data-module-refresh_on_success="1"
+          data-module-disable_action_buttons="1">Yes</a>
+      </div>
+      <div class="requested-data-container-inline">
+        <a class="btn requested-data-container__actions--data-notshared"
+          style="font-weight: bold; cursor: pointer;"
+          data-module="handle-open-request"
+          data-module-action="{{ action_notshared }}"
+          data-module-post_data="{{ post_data_notshared }}"
+          data-module-refresh_on_success="1"
+          data-module-disable_action_buttons="1">No</a>
+      </div>
     </div>
-</div>
+  </div>
 </div>

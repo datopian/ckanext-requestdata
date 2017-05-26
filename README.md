@@ -1,4 +1,4 @@
-## Request data &middot; [![Build Status](https://travis-ci.org/ViderumGlobal/ckanext-requestdata.svg?branch=master)](https://travis-ci.org/ViderumGlobal/ckanext-requestdata)
+## Request data &middot; [![Build Status](https://travis-ci.org/ViderumGlobal/ckanext-requestdata.svg?branch=master)](https://travis-ci.org/ViderumGlobal/ckanext-requestdata)   [![Coverage Status](https://coveralls.io/repos/github/ViderumGlobal/ckanext-requestdata/badge.svg?branch=master)](https://coveralls.io/github/ViderumGlobal/ckanext-requestdata?branch=master)
 
 These extension allow users to publish  dataset metadata without
 uploading any file(s). The owner
@@ -14,11 +14,15 @@ To install ckanext-requestdata:
 
 1. Activate your CKAN virtual environment, for example:
 
-     . /usr/lib/ckan/default/bin/activate
+```
+. /usr/lib/ckan/default/bin/activate
+```
 
 2. Install the ckanext-requestdata Python package into your virtual environment:
 
-     pip install ckanext-requestdata
+```
+pip install ckanext-requestdata
+```
 
 3. Add ``requestdata`` to the ``ckan.plugins`` setting in your CKAN
    config file (by default the config file is located at
@@ -26,7 +30,9 @@ To install ckanext-requestdata:
 
 4. Restart CKAN. For example if you've deployed CKAN with Apache on Ubuntu:
 
-     sudo service apache2 reload
+```
+sudo service apache2 reload
+```
 
 
 ## Config Settings
