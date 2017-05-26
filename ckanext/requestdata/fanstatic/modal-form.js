@@ -173,11 +173,11 @@ this.ckan.module('modal-form', function($) {
             this._resetModalForm();
         },
         _showInputError: function(element, message) {
-            var span = document.createElement('span');
-            span.className = 'error-block';
-            span.textContent = message;
+            var div = document.createElement('div');
+            div.className = 'error-block';
+            div.textContent = message;
 
-            element.parentElement.appendChild(span);
+            element.parentElement.appendChild(div);
         },
         _clearFormErrors: function() {
             var errors = this.modal.find('.error-block')
