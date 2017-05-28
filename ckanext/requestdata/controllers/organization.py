@@ -98,21 +98,17 @@ class OrganizationController(organization.OrganizationController):
                     reverse = True
                     order = 'last_request_created_at'
 
-                for x in requests:
-                    package = _get_action('package_show', {'id': x['package_id']})
-                    count = _get_action('requestdata_request_data_counters_get', {'package_id': x['package_id']})
-                    x['title'] = package['title']
-                    x['shared'] = count.shared
-                    x['requests'] = count.requests
-                    data_dict = {'id': package['owner_org']}
-                    current_org = _get_action('organization_show', data_dict)
-                    x['name'] = current_org['name']
-
         maintainers = []
         for item in requests:
             package = _get_action('package_show', {'id': item['package_id']})
+            count = _get_action('requestdata_request_data_counters_get', {'package_id': item['package_id']})
+            item['shared'] = count.shared
+            item['requests'] = count.requests
             package_maintainer_ids = package['maintainer'].split(',')
             item['title'] = package['title']
+            data_dict = {'id': package['owner_org']}
+            current_org = _get_action('organization_show', data_dict)
+            item['name'] = current_org['name']
             package_maintainers = []
 
             for maint_id in package_maintainer_ids:
@@ -143,7 +139,7 @@ class OrganizationController(organization.OrganizationController):
         # Sort maintainers by number of requests
         maintainers = sorted(maintainers, key=lambda k: k['count'], reverse=True)
 
-        for i, r in enumerate(requests[:]):
+        for r in requests[:]:
             maintainer_found = False
 
             package = _get_action('package_show', {'id': r['package_id']})
