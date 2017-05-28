@@ -56,47 +56,8 @@ class OrganizationController(organization.OrganizationController):
         c.group_dict = self._get_group_dict(id)
         group_type = c.group_dict['type']
         request_params = request.params.dict_of_lists()
-        filtered_maintainers = []
-        reverse = True
-        order = 'last_request_created_at'
-        q_organization = ''
 
-        for item in request_params:
-            if item == 'filter_by_maintainers':
-                for x in request_params[item]:
-                    params = x.split('|')
-                    org = params[0].split(':')[1]
-                    maintainers = params[1].split(':')[1].split(',')
-                    maintainers_ids = []
-
-                    if maintainers[0] != '*all*':
-                        for i in maintainers:
-                            try:
-                                user = _get_action('user_show', {'id': i})
-                                maintainers_ids.append(user['id'])
-                            except NotFound:
-                                pass
-
-                        data = {
-                            'org': org,
-                            'maintainers': maintainers_ids
-                        }
-
-                        filtered_maintainers.append(data)
-            elif item == 'order_by':
-                params = request_params[item][0].split('|')
-                q_organization = params[1].split(':')[1]
-                order = params[0]
-
-                if 'asc' in order:
-                    reverse = False
-                    order = 'title'
-                elif 'desc' in order:
-                    reverse = True
-                    order = 'title'
-                elif 'most_recent' in order:
-                    reverse = True
-                    order = 'last_request_created_at'
+        filters = helpers.set_filters(request_params)
 
         maintainers = []
         for item in requests:
@@ -159,7 +120,7 @@ class OrganizationController(organization.OrganizationController):
             organ = _get_action('organization_show', data_dict)
 
             # Check if current request is part of a filtered maintainer
-            for x in filtered_maintainers:
+            for x in filters['filtered_maintainers']:
                 if x['org'] == organ['name']:
                     for maint in x['maintainers']:
                         if is_hdx:
@@ -186,15 +147,15 @@ class OrganizationController(organization.OrganizationController):
 
         grouped_requests_archive = helpers.group_archived_requests_by_dataset(requests_archive)
 
-        if order == 'last_request_created_at':
+        if filters['order'] == 'last_request_created_at':
             for dataset in grouped_requests_archive:
                 created_at = dataset.get('requests_archived')[0].get('created_at')
                 data = {
                     'last_request_created_at': created_at
                 }
 
-        if organ['name'] == q_organization:
-            grouped_requests_archive = sorted(grouped_requests_archive, key=lambda x: x[order], reverse=reverse)
+        if organ['name'] == filters['q_organization']:
+            grouped_requests_archive = sorted(grouped_requests_archive, key=lambda x: x[filters['order']], reverse=filters['reverse'])
         extra_vars = {
             'requests_new': requests_new,
             'requests_open': requests_open,

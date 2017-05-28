@@ -187,3 +187,53 @@ def role_in_org(user_id, org_name):
     for user in org.get('users', []):
         if user.get('id') == user_id:
             return user.get('capacity')
+
+
+def set_filters(request_params):
+    filtered_maintainers = []
+    q_organization = ''
+    reverse = True
+    order = 'last_request_created_at'
+    for item in request_params:
+        if item == 'filter_by_maintainers':
+            for x in request_params[item]:
+                params = x.split('|')
+                org = params[0].split(':')[1]
+                maintainers = params[1].split(':')[1].split(',')
+                maintainers_ids = []
+
+                if maintainers[0] != '*all*':
+                    for i in maintainers:
+                        try:
+                            user = _get_action('user_show', {'id': i})
+                            maintainers_ids.append(user['id'])
+                        except NotFound:
+                            pass
+
+                    data = {
+                        'org': org,
+                        'maintainers': maintainers_ids
+                    }
+
+                    filtered_maintainers.append(data)
+        elif item == 'order_by':
+            params = request_params[item][0].split('|')
+            q_organization = params[1].split(':')[1]
+            order = params[0]
+
+            if 'asc' in order:
+                reverse = False
+                order = 'title'
+            elif 'desc' in order:
+                reverse = True
+                order = 'title'
+            elif 'most_recent' in order:
+                reverse = True
+                order = 'last_request_created_at'
+    requests = {
+        'filtered_maintainers' : filtered_maintainers,
+        'q_organization' : q_organization,
+        'reverse' : reverse,
+        'order' : order
+    }
+    return requests
