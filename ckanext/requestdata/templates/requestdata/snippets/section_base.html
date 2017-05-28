@@ -17,7 +17,7 @@ Example usage:
   <div class="requested-data-container__header">
     <span class="requested-data-container__header--title">{{ title }} [{{ total_requests }}]</span>
 
-    {% if total_requests > 0 and state != 'archive' %}
+    {% if total_requests and total_requests > 0 and state != 'archive' %}
       <span style="position: absolute; left: 32%;">{{ _('Requested by') }}:</span>
       <span style="float: right; margin-right: 133px;">{{ _('Actions') }}</span>
     {% endif %}
