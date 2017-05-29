@@ -76,10 +76,8 @@ class OrganizationController(organization.OrganizationController):
                     user = _get_action('user_show', {'id': maint_id})
                     username = user['name']
                     name = user['fullname']
-
                     if not name:
                         name = username
-
                     payload = {'id': maint_id, 'name': name, 'username' : username, 'fullname': name}
                     maintainers.append(payload)
                 except NotFound:
@@ -100,31 +98,15 @@ class OrganizationController(organization.OrganizationController):
 
         for r in requests[:]:
             maintainer_found = False
-
             package = _get_action('package_show', {'id': r['package_id']})
             package_maintainer_ids = package['maintainer'].split(',')
-            is_hdx = helpers.is_hdx_portal()
-
-            if is_hdx:
-                # Quick fix for hdx portal
-                maintainer_ids = []
-                for maintainer_name in package_maintainer_ids:
-                    try:
-                        main_ids = _get_action('user_show', {'id': maintainer_name})
-                        maintainer_ids.append(main_ids['id'])
-                    except NotFound:
-                        pass
 
             # Check if current request is part of a filtered maintainer
             for x in filters['filtered_maintainers']:
                 if x['org'] == organ['name']:
                     for maint in x['maintainers']:
-                        if is_hdx:
-                            if maint in maintainer_ids:
-                                maintainer_found = True
-                        else:
-                            if maint in package_maintainer_ids:
-                                maintainer_found = True
+                        if maint in package_maintainer_ids:
+                            maintainer_found = True
 
                     if not maintainer_found:
                         requests.remove(r)
