@@ -83,18 +83,15 @@ class UserController(BaseController):
                 reverse = True
                 order = 'last_request_created_at'
 
-            for item in requests:
-                package = _get_action('package_show', {'id': item['package_id']})
-                count = _get_action('requestdata_request_data_counters_get',{'package_id':item['package_id']})
-                item['title'] = package['title']
-                item['shared'] = count.shared
-                item['requests'] = count.requests
 
         #TODO simplify these
         for item in requests:
             package = _get_action('package_show', {'id': item['package_id']})
+            count = _get_action('requestdata_request_data_counters_get', {'package_id': item['package_id']})
             package_maintainers_ids = package['maintainer'].split(',')
             item['title'] = package['title']
+            item['shared'] = count.shared
+            item['requests'] = count.requests
             maintainers = []
             for i in package_maintainers_ids:
                 try:
