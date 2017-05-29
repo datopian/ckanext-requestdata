@@ -128,17 +128,25 @@ class AdminController(AdminController):
                     if 'asc' in order:
                         reverse = False
                         order = 'title'
+                        current_order_name = 'Alphabetical (A-Z)'
                     elif 'desc' in order:
                         reverse = True
                         order = 'title'
+                        current_order_name = 'Alphabetical (Z-A)'
                     elif 'most_recent' in order:
                         reverse = True
                         order = 'last_request_created_at'
+                        current_order_name = 'Most Recent'
+                    elif 'shared' in order:
+                        current_order_name = 'Sharing Rate'
+                    elif 'requests' in order:
+                        current_order_name = 'Requests Rate'
 
                     data = {
                         'org': q_organization,
                         'order': order,
-                        'reverse': reverse
+                        'reverse': reverse,
+                        'current_order_name': current_order_name
                     }
 
                     q_organizations.append(data)
@@ -291,9 +299,13 @@ class AdminController(AdminController):
                 q_org = q_org[0]
                 order = q_org.get('order')
                 reverse = q_org.get('reverse')
+                current_order_name = q_org.get('current_order_name')
             else:
                 order = 'last_request_created_at'
                 reverse = True
+                current_order_name = 'Most Recent'
+
+            org['current_order_name'] = current_order_name
 
             if order == 'last_request_created_at':
                 for dataset in org['requests_archive']:

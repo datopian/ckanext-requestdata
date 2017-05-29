@@ -60,6 +60,7 @@ class OrganizationController(organization.OrganizationController):
         reverse = True
         order = 'last_request_created_at'
         q_organization = ''
+        current_order_name = 'Most Recent'
 
         for item in request_params:
             if item == 'filter_by_maintainers':
@@ -91,12 +92,18 @@ class OrganizationController(organization.OrganizationController):
                 if 'asc' in order:
                     reverse = False
                     order = 'title'
+                    current_order_name = 'Alphabetical (A-Z)'
                 elif 'desc' in order:
                     reverse = True
                     order = 'title'
+                    current_order_name = 'Alphabetical (Z-A)'
                 elif 'most_recent' in order:
                     reverse = True
                     order = 'last_request_created_at'
+                elif 'shared' in order:
+                    current_order_name = 'Sharing Rate'
+                elif 'requests' in order:
+                    current_order_name = 'Requests Rate'
 
                 for x in requests:
                     package = _get_action('package_show', {'id': x['package_id']})
@@ -196,15 +203,21 @@ class OrganizationController(organization.OrganizationController):
                 data = {
                     'last_request_created_at': created_at
                 }
+                dataset.update(data)
 
         if organ['name'] == q_organization:
             grouped_requests_archive = sorted(grouped_requests_archive, key=lambda x: x[order], reverse=reverse)
+
+        counters = _get_action('requestdata_request_data_counters_get_by_org', {'org_id': organ['id']})
+
         extra_vars = {
             'requests_new': requests_new,
             'requests_open': requests_open,
             'requests_archive': grouped_requests_archive,
             'maintainers': maintainers,
-            'org_name': organ['name']
+            'org_name': organ['name'],
+            'current_order_name': current_order_name,
+            'counters': counters
         }
 
         self._setup_template_variables(context, {'id': id},

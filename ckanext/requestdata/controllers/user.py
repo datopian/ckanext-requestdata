@@ -67,18 +67,23 @@ class UserController(BaseController):
         requests_archive = []
         reverse = True
         order = 'last_request_created_at'
+        current_order_name = 'Most Recent'
 
         if order_by is not '':
             if 'shared' in order_by:
                 order = 'shared'
+                current_order_name = 'Sharing Rate'
             elif 'requests' in order_by:
                 order = 'requests'
+                current_order_name = 'Requests Rate'
             elif 'asc' in order_by:
                 reverse = False
                 order = 'title'
+                current_order_name = 'Alphabetical (A-Z)'
             elif 'desc' in order_by:
                 reverse = True
                 order = 'title'
+                current_order_name = 'Alphabetical (Z-A)'
             elif 'most_recent' in order_by:
                 reverse = True
                 order = 'last_request_created_at'
@@ -130,7 +135,8 @@ class UserController(BaseController):
         extra_vars = {
             'requests_new': requests_new,
             'requests_open': requests_open,
-            'requests_archive': requests_archive
+            'requests_archive': requests_archive,
+            'current_order_name': current_order_name
         }
 
         context = _get_context()
