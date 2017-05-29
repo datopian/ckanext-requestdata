@@ -10,25 +10,18 @@ from ckanext.requestdata import helpers
 
 def request_create(context, data_dict):
     '''Create new request data.
-
     :param sender_name: The name of the sender who request data.
     :type sender_name: string
-
     :param organization: The sender's organization.
     :type organization: string
-
     :param email_address: The sender's email_address.
     :type email_address: string
-
     :param message_content: The content of the message.
     :type message_content: string
-
     :param package_id: The id of the package the data belongs to.
     :type package_id: string
-
     :returns: the newly created request data
     :rtype: dictionary
-
     '''
 
     check_access('requestdata_request_create', context, data_dict)
@@ -88,12 +81,9 @@ def request_create(context, data_dict):
 @toolkit.side_effect_free
 def request_show(context, data_dict):
     '''Return the metadata of a requestdata.
-
     :param id: The id of a requestdata.
     :type id: string
-
     :rtype: dictionary
-
     '''
 
 
@@ -119,9 +109,7 @@ def request_show(context, data_dict):
 @toolkit.side_effect_free
 def request_list_for_sysadmin(context, data_dict):
     '''Returns a list of all requests.
-
     :rtype: list of dictionaries
-
     '''
 
     check_access('requestdata_request_list_for_sysadmin',
@@ -139,12 +127,9 @@ def request_list_for_sysadmin(context, data_dict):
 @toolkit.side_effect_free
 def request_list_for_organization(context, data_dict):
     '''Returns a list of requests for specified organization.
-
     :param org_id: The organization id.
     :type org_id: string
-
     :rtype: list of dictionaries
-
     '''
 
     data, errors = df.validate(data_dict,
@@ -181,12 +166,9 @@ def request_list_for_organization(context, data_dict):
 @toolkit.side_effect_free
 def request_list_for_current_user(context, data_dict):
     '''Returns a list of requests.
-
     :param id: The id of a requestdata.
     :type id: string
-
     :rtype: list of dictionaries
-
     '''
 
     check_access('requestdata_request_list_for_current_user',
@@ -205,13 +187,10 @@ def request_list_for_current_user(context, data_dict):
 
 def request_patch(context, data_dict):
     '''Patch a request.
-
     :param id: The id of a request.
     :type id: string
-
     :returns: A patched request
     :rtype: dictionary
-
     '''
 
     request_patch_schema = schema.request_patch_schema()
@@ -270,13 +249,10 @@ def request_delete(self):
 
 def notification_create(context, data_dict):
     '''Create new notification data.
-
     :param package_id: The id of the package the data belongs to.
     :type package_id: string
-
     :returns: the newly created notification data
     :rtype: dictionary
-
     '''
     not_seen = False
     notifications = []
@@ -301,9 +277,7 @@ def notification_create(context, data_dict):
 @toolkit.side_effect_free
 def notification_for_current_user(context, data_dict):
     '''Returns a notification for logged in user
-
     :rtype: boolean
-
     '''
 
     model = context['model']
@@ -322,10 +296,8 @@ def notification_change(context, data_dict):
     '''
         Change the notification status to seen
     :param context:
-
     :param user_id: The id of logged in user
     :type String
-
     :return:
     '''
 
@@ -346,13 +318,10 @@ def notification_change(context, data_dict):
 def increment_request_data_counters(context, data_dict):
     '''
        Increment the counter for the requested data depending on the flag
-
        :param package_id: The id of the package the data belongs to.
        :type package_id: string
-
        :param flag: The flag that indicates which counter to increment
        :type String
-
        :return:
      '''
     data, errors = df.validate(data_dict,
@@ -372,29 +341,21 @@ def increment_request_data_counters(context, data_dict):
     data_request = ckanextRequestDataCounters.get(package_id=package_id)
     if data_request is None:
         new_request = ckanextRequestDataCounters(**data)
+        new_request.requests = 1
         new_request.save()
         return new_request
     else:
-        if flag == 'replied':
-            print 'REPLIED'
-            data_request.replied += 1
-
+        if flag == 'request':
             data_request.requests += 1
+        elif flag == 'replied':
+            data_request.replied += 1
         elif flag == 'declined':
             data_request.declined += 1
-
-            data_request.requests += 1
-            print 'DECLINED'
         elif flag == 'shared':
             data_request.shared += 1
-
-            data_request.requests += 1
-            print 'SHARED'
         elif flag == 'shared and replied':
-            print 'SHARED AND REPLIED'
             data_request.shared += 1
             data_request.replied += 1
-            data_request.requests += 1
 
         data_request.save()
         return data_request
@@ -404,10 +365,8 @@ def increment_request_data_counters(context, data_dict):
 def request_data_counters_get(context, data_dict):
     '''
         Returns a counters for particular request data
-
        :param package_id: The id of the package the request belongs to.
        :type package_id: string
-
      '''
 
     package_id = data_dict['package_id']
@@ -419,10 +378,8 @@ def request_data_counters_get(context, data_dict):
 def request_data_counters_get_all(context, data_dict):
     '''
         Returns a counters for particular request data
-
        :param package_id: The id of the package the request belongs to.
        :type package_id: string
-
      '''
 
     counters = ckanextRequestDataCounters.search()
@@ -433,10 +390,8 @@ def request_data_counters_get_all(context, data_dict):
 def request_data_counters_get_by_org(context, data_dict):
     '''
         Return counters for requests that belong to particular organization
-
        :param org_id: The id of the organizatiion the request belongs to.
        :type org_id: string
-
      '''
 
     data = {'org_id': data_dict['org_id']}
