@@ -1,9 +1,6 @@
 ## Request data &middot; [![Build Status](https://travis-ci.org/ViderumGlobal/ckanext-requestdata.svg?branch=master)](https://travis-ci.org/ViderumGlobal/ckanext-requestdata) 
 
-These extension allow users to publish  dataset metadata without
-uploading any file(s). The owner
-of the dataset, as well as the admins of the organization that the dataset
-belongs to can take actions on these requests and decide what to share.
+This extension introduces a new type of dataset in which access to data is by request. The dataset's metadata is published and searchable but it has no resources - no files are uploaded in the CKAN filestore and there are no URL links to externally hosted files. When a logged in CKAN user requests the data in the dataset, the maintainers are alerted and one of them can decide to accept or decline the request. These actions are performed in the maintainer's dashboard. Conversations between the requester and maintainer are purposely not recorded; only the information needed for dashboard statistics is stored ie. requested, replied, declined, shared. Organisation and system administrators have overview dashboards.
 
 ## Full Documentation
 See our [Wiki](https://github.com/ViderumGlobal/ckanext-requestdata/wiki) for full documentation, examples, operational details and other information.
