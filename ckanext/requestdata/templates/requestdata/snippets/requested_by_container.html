@@ -13,23 +13,30 @@
     style="float: right; margin-right: 14px;"
   {% endif %}>
     <a href="{{ sender_profile }}" title="{{ _('View profile') }}">{{ item.sender_name }}</a>
-    {% if orgs | length == 1 %}
-      {% set org_url = h.url_for(controller='organization', action='read', id=orgs[0].name) %}
-      {% set one_org = orgs[0] %}
-      | <a href="{{ org_url }}">{{ orgs[0].title }}</a>
-    {% elif orgs | length > 1 %}
-      {% set more_orgs = [] %}
-      {% for org in orgs[1:] %}
-        {% if more_orgs.append(org.title) %}{% endif %}
-      {% endfor %}
-      {% set more_orgs = more_orgs | join(', ') %}
-      | <a href="{{ org_url }}">{{ orgs[0].title }}</a> <span title="{{ more_orgs }}">(more)</span>
+    {% if c.userobj.sysadmin %}
+      | <span>{{ g.site_title }}</span>
+    {% else %}
+      {% if orgs | length == 1 %}
+        {% set org_url = h.url_for(controller='organization', action='read', id=orgs[0].name) %}
+        {% set one_org = orgs[0] %}
+        | <a href="{{ org_url }}">{{ orgs[0].title }}</a>
+      {% elif orgs | length > 1 %}
+        {% set more_orgs = [] %}
+        {% for org in orgs[1:] %}
+          {% if more_orgs.append(org.title) %}{% endif %}
+        {% endfor %}
+        {% set more_orgs = more_orgs | join(', ') %}
+        | <a href="{{ org_url }}">{{ orgs[0].title }}</a> <span title="{{ more_orgs }}">(more)</span>
+      {% endif %}
     {% endif %}
-
     <p class="requested-data-container__content-item--requested-by-date">
       {% if one_org %}
         {% set role = h.requestdata_role_in_org(item.sender_user_id, orgs[0].name) %}
         <span><b>{{ role | capitalize }} -</b></span>
+      {% endif %}
+
+      {% if c.userobj.sysadmin %}
+         <span><b>Sysadmin -</b></span>
       {% endif %}
       <span>Requested on {{ h.render_datetime(item.created_at, date_format='%-d %B %Y') }}</span>
     </p>

@@ -13,13 +13,16 @@
 {% endif %}
 
 <div class="dropdown requested-data-order-btn">
-  <button class="btn dropdown-toggle " type="button" data-toggle="dropdown">ORDER BY
-  <span class="caret"></span></button>
+  <span style="text-transform: uppercase;">Order by: &nbsp;</span>
+  <a class="dropdown-toggle" data-toggle="dropdown">
+    <span>{{ current_order_name }}</span>
+    <span class="caret"></span>
+  </a>
   <ul class="dropdown-menu dropdown-menu-left">
-    <li><a href="{{ service_url }}{{ most_recent }}">MOST RECENT</a></li>
-    <li><a href="{{ service_url }}{{ asc }}">ALPHABETICAL (A-Z)</a></li>
-    <li><a href="{{ service_url }}{{ desc }}">ALPHABETICAL (Z-A)</a></li>
-    <li><a href="{{ service_url }}{{ req }}">REQUESTS RATE</a></li>
-    <li><a href="{{ service_url }}{{ shared }}">SHARING RATE</a></li>
+    <li><a href="{{ service_url }}{{ most_recent }}">Most Recent</a></li>
+    <li><a href="{{ service_url }}{{ asc }}">Alphabetical (A-Z)</a></li>
+    <li><a href="{{ service_url }}{{ desc }}">Alphabetical (Z-A)</a></li>
+    <li><a href="{{ service_url }}{{ req }}">Requests Rate</a></li>
+    <li><a href="{{ service_url }}{{ shared }}">Sharing Rate</a></li>
   </ul>
 </div>

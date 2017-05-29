@@ -16,11 +16,10 @@ Example usage:
 <div data-module="filter-requests"
      data-module-org_name="{{ org_name }}"
      data-module-type="{{ type }}"
-     class="filter-requests">
-  Filter by:
-  <div class="btn-group">
-    <a class="btn btn-filter dropdown-toggle" data-toggle="dropdown" href="#">
-      {{ title }}
+     class="filter-requests dropdown">
+  <span style="text-transform: uppercase;">Filter by:&nbsp;</span>
+    <a class="dropdown-toggle" data-toggle="dropdown">
+      <span>{{ title }}</span>
       <span class="caret"></span>
     </a>
     <div class="dropdown-menu sysadmin-requests-container__dropdown">
@@ -45,5 +44,4 @@ Example usage:
         <button class="btn btn-small" type="button" data-action="reset">Reset</button>
       </div>
     </div>
-  </div>
 </div>

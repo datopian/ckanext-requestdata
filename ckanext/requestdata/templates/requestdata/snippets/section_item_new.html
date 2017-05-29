@@ -24,6 +24,20 @@ Example usage:
   <div class="requested-data-container__content-item--sections">
     <h4>
       <a href="{{ package_url }}">{{ item.title }}</a>
+
+      {% if template_type != 'user' %}
+        <p style="font-weight: initial;">
+          <span>Maintained by </span>
+          {% if item.maintainers %}
+            {% for m in item.maintainers %}
+              {% set profile = h.url_for(controller='user', action='read', id=m.id) %}
+              <a href="{{ profile }}" title="{{ _('View profile') }}">{{ m.fullname }}</a>{% if not loop.last %}, {% endif %}
+            {% endfor %}
+          {% else %}
+            <span>Not found</span>
+          {% endif %}
+        </p>
+      {% endif %}
     </h4>
 
     {% snippet 'requestdata/snippets/requested_by_container.html', item=item %}
