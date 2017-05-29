@@ -114,8 +114,6 @@ class OrganizationController(organization.OrganizationController):
                         maintainer_ids.append(main_ids['id'])
                     except NotFound:
                         pass
-            data_dict = {'id': package['owner_org']}
-            organ = _get_action('organization_show', data_dict)
 
             # Check if current request is part of a filtered maintainer
             for x in filters['filtered_maintainers']:
@@ -142,7 +140,7 @@ class OrganizationController(organization.OrganizationController):
                 requests_open.append(item)
             elif item['state'] == 'archive':
                 requests_archive.append(item)
-        '''
+
         grouped_requests_archive = helpers.group_archived_requests_by_dataset(requests_archive)
 
         if filters['order'] == 'last_request_created_at':
@@ -151,8 +149,7 @@ class OrganizationController(organization.OrganizationController):
                 data = {
                     'last_request_created_at': created_at
                 }
-        '''
-        print requests_archive
+
         if organ['name'] == filters['q_organization']:
             requests_archive = sorted(requests_archive, key=lambda x: x[filters['order']], reverse=filters['reverse'])
 
