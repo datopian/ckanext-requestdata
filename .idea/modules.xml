@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/../ckanext-hdx_theme/.idea/ckanext-hdx_theme.iml" filepath="$PROJECT_DIR$/../ckanext-hdx_theme/.idea/ckanext-hdx_theme.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../ckanext-hdx_users/.idea/ckanext-hdx_users.iml" filepath="$PROJECT_DIR$/../ckanext-hdx_users/.idea/ckanext-hdx_users.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/ckanext-requestdata.iml" filepath="$PROJECT_DIR$/.idea/ckanext-requestdata.iml" />
+      <module fileurl="file://$USER_HOME$/devel/hdx-ckan/.idea/hdx-ckan.iml" filepath="$USER_HOME$/devel/hdx-ckan/.idea/hdx-ckan.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../hdx-request-data/.idea/hdx-request-data.iml" filepath="$PROJECT_DIR$/../hdx-request-data/.idea/hdx-request-data.iml" />
+    </modules>
+  </component>
+</project>

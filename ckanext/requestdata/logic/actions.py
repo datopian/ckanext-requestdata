@@ -372,21 +372,29 @@ def increment_request_data_counters(context, data_dict):
     data_request = ckanextRequestDataCounters.get(package_id=package_id)
     if data_request is None:
         new_request = ckanextRequestDataCounters(**data)
-        new_request.requests = 1
         new_request.save()
         return new_request
     else:
-        if flag == 'request':
-            data_request.requests += 1
-        elif flag == 'replied':
+        if flag == 'replied':
+            print 'REPLIED'
             data_request.replied += 1
+
+            data_request.requests += 1
         elif flag == 'declined':
             data_request.declined += 1
+
+            data_request.requests += 1
+            print 'DECLINED'
         elif flag == 'shared':
             data_request.shared += 1
+
+            data_request.requests += 1
+            print 'SHARED'
         elif flag == 'shared and replied':
+            print 'SHARED AND REPLIED'
             data_request.shared += 1
             data_request.replied += 1
+            data_request.requests += 1
 
         data_request.save()
         return data_request

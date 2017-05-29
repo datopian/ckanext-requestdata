@@ -70,7 +70,6 @@ class OrganizationController(organization.OrganizationController):
             data_dict = {'id': package['owner_org']}
             current_org = _get_action('organization_show', data_dict)
             item['name'] = current_org['name']
-            package_maintainers = []
 
             for maint_id in package_maintainer_ids:
                 try:
@@ -83,10 +82,9 @@ class OrganizationController(organization.OrganizationController):
 
                     payload = {'id': maint_id, 'name': name, 'username' : username, 'fullname': name}
                     maintainers.append(payload)
-                    package_maintainers.append(payload)
                 except NotFound:
                     pass
-            item['maintainers'] = package_maintainers
+            item['maintainers'] = maintainers
 
         copy_of_maintainers = maintainers
         maintainers = dict((item['id'], item) for item in maintainers).values()
@@ -144,22 +142,24 @@ class OrganizationController(organization.OrganizationController):
                 requests_open.append(item)
             elif item['state'] == 'archive':
                 requests_archive.append(item)
-
+        '''
         grouped_requests_archive = helpers.group_archived_requests_by_dataset(requests_archive)
 
         if filters['order'] == 'last_request_created_at':
             for dataset in grouped_requests_archive:
-                created_at = dataset.get('requests_archived')[0].get('created_at')
+                created_at = dataset[0].get('created_at')
                 data = {
                     'last_request_created_at': created_at
                 }
-
+        '''
+        print requests_archive
         if organ['name'] == filters['q_organization']:
-            grouped_requests_archive = sorted(grouped_requests_archive, key=lambda x: x[filters['order']], reverse=filters['reverse'])
+            requests_archive = sorted(requests_archive, key=lambda x: x[filters['order']], reverse=filters['reverse'])
+
         extra_vars = {
             'requests_new': requests_new,
             'requests_open': requests_open,
-            'requests_archive': grouped_requests_archive,
+            'requests_archive': requests_archive,
             'maintainers': maintainers,
             'org_name': organ['name']
         }

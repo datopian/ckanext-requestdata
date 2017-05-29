@@ -112,6 +112,7 @@ def convert_id_to_email(ids):
 
 
 def group_archived_requests_by_dataset(requests):
+    print 'NA VLEZ', requests
     sorted_requests = sorted(requests, key=itemgetter('package_id'))
     grouped_requests = []
 
@@ -124,14 +125,13 @@ def group_archived_requests_by_dataset(requests):
         data = {
             'package_id': key,
             'title': requests[0].get('title'),
-            'maintainers': requests[0].get('maintainers'),
             'requests_archived': requests,
             'shared': item_shared,
             'requests': item_requests
         }
 
         grouped_requests.append(data)
-
+    print 'GROUPED',grouped_requests
     return grouped_requests
 
 
@@ -193,7 +193,7 @@ def set_filters(request_params):
     filtered_maintainers = []
     q_organization = ''
     reverse = True
-    order = 'last_request_created_at'
+    order = 'created_at'
     for item in request_params:
         if item == 'filter_by_maintainers':
             for x in request_params[item]:
@@ -229,7 +229,7 @@ def set_filters(request_params):
                 order = 'title'
             elif 'most_recent' in order:
                 reverse = True
-                order = 'last_request_created_at'
+                order = 'created_at'
     requests = {
         'filtered_maintainers' : filtered_maintainers,
         'q_organization' : q_organization,
