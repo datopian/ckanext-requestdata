@@ -112,7 +112,6 @@ def convert_id_to_email(ids):
 
 
 def group_archived_requests_by_dataset(requests):
-    print 'NA VLEZ', requests
     sorted_requests = sorted(requests, key=itemgetter('package_id'))
     grouped_requests = []
 
@@ -131,7 +130,6 @@ def group_archived_requests_by_dataset(requests):
         }
 
         grouped_requests.append(data)
-    print 'GROUPED',grouped_requests
     return grouped_requests
 
 
