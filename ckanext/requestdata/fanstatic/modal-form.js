@@ -199,9 +199,13 @@ this.ckan.module('modal-form', function($) {
             div.id = 'request-success-container'
             div.textContent = msg;
             div.style.marginTop = '25px';
-            var currentDiv = document.getElementsByClassName("requested-data-message");
-            currentDiv[0].style.display = 'block';
-            currentDiv[0].appendChild(div);
+            var currentDiv = $('.requested-data-message')
+
+            if (currentDiv.length > 1) {
+                currentDiv = this.el.next('.requested-data-message');
+            }
+            currentDiv.css('display', 'block');
+            currentDiv.append(div)
             this._resetModalForm();
         },
         _resetModalForm: function(){
