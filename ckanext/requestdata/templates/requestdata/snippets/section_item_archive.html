@@ -36,13 +36,12 @@ Example usage:
       </span>
     </div>
 
-    <i class="icon-chevron-right archive-requests-arrow" data-toggle="collapse" data-target="#{{ item.package_id }}"></i>
-
+    <i class="{% block collapse_icon %}icon-chevron-right archive-requests-arrow{% endblock %}" data-toggle="collapse" data-target="#{{ item.package_id }}"></i>
   </div>
 </div>
 <div id="{{ item.package_id }}" class="collapse requested-data-container__collapse">
     {% for x in item.requests_archived %}
-      <div class="requested-data-container__collapse--sections">
+      <div class="requested-data-container__collapse--sections requested-data-container__collapse--sections-archive">
 
         {% snippet 'requestdata/snippets/requested_by_container.html', item=x, type='archive' %}
 

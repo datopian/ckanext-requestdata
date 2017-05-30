@@ -22,7 +22,7 @@ Example usage:
 
     {% snippet 'requestdata/snippets/requested_by_container.html', item=item %}
 
-    <div class="requested-data-container__content-item--actions" style="margin-right: 20px; margin-top: -4px;">
+    <div class="requested-data-container__content-item--actions requested-data-container__content-item--actions-open" style="margin-right: 20px; margin-top: -4px;">
       {% set action_shared = h.url_for('requestdata_handle_open_request_action', username=c.userobj.name, request_action='shared') %}
       {% set post_data_shared = h.dump_json({'id': item.id, 'package_id': item.package_id, 'state': 'archive', 'data_shared': True}) %}
 

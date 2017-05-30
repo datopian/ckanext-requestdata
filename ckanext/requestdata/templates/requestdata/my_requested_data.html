@@ -22,7 +22,7 @@
 {% set total_requests = requests_new | length + requests_open | length + total_archived_requests | length %}
 
 {% block primary %}
-  <div style="padding: 30px;">
+  <div class="requests-main-container">
     {% snippet 'requestdata/snippets/requests_header.html', title='My Requests', total_requests=total_requests %}
 
     {% snippet 'requestdata/snippets/section_base.html', state='new', title='New requests', requests=requests_new, template_type='user' %}
