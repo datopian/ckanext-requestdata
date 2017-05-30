@@ -473,3 +473,17 @@ h3 {
 .requests-header-counters {
   margin-left: -14%;
 }
+
+.requests-main-container {
+  padding: 30px;
+}
+
+.requested-data-container__header--actions {
+  float: right;
+  margin-right: 133px;
+}
+
+.requested-data-container__header--requested {
+  position: absolute;
+  left: 32%;
+}

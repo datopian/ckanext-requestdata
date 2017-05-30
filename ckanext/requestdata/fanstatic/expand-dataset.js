@@ -4,13 +4,23 @@
 
   archiveRequestsArrow.on('click', function(event) {
     var arrow = $(this)
+    var iconRight = 'icon-chevron-right' 
+    var iconDown = 'icon-chevron-down'
+    var prefix = ''
 
-    if (arrow.hasClass('icon-chevron-right')) {
-      arrow.removeClass('icon-chevron-right')
-      arrow.addClass('icon-chevron-down')
-    } else if (arrow.hasClass('icon-chevron-down')) {
-      arrow.removeClass('icon-chevron-down')
-      arrow.addClass('icon-chevron-right')
+    if (archiveRequestsArrow.hasClass('glyphicon')) {
+      prefix = 'glyph'
+    }
+
+    iconRight = prefix + iconRight
+    iconDown = prefix + iconDown
+
+    if (arrow.hasClass(iconRight)) {
+      arrow.removeClass(iconRight)
+      arrow.addClass(iconDown)
+    } else if (arrow.hasClass(iconDown)) {
+      arrow.removeClass(iconDown)
+      arrow.addClass(iconRight)
     }
   })
 
