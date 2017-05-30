@@ -98,7 +98,6 @@ class ckanextRequestdata(DomainObject):
     @classmethod
     def get(self, **kwds):
         '''Finds a single entity in the table.
-
         '''
 
         query = Session.query(self).autoflush(False)
@@ -109,10 +108,8 @@ class ckanextRequestdata(DomainObject):
     @classmethod
     def search(self, order='modified_at desc', **kwds):
         '''Finds entities in the table that satisfy certain criteria.
-
         :param order: Order rows by specified column.
         :type order: string
-
         '''
 
         query = Session.query(self).autoflush(False)
@@ -123,10 +120,8 @@ class ckanextRequestdata(DomainObject):
     @classmethod
     def search_by_maintainers(self,id,order='modified_at desc'):
         '''Finds all of the requests for the specific maintainer
-
         :param id: User is
         :type id: string
-
         '''
         maintainer_id = id;
         requests= Session.query(ckanextRequestdata,ckanextMaintainers).join(ckanextMaintainers)\
@@ -194,7 +189,6 @@ class ckanextUserNotification(DomainObject):
     @classmethod
     def get(self, **kwds):
         '''Finds a single entity in the table.
-
         '''
 
         query = Session.query(self).autoflush(False)
@@ -204,10 +198,8 @@ class ckanextUserNotification(DomainObject):
     @classmethod
     def search(self,**kwds):
         '''Finds entities in the table that satisfy certain criteria.
-
         :param order: Order rows by specified column.
         :type order: string
-
         '''
 
         query = Session.query(self).autoflush(False)
@@ -238,7 +230,6 @@ class ckanextMaintainers(DomainObject):
     @classmethod
     def get(self, **kwds):
         '''Finds a single entity in the table.
-
         '''
 
         query = Session.query(self).autoflush(False)
@@ -249,10 +240,8 @@ class ckanextMaintainers(DomainObject):
     @classmethod
     def search(self,**kwds):
         '''Finds entities in the table that satisfy certain criteria.
-
         :param order: Order rows by specified column.
         :type order: string
-
         '''
 
         query = Session.query(self).autoflush(False)
@@ -263,10 +252,8 @@ class ckanextMaintainers(DomainObject):
     @classmethod
     def insert_all(self, maintainers, requestdata_id):
         '''Finds entities in the table that satisfy certain criteria.
-
         :param order: Order rows by specified column.
         :type order: string
-
         '''
         Session.add_all(maintainers)
         Session.commit()
@@ -297,7 +284,6 @@ class ckanextRequestDataCounters(DomainObject):
     @classmethod
     def get(self, **kwds):
         '''Finds a single entity in the table.
-
         '''
 
         query = Session.query(self).autoflush(False)
@@ -308,10 +294,8 @@ class ckanextRequestDataCounters(DomainObject):
     @classmethod
     def search(self, **kwds):
         '''Finds entities in the table that satisfy certain criteria.
-
         :param order: Order rows by specified column.
         :type order: string
-
         '''
 
         request = Session.query(func.sum(ckanextRequestDataCounters.requests)).all()
@@ -330,10 +314,8 @@ class ckanextRequestDataCounters(DomainObject):
     @classmethod
     def search_by_organization(self, **kwds):
         '''Finds entities in the table that satisfy certain criteria.
-
         :param order: Order rows by specified column.
         :type order: string
-
         '''
 
         request = Session.query(func.sum(ckanextRequestDataCounters.requests))
