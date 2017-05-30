@@ -29,7 +29,8 @@ Example usage:
       {% set action_notshared = h.url_for('requestdata_handle_open_request_action', username=c.userobj.name, request_action='shared') %}
       {% set post_data_notshared = h.dump_json({'id': item.id, 'package_id': item.package_id, 'state': 'archive', 'data_shared': False}) %}
 
-      <div class="requested-data-container__content-item--actions-text">Has the dataset been shared?</div>
+      <div class="requested-data-container__content-item--actions-text">Keep track of who you share datasets with.</div>
+      <div class="requested-data-container__content-item--actions-text">Did you share the dataset?</div>
 
       <div class="requested-data-container-inline">
         <a class="btn btn-primary requested-data-container__actions--data-shared"

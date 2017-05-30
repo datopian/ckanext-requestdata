@@ -27,7 +27,7 @@ Example usage:
 
       <span>
         <img src="/images/icons/declined.svg" class="requested-data-container__content-item-counters--icon" />
-        <span>{{ counters.declined }} Declined</span>
+        <span>{{ counters.declined }} Denied</span>
       </span>
 
       <span>
@@ -49,7 +49,7 @@ Example usage:
           {% if x.rejected %}
             <div style="margin-right: -8px;">
               <img src="/images/icons/declined.svg" class="requested-data-container__content-item-counters--icon" />
-              <span class="requested-data-container__collapse--status-text">Declined ({{ h.render_datetime(x.modified_at, date_format='%-d %B %Y') }})</span>
+              <span class="requested-data-container__collapse--status-text">Denied ({{ h.render_datetime(x.modified_at, date_format='%-d %B %Y') }})</span>
             </div>
           {% else %}
             <img src="/images/icons/reply.svg" class="requested-data-container__content-item-counters--icon requested-data-container__content-item-counters--replied" />
