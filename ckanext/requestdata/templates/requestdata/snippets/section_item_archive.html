@@ -12,7 +12,7 @@ Example usage:
 {% resource 'requestdata/expand-dataset.js' %}
 {% set package_url = h.url_for(controller='package', action='read', id=item.package_id) %}
 
-<div class="requested-data-container__content-item" style="height: 50px; {% if index == 1 %} border-top: 1px solid #CCCCCC; {% endif %}">
+<div class="requested-data-container__content-item" style="height: 60px; {% if index == 1 %} border-top: 1px solid #CCCCCC; {% endif %}">
   <div class="requested-data-container__content-item--sections">
     <h4>
       <a href="{{ package_url }}">{{ item.title }}</a>
@@ -48,7 +48,7 @@ Example usage:
 
         <div class="requested-data-container__collapse--request-status">
           {% if x.rejected %}
-            <div style="margin-right: -8px;">
+            <div style="margin-right: 2px;">
               <img src="/images/icons/declined.svg" class="requested-data-container__content-item-counters--icon" />
               <span class="requested-data-container__collapse--status-text">Denied ({{ h.render_datetime(x.modified_at, date_format='%-d %B %Y') }})</span>
             </div>
