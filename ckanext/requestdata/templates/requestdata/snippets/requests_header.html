@@ -1,5 +1,6 @@
 <div class="requests-header">
-  <div class="requests-header__title" title="{{ title }}">{{ title|truncate(27) }} [{{ total_requests }}]</div>
+  {% set org_link = h.url_for(controller='organization', action='read', id=org_name) %}
+  <div class="requests-header__title" title="{{ title }}"><a href="{{ org_link }}">{{ title|truncate(27) }}</a> [{{ total_requests }}]</div>
 
   {% if type == 'organization' or type == 'admin' %}
     <div class="requests-header-counters">

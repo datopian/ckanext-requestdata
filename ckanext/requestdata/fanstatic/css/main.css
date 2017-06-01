@@ -18,8 +18,9 @@
 .requested-data-container__content-item h4 {
   padding-left: 18px;
   width: 27%;
-  word-wrap: break-word;
-  margin-top: -5px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .requested-data-container__message {
@@ -403,12 +404,13 @@ h3 {
 .requested-data-container__content-item--sections {
   display: flex;
   justify-content: space-between;
-  padding-top: 15px;
-  padding-bottom: 15px;
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
 
 .requested-data-container__content-item--actions {
   margin-right: 5%;
+  width: 160px;
 }
 
 .requested-data-container__content-item--requested-by-info {
@@ -435,8 +437,8 @@ h3 {
 }
 
 .requested-data-container__content-item-counters--icon {
-  width: 18px;
-  height: 18px;
+  width: 14px;
+  height: 14px;
   margin-left: 30px;
 }
 

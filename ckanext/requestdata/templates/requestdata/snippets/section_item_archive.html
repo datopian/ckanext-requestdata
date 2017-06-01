@@ -12,10 +12,10 @@ Example usage:
 {% resource 'requestdata/expand-dataset.js' %}
 {% set package_url = h.url_for(controller='package', action='read', id=item.package_id) %}
 
-<div class="requested-data-container__content-item" style="height: 60px; {% if index == 1 %} border-top: 1px solid #CCCCCC; {% endif %}">
-  <div class="requested-data-container__content-item--sections">
+<div class="requested-data-container__content-item" style="{% if index == 1 %} border-top: 1px solid #CCCCCC; {% endif %}">
+  <div class="requested-data-container__content-item--sections" style="align-items: center;">
     <h4>
-      <a href="{{ package_url }}">{{ item.title }}</a>
+      <a href="{{ package_url }}" title="{{ item.title }}">{{ item.title }}</a>
     </h4>
 
     {% set counters = h.requestdata_get_request_counters(item.package_id) %}
@@ -42,7 +42,7 @@ Example usage:
 </div>
 <div id="{{ item.package_id }}" class="collapse requested-data-container__collapse">
     {% for x in item.requests_archived %}
-      <div class="requested-data-container__collapse--sections requested-data-container__collapse--sections-archive">
+      <div class="requested-data-container__collapse--sections requested-data-container__collapse--sections-archive" style="{% if loop.last %}border-bottom: none;{% endif %}">
 
         {% snippet 'requestdata/snippets/requested_by_container.html', item=x, type='archive' %}
 

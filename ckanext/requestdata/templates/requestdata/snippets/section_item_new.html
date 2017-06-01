@@ -21,9 +21,9 @@ Example usage:
 {% set package_url = h.url_for(controller='package', action='read', id=item.package_id) %}
 
 <div class="requested-data-container__content-item" style="background-color: #FEFBED; {% if index == 1 %} border-top: 1px solid #CCCCCC {% endif %}">
-  <div class="requested-data-container__content-item--sections">
+  <div class="requested-data-container__content-item--sections" style="padding-top: 15px;">
     <h4>
-      <a href="{{ package_url }}">{{ item.title }}</a>
+      <a href="{{ package_url }}" title="{{ item.title }}">{{ item.title }}</a>
 
       {% if template_type != 'user' %}
         <p style="font-weight: initial;">
@@ -42,7 +42,7 @@ Example usage:
 
     {% snippet 'requestdata/snippets/requested_by_container.html', item=item %}
 
-    <div class="requested-data-container__content-item--actions">
+    <div class="requested-data-container__content-item--actions requested-data-container__content-item--actions-new">
       {% set reply_action = h.url_for('requestdata_handle_new_request_action', username=c.userobj.name, request_action='reply') %}
 
       {% set maintainers = item.maintainers or [] %}

@@ -15,9 +15,9 @@ Example usage:
 {% set sender_profile = h.url_for(controller='user', action='read', id=item.sender_user_id) %}
 
 <div class="requested-data-container__content-item" style="{% if index == 1 %} border-top: 1px solid #CCCCCC {% endif %}">
-  <div class="requested-data-container__content-item--sections">
+  <div class="requested-data-container__content-item--sections" style="padding-top: 15px; padding-bottom: 15px;">
     <h4>
-      <a href="{{ package_url }}">{{ item.title }}</a>
+      <a href="{{ package_url }}" title="{{ item.title }}">{{ item.title }}</a>
     </h4>
 
     {% snippet 'requestdata/snippets/requested_by_container.html', item=item %}
@@ -29,8 +29,7 @@ Example usage:
       {% set action_notshared = h.url_for('requestdata_handle_open_request_action', username=c.userobj.name, request_action='shared') %}
       {% set post_data_notshared = h.dump_json({'id': item.id, 'package_id': item.package_id, 'state': 'archive', 'data_shared': False}) %}
 
-      <div class="requested-data-container__content-item--actions-text">Keep track of who you share datasets with.</div>
-      <div class="requested-data-container__content-item--actions-text">Did you share the dataset?</div>
+      <div class="requested-data-container__content-item--actions-text">Keep track of who you share datasets with. Did you share the dataset?</div>
 
       <div class="requested-data-container-inline">
         <a class="btn btn-primary requested-data-container__actions--data-shared"
