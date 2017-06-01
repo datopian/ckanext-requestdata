@@ -5,16 +5,17 @@ import ckan.model as model
 import ckan.lib.helpers as h
 from ckan.plugins import toolkit
 from ckan.controllers.package import PackageController as _PackageController
-
+import ckan.lib.navl.dictization_functions as dict_fns
 from ckanext.requestdata.helpers import has_query_param
 
 get_action = logic.get_action
 NotAuthorized = logic.NotAuthorized
 ValidationError = logic.ValidationError
-
+clean_dict = logic.clean_dict
 redirect = base.redirect
 abort = base.abort
-
+tuplize_dict = logic.tuplize_dict
+parse_params = logic.parse_params
 
 class PackageController(_PackageController):
 
@@ -39,8 +40,9 @@ class PackageController(_PackageController):
             if toolkit.request.method == 'POST':
                 context = {'model': model, 'session': model.Session,
                            'user': c.user, 'auth_user_obj': c.userobj}
-
-                data_dict = dict(toolkit.request.POST)
+                
+                data_dict = clean_dict(dict_fns.unflatten(
+                    tuplize_dict(parse_params(toolkit.request.POST))))
                 data_dict['type'] = package_type
 
                 try:

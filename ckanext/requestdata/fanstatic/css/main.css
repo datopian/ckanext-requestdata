@@ -404,6 +404,7 @@ h3 {
   display: flex;
   justify-content: space-between;
   padding-top: 15px;
+  padding-bottom: 15px;
 }
 
 .requested-data-container__content-item--actions {

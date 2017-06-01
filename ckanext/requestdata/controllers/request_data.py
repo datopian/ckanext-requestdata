@@ -35,10 +35,10 @@ def _get_action(action, data_dict):
     return toolkit.get_action(action)(_get_context(), data_dict)
 
 
-def _get_email_configuration(user_name,data_owner, dataset_name,email,message,organization, only_org_admins=False):
+def _get_email_configuration(user_name,data_owner, dataset_name,email,message,organization, data_maintainers, only_org_admins=False):
     schema = logic.schema.update_configuration_schema()
-    avaiable_terms =['{name}','{data_owner}','{dataset}','{organization}','{message}','{email}']
-    new_terms = [user_name,data_owner,dataset_name,organization,message,email]
+    avaiable_terms =['{name}','{data_maintainers}','{dataset}','{organization}','{message}','{email}']
+    new_terms = [user_name,data_maintainers,dataset_name,organization,message,email]
 
     try:
         is_user_sysadmin = _get_action('user_show', {'id': c.user}).get('sysadmin')
@@ -62,6 +62,20 @@ def _get_email_configuration(user_name,data_owner, dataset_name,email,message,or
             new_terms[i] = '<a href="' + url + '">' + new_terms[i] + '</a>'
         elif avaiable_terms[i] == '{organization}' and is_user_sysadmin:
             new_terms[i] = config.get('ckan.site_title')
+        elif avaiable_terms[i] == '{data_maintainers}':
+            if len(new_terms[i]) == 1:
+                new_terms[i] = new_terms[i][0]
+            else:
+                maintainers = ''
+                for j, term in enumerate(new_terms[i][:]):
+                    maintainers += term
+
+                    if j == len(new_terms[i]) - 2:
+                        maintainers += ' and '
+                    elif j < len(new_terms[i]) - 1:
+                        maintainers += ', '
+
+                new_terms[i] = maintainers
 
         email_header = email_header.replace(avaiable_terms[i],new_terms[i])
         email_body = email_body.replace(avaiable_terms[i],new_terms[i])
@@ -185,21 +199,27 @@ class RequestDataController(BaseController):
             }
             users_email = []
             only_org_admins = False
+            data_maintainers = []
             #Get users objects from maintainers list
             for id in maintainers:
                 try:
                     user = toolkit.get_action('user_show')(context_sysadmin, {'id': id})
                     data_dict['users'].append(user)
                     users_email.append(user['email'])
+                    data_maintainers.append(user['fullname'] or user['name'])
                 except NotFound:
                     pass
             mail_subject = config.get('ckan.site_title') + ': New data request "' + dataset_title + '"'
 
             if len(users_email) == 0:
-                users_email = self._org_admins_for_dataset(dataset_name)
+                admins = self._org_admins_for_dataset(dataset_name)
+
+                for admin in admins:
+                    users_email.append(admin.get('email'))
+                    data_maintainers.append(admin.get('fullname'))
                 only_org_admins = True
 
-            content = _get_email_configuration(sender_name,data_owner,dataset_name,email,message,org, only_org_admins=only_org_admins)
+            content = _get_email_configuration(sender_name,data_owner,dataset_name,email,message,org, data_maintainers, only_org_admins=only_org_admins)
 
             response_message = emailer.send_email(content, users_email, mail_subject)
 
@@ -223,13 +243,17 @@ class RequestDataController(BaseController):
     def _org_admins_for_dataset(self, dataset_name):
         package = _get_action('package_show', {'id': dataset_name})
         owner_org = package['owner_org']
-        users_email = []
+        admins = []
 
         org = _get_action('organization_show', {'id': owner_org})
 
         for user in org['users']:
             if user['capacity'] == 'admin':
                 db_user = model.User.get(user['id'])
-                users_email.append(db_user.email)
+                data = {
+                    'email': db_user.email,
+                    'fullname': db_user.fullname or db_user.name
+                }
+                admins.append(data)
 
-        return users_email
+        return admins
