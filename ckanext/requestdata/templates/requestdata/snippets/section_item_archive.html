@@ -37,7 +37,9 @@ Example usage:
       </span>
     </div>
 
-    <i class="{% block collapse_icon %}icon-chevron-right archive-requests-arrow{% endblock %}" data-toggle="collapse" data-target="#{{ item.package_id }}"></i>
+    <div data-module="expand-dataset">
+      <i class="{% block collapse_icon %}icon-chevron-right archive-requests-arrow{% endblock %}" data-toggle="collapse" data-target="#{{ item.package_id }}"></i>
+    </div>
   </div>
 </div>
 <div id="{{ item.package_id }}" class="collapse requested-data-container__collapse">
