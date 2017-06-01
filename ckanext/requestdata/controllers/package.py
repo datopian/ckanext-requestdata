@@ -40,7 +40,7 @@ class PackageController(_PackageController):
             if toolkit.request.method == 'POST':
                 context = {'model': model, 'session': model.Session,
                            'user': c.user, 'auth_user_obj': c.userobj}
-                
+
                 data_dict = clean_dict(dict_fns.unflatten(
                     tuplize_dict(parse_params(toolkit.request.POST))))
                 data_dict['type'] = package_type
