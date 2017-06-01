@@ -51,6 +51,7 @@ this.ckan.module('modal-form', function($) {
                 var payload = {
                     message_content: this.options.message_content,
                     package_name: this.options.post_data.package_name,
+                    package_title: this.options.post_data.package_title,
                     maintainers: JSON.stringify(this.options.post_data.maintainers),
                     requested_by: this.options.post_data.requested_by,
                     sender_id: this.options.post_data.sender_id
