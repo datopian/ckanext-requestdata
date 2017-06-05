@@ -12,4 +12,4 @@ before_install:
 install: ./bin/travis-install-dependencies
 script:
  - ./bin/travis-run-tests
- - pycodestyle --count
+ - pycodestyle --count ./ckanext/requestdata
