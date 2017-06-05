@@ -3,12 +3,13 @@ python:
   - "2.7"
 env:
   - PGVERSION=9.6
-dist: trusty 
+dist: trusty
 sudo: required
 cache: pip
 before_install:
  - chmod +x ./bin/travis-install-dependencies
  - chmod +x ./bin/travis-run-tests
 install: ./bin/travis-install-dependencies
-script: ./bin/travis-run-tests
-after_success: coveralls
+script:
+ - ./bin/travis-run-tests
+ - pycodestyle --count ./ckanext/requestdata

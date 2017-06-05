@@ -78,7 +78,7 @@ def get_notification():
 
       '''
 
-    notification = _get_action('requestdata_notification_for_current_user',{})
+    notification = _get_action('requestdata_notification_for_current_user', {})
     return notification
 
 
@@ -92,7 +92,8 @@ def get_request_counters(id):
      '''
 
     package_id = id
-    counters = _get_action('requestdata_request_data_counters_get', {'package_id':package_id})
+    data_dict = {'package_id': package_id}
+    counters = _get_action('requestdata_request_data_counters_get', data_dict)
     return counters
 
 
@@ -115,7 +116,8 @@ def group_archived_requests_by_dataset(requests):
     sorted_requests = sorted(requests, key=itemgetter('package_id'))
     grouped_requests = []
 
-    for key, group in itertools.groupby(sorted_requests, key=lambda x: x['package_id']):
+    for key, group in itertools.groupby(sorted_requests,
+                                        key=lambda x: x['package_id']):
 
         requests = list(group)
         item_shared = requests[0].get('shared')
@@ -149,7 +151,7 @@ def has_query_param(param):
 def convert_str_to_json(data):
     try:
         return json.loads(data)
-    except Exception as e:
+    except Exception:
         return 'string cannot be parsed'
 
 

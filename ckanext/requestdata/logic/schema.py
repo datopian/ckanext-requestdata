@@ -11,6 +11,7 @@ state_validator = validators.state_validator
 boolean_validator = validators.boolean_validator
 counters_validator = validators.request_counter_validator
 
+
 def request_create_schema():
     return {
         'sender_name': [not_empty, unicode],
@@ -57,6 +58,6 @@ def notification_change_schema():
 
 def increment_request_counters_schema():
     return{
-         'package_id': [not_empty],
-         'flag' : [counters_validator]
+        'package_id': [not_empty],
+        'flag': [counters_validator]
     }
