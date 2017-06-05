@@ -270,8 +270,9 @@ class UserController(BaseController):
             'success': True,
             'message': 'Message was sent successfully'
         }
-        get_action('requestdata_increment_request_data_counters')
-        ({}, counters_data_dict)
+
+        action_name = 'requestdata_increment_request_data_counters'
+        _get_action(action_name, counters_data_dict)
 
         return json.dumps(success)
 
@@ -302,8 +303,9 @@ class UserController(BaseController):
         else:
             data_dict['flag'] = 'declined'
 
-        get_action('requestdata_increment_request_data_counters')
-        ({}, data_dict)
+        action_name = 'requestdata_increment_request_data_counters'
+        _get_action(action_name)(data_dict)
+
         try:
             _get_action('requestdata_request_patch', data)
         except NotAuthorized:

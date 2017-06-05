@@ -109,8 +109,7 @@ class OrganizationController(organization.OrganizationController):
                     package = \
                         _get_action('package_show', {'id': x['package_id']})
                     count = \
-                        _get_action(
-                                    'requestdata_request_data_counters_get',
+                        _get_action('requestdata_request_data_counters_get',
                                     {'package_id': x['package_id']})
                     x['title'] = package['title']
                     x['shared'] = count.shared
@@ -219,14 +218,12 @@ class OrganizationController(organization.OrganizationController):
                 dataset.update(data)
 
         if organ['name'] == q_organization:
-            grouped_requests_archive = sorted(
-                                                grouped_requests_archive,
-                                                key=lambda x: x[order],
-                                                reverse=reverse)
+            grouped_requests_archive = sorted(grouped_requests_archive,
+                                              key=lambda x: x[order],
+                                              reverse=reverse)
 
         counters =\
-            _get_action(
-                        'requestdata_request_data_counters_get_by_org',
+            _get_action('requestdata_request_data_counters_get_by_org',
                         {'org_id': organ['id']})
 
         extra_vars = {

@@ -90,8 +90,7 @@ def _get_email_configuration(
         email_footer = email_footer.replace(avaiable_terms[i], new_terms[i])
 
     if only_org_admins:
-        owner_org = _get_action(
-                                'package_show',
+        owner_org = _get_action('package_show',
                                 {'id': dataset_name}).get('owner_org')
         url = toolkit.url_for('requestdata_organization_requests',
                               id=owner_org, qualified=True)
@@ -168,7 +167,7 @@ class RequestDataController(BaseController):
             error = {
                 'success': False,
                 'error': {
-                     'fields': e.error_dict
+                    'fields': e.error_dict
                 }
             }
 
@@ -178,7 +177,6 @@ class RequestDataController(BaseController):
         package = _get_action('package_show', data_dict)
         sender_name = data.get('sender_name', '')
         user_obj = context['auth_user_obj']
-        user_name = user_obj.fullname
         data_dict = {
             'id': user_obj.id,
             'permission': 'read'
@@ -261,9 +259,9 @@ class RequestDataController(BaseController):
                 'package_id': data['package_id'],
                 'flag': 'request'
             }
-            _get_action(
-                        'requestdata_increment_request_data_counters',
-                        data_dict)
+
+            action_name = 'requestdata_increment_request_data_counters'
+            _get_action(action_name, data_dict)
 
             return json.dumps(response_message)
         else:

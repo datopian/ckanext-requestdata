@@ -23,7 +23,6 @@ from ckan.common import response, request
 NotFound = logic.NotFound
 NotAuthorized = logic.NotAuthorized
 
-c = base.c
 redirect = base.redirect
 abort = base.abort
 
@@ -156,8 +155,7 @@ class AdminController(AdminController):
                     package =\
                         _get_action('package_show', {'id': x['package_id']})
                     count = \
-                        _get_action(
-                                    'requestdata_request_data_counters_get',
+                        _get_action('requestdata_request_data_counters_get',
                                     {'package_id': x['package_id']})
                     if count:
                         x['shared'] = count.shared
