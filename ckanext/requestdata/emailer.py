@@ -1,7 +1,6 @@
 import logging
 import smtplib
 import cgi
-from paste.deploy.converters import asbool
 from socket import error as socket_error
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
@@ -62,7 +61,9 @@ def send_email(content, to, subject, file=None):
 
         extension = file.filename.split('.')[-1]
 
-        part.add_header('Content-Disposition', 'attachment; filename=attachment.{0}'.format(extension))
+        header_value = 'attachment; filename=attachment.{0}'.format(extension)
+
+        part.add_header('Content-Disposition', header_value)
 
         msg.attach(part)
 
@@ -73,22 +74,26 @@ def send_email(content, to, subject, file=None):
         s.sendmail(from_, to, msg.as_string())
         s.quit()
         response_dict = {
-            'success' : True,
-            'message' : 'Email message was successfully sent.'
+            'success': True,
+            'message': 'Email message was successfully sent.'
         }
         return response_dict
     except SMTPRecipientsRefused:
         error = {
             'success': False,
             'error': {
-                'fields': {'recepient' : 'Invalid email recepient, maintainer not found'}
+                'fields': {
+                    'recepient': 'Invalid email recepient, maintainer not '
+                    'found'
+                }
             }
         }
         return error
     except socket_error:
-        log.critical('Could not connect to email server. Have you configured the SMTP settings?')
+        log.critical('Could not connect to email server. Have you configured '
+                     'the SMTP settings?')
         error_dict = {
             'success': False,
-            'message' : 'An error occured while sending the email. Try again.'
+            'message': 'An error occured while sending the email. Try again.'
         }
         return error_dict

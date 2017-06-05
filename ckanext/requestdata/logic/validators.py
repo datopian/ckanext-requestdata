@@ -79,7 +79,10 @@ def members_in_org_validator(key, data, errors, context):
 
 
 def request_counter_validator(key, data, errors, context):
-    counters = ['request','replied','declined','shared','shared and replied']
+    counters = ['request', 'replied', 'declined', 'shared',
+                'shared and replied']
+
     if data[key] not in counters:
-        message = _('The flag parameter must be request, replied, declined, or shared')
+        message = _('The flag parameter must be request, replied, declined, '
+                    'or shared')
         errors[key].append(message)

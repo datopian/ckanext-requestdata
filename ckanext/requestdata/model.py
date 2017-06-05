@@ -1,7 +1,7 @@
 import logging
 import datetime
 
-from sqlalchemy import Table, Column ,Index, ForeignKey
+from sqlalchemy import Table, Column, Index, ForeignKey
 from sqlalchemy import types, func
 
 from sqlalchemy.engine.reflection import Inspector
@@ -15,6 +15,7 @@ request_data_table = None
 user_notification_table = None
 maintainers_table = None
 request_data_counters_table = None
+
 
 def setup():
     if request_data_table is None:
@@ -118,31 +119,35 @@ class ckanextRequestdata(DomainObject):
         return query.all()
 
     @classmethod
-    def search_by_maintainers(self,id,order='modified_at desc'):
+    def search_by_maintainers(self, id, order='modified_at desc'):
         '''Finds all of the requests for the specific maintainer
         :param id: User is
         :type id: string
         '''
-        maintainer_id = id;
-        requests= Session.query(ckanextRequestdata,ckanextMaintainers).join(ckanextMaintainers)\
-                         .filter(ckanextRequestdata.id == ckanextMaintainers.request_data_id, ckanextMaintainers.maintainer_id == maintainer_id)\
-                         .order_by(order).all()
+        maintainer_id = id
+        requests = Session.query(ckanextRequestdata, ckanextMaintainers)\
+                          .join(ckanextMaintainers)\
+                          .filter(ckanextRequestdata.id ==
+                                  ckanextMaintainers.request_data_id,
+                                  ckanextMaintainers.maintainer_id ==
+                                  maintainer_id)\
+                          .order_by(order).all()
 
         requests_data = []
         for r in requests:
             request = {}
             request.update({
                 'id': r.ckanextRequestdata.id,
-                'sender_name':r.ckanextRequestdata.sender_name,
-                'sender_user_id':r.ckanextRequestdata.sender_user_id,
-                'email_address':r.ckanextRequestdata.email_address,
+                'sender_name': r.ckanextRequestdata.sender_name,
+                'sender_user_id': r.ckanextRequestdata.sender_user_id,
+                'email_address': r.ckanextRequestdata.email_address,
                 'message_content': r.ckanextRequestdata.message_content,
-                'package_id':r.ckanextRequestdata.package_id,
-                'state':r.ckanextRequestdata.state,
-                'data_shared':r.ckanextRequestdata.data_shared,
-                'rejected':r.ckanextRequestdata.rejected,
-                'created_at':r.ckanextRequestdata.created_at,
-                'modified_at':r.ckanextRequestdata.modified_at,
+                'package_id': r.ckanextRequestdata.package_id,
+                'state': r.ckanextRequestdata.state,
+                'data_shared': r.ckanextRequestdata.data_shared,
+                'rejected': r.ckanextRequestdata.rejected,
+                'created_at': r.ckanextRequestdata.created_at,
+                'modified_at': r.ckanextRequestdata.modified_at,
                 'maintainer_id': r.ckanextMaintainers.maintainer_id,
                 'email': r.ckanextMaintainers.email
             })
@@ -177,7 +182,8 @@ def define_request_data_table():
                                       default=datetime.datetime.now),
                                Column('modified_at', types.DateTime,
                                       default=datetime.datetime.now),
-                               Index('ckanext_requestdata_requests_id_idx', 'id'))
+                               Index('ckanext_requestdata_requests_id_idx',
+                                     'id'))
 
     mapper(
         ckanextRequestdata,
@@ -196,7 +202,7 @@ class ckanextUserNotification(DomainObject):
         return query
 
     @classmethod
-    def search(self,**kwds):
+    def search(self, **kwds):
         '''Finds entities in the table that satisfy certain criteria.
         :param order: Order rows by specified column.
         :type order: string
@@ -211,20 +217,24 @@ class ckanextUserNotification(DomainObject):
 def define_user_notification_table():
     global user_notification_table
 
-    user_notification_table = Table('ckanext_requestdata_user_notification', metadata,
-                               Column('id', types.UnicodeText,
-                                      primary_key=True,
-                                      default=make_uuid),
-                               Column('package_maintainer_id', types.UnicodeText,
-                                      nullable=False),
-                               Column('seen', types.Boolean,
-                                      default=False),
-                               Index('ckanext_requestdata_user_notification_id_idx', 'id'))
+    user_notification_table = Table('ckanext_requestdata_user_notification',
+                                    metadata,
+                                    Column('id', types.UnicodeText,
+                                           primary_key=True,
+                                           default=make_uuid),
+                                    Column('package_maintainer_id',
+                                           types.UnicodeText,
+                                           nullable=False),
+                                    Column('seen', types.Boolean,
+                                           default=False),
+                                    Index('ckanext_requestdata_user_'
+                                          'notification_id_idx', 'id'))
 
     mapper(
         ckanextUserNotification,
         user_notification_table
     )
+
 
 class ckanextMaintainers(DomainObject):
     @classmethod
@@ -238,7 +248,7 @@ class ckanextMaintainers(DomainObject):
         return query
 
     @classmethod
-    def search(self,**kwds):
+    def search(self, **kwds):
         '''Finds entities in the table that satisfy certain criteria.
         :param order: Order rows by specified column.
         :type order: string
@@ -267,12 +277,15 @@ def define_maintainers_table():
     global maintainers_table
 
     maintainers_table = Table('ckanext_requestdata_maintainers', metadata,
-                                Column('id', types.UnicodeText, primary_key=True, default=make_uuid),
-                                Column('request_data_id', types.UnicodeText, ForeignKey('ckanext_requestdata_requests.id')),
-                                Column('maintainer_id', types.UnicodeText),
-                                Column('email', types.UnicodeText),
-                                Index('ckanext_requestdata_maintainers_id_idx', 'id')
-                                )
+                              Column('id', types.UnicodeText,
+                                     primary_key=True, default=make_uuid),
+                              Column('request_data_id', types.UnicodeText,
+                                     ForeignKey('ckanext_requestdata_'
+                                                'requests.id')),
+                              Column('maintainer_id', types.UnicodeText),
+                              Column('email', types.UnicodeText),
+                              Index('ckanext_requestdata_maintainers_id_idx',
+                                    'id'))
 
     mapper(
         ckanextMaintainers,
@@ -298,15 +311,19 @@ class ckanextRequestDataCounters(DomainObject):
         :type order: string
         '''
 
-        request = Session.query(func.sum(ckanextRequestDataCounters.requests)).all()
-        replied = Session.query(func.sum(ckanextRequestDataCounters.replied)).all()
-        declined = Session.query(func.sum(ckanextRequestDataCounters.declined)).all()
-        shared = Session.query(func.sum(ckanextRequestDataCounters.shared)).all()
+        request = Session.query(func.sum(ckanextRequestDataCounters.requests))\
+                         .all()
+        replied = Session.query(func.sum(ckanextRequestDataCounters.replied))\
+                         .all()
+        declined_sum = func.sum(ckanextRequestDataCounters.declined)
+        declined = Session.query(declined_sum).all()
+        shared = Session.query(func.sum(ckanextRequestDataCounters.shared))\
+                        .all()
         counters = {
-            'requests' : request,
+            'requests': request,
             'replied': replied,
             'declined': declined,
-            'shared' : shared
+            'shared': shared
         }
 
         return counters
@@ -327,10 +344,10 @@ class ckanextRequestDataCounters(DomainObject):
         shared = Session.query(func.sum(ckanextRequestDataCounters.shared))
         shared = shared.filter_by(**kwds).all()
         counters = {
-            'requests' : request,
+            'requests': request,
             'replied': replied,
             'declined': declined,
-            'shared' : shared
+            'shared': shared
         }
 
         return counters
@@ -339,16 +356,24 @@ class ckanextRequestDataCounters(DomainObject):
 def define_request_data_counters_table():
     global request_data_counters_table
 
-    request_data_counters_table = Table('ckanext_requestdata_counters', metadata,
-                                Column('id', types.UnicodeText, primary_key=True, default=make_uuid),
-                                Column('package_id', types.UnicodeText),
-                                Column('org_id', types.UnicodeText),
-                                Column('requests', types.Integer,default=0),
-                                Column('replied', types.Integer,default=0),
-                                Column('declined', types.Integer,default=0),
-                                Column('shared', types.Integer,default=0),
-                                Index('ckanext_requestdata_counters_id_idx', 'id')
-                                )
+    request_data_counters_table = Table('ckanext_requestdata_counters',
+                                        metadata,
+                                        Column('id', types.UnicodeText,
+                                               primary_key=True,
+                                               default=make_uuid),
+                                        Column('package_id',
+                                               types.UnicodeText),
+                                        Column('org_id', types.UnicodeText),
+                                        Column('requests', types.Integer,
+                                               default=0),
+                                        Column('replied', types.Integer,
+                                               default=0),
+                                        Column('declined', types.Integer,
+                                               default=0),
+                                        Column('shared', types.Integer,
+                                               default=0),
+                                        Index('ckanext_requestdata_counters_'
+                                              'id_idx', 'id'))
 
     mapper(
         ckanextRequestDataCounters,

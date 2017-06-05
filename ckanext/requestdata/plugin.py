@@ -45,12 +45,12 @@ class RequestdataPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
             'ckanext.requestdata.controllers.package:PackageController'
         user_controller =\
             'ckanext.requestdata.controllers.user:UserController'
-        request_data_controller = \
-            'ckanext.requestdata.controllers.request_data:RequestDataController'
+        request_data_controller = 'ckanext.requestdata.controllers.'
+        'request_data:RequestDataController'
         admin_controller = \
             'ckanext.requestdata.controllers.admin:AdminController'
-        organization_controller =\
-            'ckanext.requestdata.controllers.organization:OrganizationController'
+        organization_controller = 'ckanext.requestdata.controllers.'
+        'organization:OrganizationController'
         search_controller =\
             'ckanext.requestdata.controllers.search:SearchController'
 
@@ -75,15 +75,21 @@ class RequestdataPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
                     controller=user_controller,
                     action='handle_open_request_action')
 
-        map.connect('requestdata_send_request','/dataset/send_request', controller=request_data_controller,
+        map.connect('requestdata_send_request', '/dataset/send_request',
+                    controller=request_data_controller,
                     action='send_request')
 
-        map.connect('ckanadmin_email','/ckan-admin/email', controller=admin_controller,
+        map.connect('ckanadmin_email', '/ckan-admin/email',
+                    controller=admin_controller,
                     action='email', ckan_icon='envelope-alt')
-        map.connect('ckanadmin_requests_data', '/ckan-admin/requests_data', controller=admin_controller,
+
+        map.connect('ckanadmin_requests_data', '/ckan-admin/requests_data',
+                    controller=admin_controller,
                     action='requests_data', ckan_icon='list')
 
-        map.connect('download_requests_data', '/ckan-admin/requests_data/download', controller=admin_controller,
+        map.connect('download_requests_data',
+                    '/ckan-admin/requests_data/download',
+                    controller=admin_controller,
                     action='download_requests_data')
 
         map.connect('requestdata_organization_requests',
@@ -93,6 +99,7 @@ class RequestdataPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
 
         map.connect('simple_search', '/dataset', controller=search_controller,
                     action='search_datasets')
+
         map.connect('search', '/search', controller=search_controller,
                     action='search_datasets')
 
@@ -115,17 +122,23 @@ class RequestdataPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
             actions.request_list_for_current_user,
             'requestdata_request_list_for_organization':
             actions.request_list_for_organization,
-            'requestdata_request_list_for_sysadmin': actions.request_list_for_sysadmin,
+            'requestdata_request_list_for_sysadmin':
+            actions.request_list_for_sysadmin,
             'requestdata_request_patch': actions.request_patch,
             'requestdata_request_update': actions.request_update,
             'requestdata_request_delete': actions.request_delete,
             'requestdata_notification_create': actions.notification_create,
-            'requestdata_notification_for_current_user': actions.notification_for_current_user,
+            'requestdata_notification_for_current_user':
+            actions.notification_for_current_user,
             'requestdata_notification_change': actions.notification_change,
-            'requestdata_increment_request_data_counters':actions.increment_request_data_counters,
-            'requestdata_request_data_counters_get' : actions.request_data_counters_get,
-            'requestdata_request_data_counters_get_all': actions.request_data_counters_get_all,
-            'requestdata_request_data_counters_get_by_org': actions.request_data_counters_get_by_org
+            'requestdata_increment_request_data_counters':
+            actions.increment_request_data_counters,
+            'requestdata_request_data_counters_get':
+            actions.request_data_counters_get,
+            'requestdata_request_data_counters_get_all':
+            actions.request_data_counters_get_all,
+            'requestdata_request_data_counters_get_by_org':
+            actions.request_data_counters_get_by_org
         }
 
     # IAuthFunctions
@@ -139,7 +152,8 @@ class RequestdataPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
             'requestdata_request_list_for_organization':
             auth.request_list_for_organization,
             'requestdata_request_patch': auth.request_patch,
-            'requestdata_request_list_for_sysadmin': auth.request_list_for_sysadmin
+            'requestdata_request_list_for_sysadmin':
+            auth.request_list_for_sysadmin
         }
 
     # ITemplateHelpers

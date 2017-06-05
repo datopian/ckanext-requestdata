@@ -220,10 +220,9 @@ class TestActions(ActionBase):
 
         context = {'user': user['name']}
 
-        result = helpers.call_action('requestdata_request_list_for_current_user',
-                                     context=context)
-        print result
-        print "RESULTAT"
+        result = helpers.call_action(
+            'requestdata_request_list_for_current_user', context=context)
+
         assert len(result) == 10
 
     def test_requestdata_request_list_for_organization(self):
@@ -252,8 +251,8 @@ class TestActions(ActionBase):
             helpers.call_action('requestdata_request_create',
                                 context=context, **data_dict)
 
-        result = helpers.call_action('requestdata_request_list_for_organization',
-                                     org_id=org['id'])
+        result = helpers.call_action(
+            'requestdata_request_list_for_organization', org_id=org['id'])
 
         assert len(result) == 5
 
@@ -293,7 +292,7 @@ class TestActions(ActionBase):
         result = helpers.call_action('requestdata_notification_create',
                                      context=context, **data_dict)
 
-        assert result[0].seen == False
+        assert result[0].seen is False
 
     def test_notification_for_current_user_valid(self):
         user = factories.User()
@@ -303,18 +302,19 @@ class TestActions(ActionBase):
 
         context = {'user': user['name']}
 
-        usero = {'id' : user['id']}
+        usero = {'id': user['id']}
         data_dict = {
             'users': [usero]
         }
-        create = helpers.call_action('requestdata_notification_create',
-                                     context=context, **data_dict)
+        helpers.call_action('requestdata_notification_create',
+                            context=context, **data_dict)
 
         data_dict = {}
-        result = helpers.call_action('requestdata_notification_for_current_user',
-                                     context=context, **data_dict)
+        result = helpers.call_action(
+            'requestdata_notification_for_current_user',
+            context=context, **data_dict)
 
-        assert result == False
+        assert result is False
 
     def test_notification_change_valid(self):
         user = factories.User()
@@ -328,8 +328,8 @@ class TestActions(ActionBase):
         data_dict = {
             'users': [usero]
         }
-        create = helpers.call_action('requestdata_notification_create',
-                                     context=context, **data_dict)
+        helpers.call_action('requestdata_notification_create',
+                            context=context, **data_dict)
 
         data_dict = {
             'user_id': usero['id']
@@ -337,4 +337,4 @@ class TestActions(ActionBase):
         result = helpers.call_action('requestdata_notification_change',
                                      context=context, **data_dict)
 
-        assert result.seen == True
+        assert result.seen is True

@@ -5,8 +5,10 @@ from ckan.logic import check_access, NotFound
 import ckan.lib.navl.dictization_functions as df
 from ckan.model.user import User
 from ckanext.requestdata.logic import schema
-from ckanext.requestdata.model import ckanextRequestdata, ckanextUserNotification, ckanextMaintainers, ckanextRequestDataCounters
+from ckanext.requestdata.model import ckanextRequestdata,\
+    ckanextUserNotification, ckanextMaintainers, ckanextRequestDataCounters
 from ckanext.requestdata import helpers
+
 
 def request_create(context, data_dict):
     '''Create new request data.
@@ -96,7 +98,6 @@ def request_show(context, data_dict):
 
     '''
 
-
     data, errors = df.validate(data_dict, schema.request_show_schema(),
                                context)
 
@@ -115,6 +116,7 @@ def request_show(context, data_dict):
     out = requestdata.as_dict()
 
     return out
+
 
 @toolkit.side_effect_free
 def request_list_for_sysadmin(context, data_dict):
@@ -135,6 +137,7 @@ def request_list_for_sysadmin(context, data_dict):
         out.append(item.as_dict())
 
     return out
+
 
 @toolkit.side_effect_free
 def request_list_for_organization(context, data_dict):
@@ -202,6 +205,7 @@ def request_list_for_current_user(context, data_dict):
         out.append(item)
 
     return out
+
 
 def request_patch(context, data_dict):
     '''Patch a request.
@@ -283,7 +287,7 @@ def notification_create(context, data_dict):
     maintainers = data_dict['users']
     for m in maintainers:
         data = {
-            'package_maintainer_id':  m['id'],
+            'package_maintainer_id': m['id'],
             'seen': not_seen
         }
         user_notification = ckanextUserNotification(**data)
@@ -356,8 +360,8 @@ def increment_request_data_counters(context, data_dict):
        :return:
      '''
     data, errors = df.validate(data_dict,
-                                schema.increment_request_counters_schema(),
-                                context)
+                               schema.increment_request_counters_schema(),
+                               context)
     if errors:
         raise toolkit.ValidationError(errors)
 
@@ -365,7 +369,7 @@ def increment_request_data_counters(context, data_dict):
     package_id = data.get('package_id')
     package = toolkit.get_action('package_show')(context, {'id': package_id})
     data = {
-        'package_id' : package_id,
+        'package_id': package_id,
         'org_id': package['owner_org']
     }
 
