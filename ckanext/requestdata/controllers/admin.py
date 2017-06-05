@@ -6,7 +6,7 @@ except ImportError:
     from pylons import config
 from ckan.plugins import toolkit
 from ckan.controllers.admin import AdminController
-from ckan import  model
+from ckan import model
 from ckan.common import c, _
 import ckan.lib.base as base
 import ckan.lib.helpers as h
@@ -18,7 +18,7 @@ from cStringIO import StringIO
 from collections import Counter
 from ckanext.requestdata import helpers
 
-from ckan.common import response ,request
+from ckan.common import response, request
 
 NotFound = logic.NotFound
 NotAuthorized = logic.NotAuthorized
@@ -26,6 +26,7 @@ NotAuthorized = logic.NotAuthorized
 c = base.c
 redirect = base.redirect
 abort = base.abort
+
 
 def _get_context():
     return {
@@ -54,7 +55,7 @@ class AdminController(AdminController):
             try:
                 data_dict = dict(request.POST)
                 del data_dict['save']
-                data = _get_action('config_option_update',data_dict)
+                data = _get_action('config_option_update', data_dict)
                 h.flash_success(_('Successfully updated.'))
             except logic.ValidationError, e:
                 errors = e.error_dict
@@ -71,7 +72,7 @@ class AdminController(AdminController):
             data[key] = config.get(key)
 
         vars = {'data': data, 'errors': {}}
-        return toolkit.render('admin/email.html',extra_vars=vars)
+        return toolkit.render('admin/email.html', extra_vars=vars)
 
     def requests_data(self):
         '''
@@ -152,8 +153,12 @@ class AdminController(AdminController):
                     q_organizations.append(data)
 
                 for x in requests:
-                    package = _get_action('package_show', {'id': x['package_id']})
-                    count = _get_action('requestdata_request_data_counters_get', {'package_id': x['package_id']})
+                    package =\
+                        _get_action('package_show', {'id': x['package_id']})
+                    count = \
+                        _get_action(
+                                    'requestdata_request_data_counters_get',
+                                    {'package_id': x['package_id']})
                     if count:
                         x['shared'] = count.shared
                         x['requests'] = count.requests
@@ -164,7 +169,8 @@ class AdminController(AdminController):
 
         # Group requests by organization
         for item in requests:
-            package = _get_action('package_show', {'id': item['package_id']})
+            package = \
+                _get_action('package_show', {'id': item['package_id']})
             package_maintainer_ids = package['maintainer'].split(',')
             data_dict = {'id': package['owner_org']}
             org = _get_action('organization_show', data_dict)
@@ -178,7 +184,8 @@ class AdminController(AdminController):
                     'requests': 1
                 }
 
-            if len(filtered_organizations) > 0 and org['name'] not in filtered_organizations:
+            if len(filtered_organizations) > 0\
+                    and org['name'] not in filtered_organizations:
                 continue
             maintainers = []
             name = ''
@@ -188,9 +195,11 @@ class AdminController(AdminController):
                     user = _get_action('user_show', {'id': id})
                     username = user['name']
                     name = user['fullname']
-
                     payload = {
-                        'id' : id,'name': name, 'username' : username, 'fullname': name
+                        'id': id,
+                        'name': name,
+                        'username': username,
+                        'fullname': name
                     }
                     maintainers.append(payload)
 
@@ -199,7 +208,9 @@ class AdminController(AdminController):
                 except NotFound:
                     pass
             item['maintainers'] = maintainers
-            counters = _get_action('requestdata_request_data_counters_get_by_org', {'org_id': org['id']})
+            counters = \
+                _get_action('requestdata_request_data_counters_get_by_org',
+                            {'org_id': org['id']})
 
             if org['id'] not in tmp_orgs:
                 data = {
@@ -225,7 +236,9 @@ class AdminController(AdminController):
 
                 organizations.append(data)
             else:
-                current_org = next(item for item in organizations if item['id'] == org['id'])
+                current_org = \
+                    next(item for item in organizations
+                         if item['id'] == org['id'])
 
                 payload = {'id': id, 'name': name, 'username': username}
                 current_org['maintainers'].append(payload)
@@ -241,17 +254,26 @@ class AdminController(AdminController):
 
         for org in organizations:
             copy_of_maintainers = org['maintainers']
-            org['maintainers'] = dict((item['id'], item) for item in org['maintainers']).values()
+            org['maintainers'] = \
+                dict((item['id'], item)
+                     for item in org['maintainers']).values()
 
             # Count how many requests each maintainer has
             for main in org['maintainers']:
-                c = Counter(item for dct in copy_of_maintainers for item in dct.items())
+                c = Counter(item for dct in copy_of_maintainers
+                            for item in dct.items())
                 main['count'] = c[('id', main['id'])]
 
             # Sort maintainers by number of requests
-            org['maintainers'] = sorted(org['maintainers'], key=lambda k: k['count'], reverse=True)
+            org['maintainers'] = \
+                sorted(org['maintainers'],
+                       key=lambda k: k['count'],
+                       reverse=True)
 
-            total_organizations = org['requests_new'] + org['requests_open'] + org['requests_archive']
+            total_organizations = \
+                org['requests_new'] + \
+                org['requests_open'] +\
+                org['requests_archive']
 
             for i, r in enumerate(total_organizations):
                 maintainer_found = False
@@ -261,11 +283,13 @@ class AdminController(AdminController):
                 is_hdx = requestdata_helper.is_hdx_portal()
 
                 if is_hdx:
-                    #Quick fix for hdx portal
+                    # Quick fix for hdx portal
                     maintainer_ids = []
                     for maintainer_name in package_maintainer_ids:
                         try:
-                            main_ids = _get_action('user_show', {'id': maintainer_name})
+                            main_ids =\
+                                _get_action('user_show',
+                                            {'id': maintainer_name})
                             maintainer_ids.append(main_ids['id'])
                         except NotFound:
                             pass
@@ -291,7 +315,9 @@ class AdminController(AdminController):
                             elif r['state'] == 'archive':
                                 org['requests_archive'].remove(r)
 
-            org['requests_archive'] = helpers.group_archived_requests_by_dataset(org['requests_archive'])
+            org['requests_archive'] = \
+                helpers.group_archived_requests_by_dataset(
+                    org['requests_archive'])
 
             q_org = [x for x in q_organizations if x.get('org') == org['name']]
 
@@ -309,18 +335,24 @@ class AdminController(AdminController):
 
             if order == 'last_request_created_at':
                 for dataset in org['requests_archive']:
-                    created_at = dataset.get('requests_archived')[0].get('created_at')
+                    created_at = \
+                        dataset.get('requests_archived')[0].get('created_at')
                     data = {
                         'last_request_created_at': created_at
                     }
                     dataset.update(data)
 
-            org['requests_archive'] = sorted(org['requests_archive'], key=lambda x: x[order], reverse=reverse)
+            org['requests_archive'] = \
+                sorted(org['requests_archive'],
+                       key=lambda x: x[order],
+                       reverse=reverse)
 
+        organizations_for_filters = \
+            sorted(organizations_for_filters.iteritems(),
+                   key=lambda (x, y): y['requests'], reverse=True)
 
-        organizations_for_filters = sorted(organizations_for_filters.iteritems(), key=lambda (x, y): y['requests'], reverse=True)
-
-        total_requests_counters = _get_action('requestdata_request_data_counters_get_all', {})
+        total_requests_counters =\
+            _get_action('requestdata_request_data_counters_get_all', {})
         extra_vars = {
             'organizations': organizations,
             'organizations_for_filters': organizations_for_filters,
@@ -337,17 +369,24 @@ class AdminController(AdminController):
         '''
 
         file_format = request.query_string
-        requests = _get_action('requestdata_request_list_for_sysadmin', {})
+        requests = \
+            _get_action('requestdata_request_list_for_sysadmin', {})
         s = StringIO()
 
         if 'json' in file_format.lower():
-            response.headerlist = [('Content-Type', 'application/json'), ('Content-Disposition', 'attachment;filename="data_requests.json"')]
+            response.headerlist = \
+                [('Content-Type', 'application/json'),
+                 ('Content-Disposition',
+                  'attachment;filename="data_requests.json"')]
             json.dump(requests, s, indent=4)
 
             return s.getvalue()
 
         if 'csv' in file_format.lower():
-            response.headerlist = [('Content-Type','text/csv'),('Content-Disposition', 'attachment;filename="data_requests.csv"')]
+            response.headerlist = \
+                [('Content-Type', 'text/csv'),
+                 ('Content-Disposition',
+                  'attachment;filename="data_requests.csv"')]
             writer = csv.writer(s, encoding='utf-8')
             header = True
             for k in requests:
