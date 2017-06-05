@@ -106,8 +106,12 @@ class OrganizationController(organization.OrganizationController):
                     current_order_name = 'Requests Rate'
 
                 for x in requests:
-                    package = _get_action('package_show', {'id': x['package_id']})
-                    count = _get_action('requestdata_request_data_counters_get', {'package_id': x['package_id']})
+                    package = \
+                        _get_action('package_show', {'id': x['package_id']})
+                    count = \
+                        _get_action(
+                                    'requestdata_request_data_counters_get',
+                                    {'package_id': x['package_id']})
                     x['title'] = package['title']
                     x['shared'] = count.shared
                     x['requests'] = count.requests
@@ -131,7 +135,11 @@ class OrganizationController(organization.OrganizationController):
                     if not name:
                         name = username
 
-                    payload = {'id': maint_id, 'name': name, 'username' : username, 'fullname': name}
+                    payload = {
+                               'id': maint_id,
+                               'name': name,
+                               'username': username,
+                               'fullname': name}
                     maintainers.append(payload)
                     package_maintainers.append(payload)
                 except NotFound:
@@ -144,11 +152,13 @@ class OrganizationController(organization.OrganizationController):
 
         # Count how many requests each maintainer has
         for main in maintainers:
-            count = Counter(item for dct in copy_of_maintainers for item in dct.items())
+            count = Counter(
+                item for dct in copy_of_maintainers for item in dct.items())
             main['count'] = count[('id', main['id'])]
 
         # Sort maintainers by number of requests
-        maintainers = sorted(maintainers, key=lambda k: k['count'], reverse=True)
+        maintainers = sorted(
+            maintainers, key=lambda k: k['count'], reverse=True)
 
         for i, r in enumerate(requests[:]):
             maintainer_found = False
@@ -162,7 +172,8 @@ class OrganizationController(organization.OrganizationController):
                 maintainer_ids = []
                 for maintainer_name in package_maintainer_ids:
                     try:
-                        main_ids = _get_action('user_show', {'id': maintainer_name})
+                        main_ids = \
+                            _get_action('user_show', {'id': maintainer_name})
                         maintainer_ids.append(main_ids['id'])
                     except NotFound:
                         pass
@@ -195,20 +206,28 @@ class OrganizationController(organization.OrganizationController):
             elif item['state'] == 'archive':
                 requests_archive.append(item)
 
-        grouped_requests_archive = helpers.group_archived_requests_by_dataset(requests_archive)
+        grouped_requests_archive =\
+            helpers.group_archived_requests_by_dataset(requests_archive)
 
         if order == 'last_request_created_at':
             for dataset in grouped_requests_archive:
-                created_at = dataset.get('requests_archived')[0].get('created_at')
+                created_at =\
+                    dataset.get('requests_archived')[0].get('created_at')
                 data = {
                     'last_request_created_at': created_at
                 }
                 dataset.update(data)
 
         if organ['name'] == q_organization:
-            grouped_requests_archive = sorted(grouped_requests_archive, key=lambda x: x[order], reverse=reverse)
+            grouped_requests_archive = sorted(
+                                                grouped_requests_archive,
+                                                key=lambda x: x[order],
+                                                reverse=reverse)
 
-        counters = _get_action('requestdata_request_data_counters_get_by_org', {'org_id': organ['id']})
+        counters =\
+            _get_action(
+                        'requestdata_request_data_counters_get_by_org',
+                        {'org_id': organ['id']})
 
         extra_vars = {
             'requests_new': requests_new,
