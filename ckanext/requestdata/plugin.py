@@ -45,12 +45,12 @@ class RequestdataPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
             'ckanext.requestdata.controllers.package:PackageController'
         user_controller =\
             'ckanext.requestdata.controllers.user:UserController'
-        request_data_controller = 'ckanext.requestdata.controllers.'
-        'request_data:RequestDataController'
+        request_data_controller = 'ckanext.requestdata.controllers.'\
+            'request_data:RequestDataController'
         admin_controller = \
             'ckanext.requestdata.controllers.admin:AdminController'
-        organization_controller = 'ckanext.requestdata.controllers.'
-        'organization:OrganizationController'
+        organization_controller = 'ckanext.requestdata.controllers.'\
+            'organization:OrganizationController'
         search_controller =\
             'ckanext.requestdata.controllers.search:SearchController'
 
