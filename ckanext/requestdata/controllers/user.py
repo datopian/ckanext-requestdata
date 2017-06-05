@@ -1,17 +1,13 @@
 import json
-from operator import attrgetter
-
 from paste.deploy.converters import asbool
 from pylons import config
 from email_validator import validate_email
-
 from ckan.lib import base
 from ckan import logic, model
 from ckan.plugins import toolkit
 from ckan.common import c, _, request
 from ckan import authz
 import ckan.lib.helpers as h
-
 from ckanext.requestdata.emailer import send_email
 from ckanext.requestdata import helpers
 
@@ -89,13 +85,14 @@ class UserController(BaseController):
                 order = 'last_request_created_at'
 
             for item in requests:
-                package = _get_action('package_show', {'id': item['package_id']})
-                count = _get_action('requestdata_request_data_counters_get',{'package_id':item['package_id']})
+                package =\
+                    _get_action('package_show', {'id': item['package_id']})
+                count = _get_action('requestdata_request_data_counters_get',
+                                    {'package_id': item['package_id']})
                 item['title'] = package['title']
                 item['shared'] = count.shared
                 item['requests'] = count.requests
 
-        #TODO simplify these
         for item in requests:
             package = _get_action('package_show', {'id': item['package_id']})
             package_maintainers_ids = package['maintainer'].split(',')
@@ -119,18 +116,23 @@ class UserController(BaseController):
             elif item['state'] == 'archive':
                 requests_archive.append(item)
 
-        requests_archive = helpers.group_archived_requests_by_dataset(requests_archive)
+        requests_archive = \
+            helpers.group_archived_requests_by_dataset(requests_archive)
 
         if order == 'last_request_created_at':
             for dataset in requests_archive:
-                created_at = dataset.get('requests_archived')[0].get('created_at')
+                created_at = \
+                    dataset.get('requests_archived')[0].get('created_at')
                 data = {
                     'last_request_created_at': created_at
                 }
                 dataset.update(data)
 
         if order:
-            requests_archive = sorted(requests_archive, key=lambda x: x[order], reverse=reverse)
+            requests_archive = \
+                sorted(requests_archive,
+                       key=lambda x: x[order],
+                       reverse=reverse)
 
         extra_vars = {
             'requests_new': requests_new,
@@ -143,7 +145,7 @@ class UserController(BaseController):
         user_obj = context['auth_user_obj']
         user_id = user_obj.id
         data_dict = {
-            'user_id' : user_id
+            'user_id': user_id
         }
         _get_action('requestdata_notification_change', data_dict)
 
@@ -268,7 +270,8 @@ class UserController(BaseController):
             'success': True,
             'message': 'Message was sent successfully'
         }
-        get_action('requestdata_increment_request_data_counters')({}, counters_data_dict)
+        get_action('requestdata_increment_request_data_counters')
+        ({}, counters_data_dict)
 
         return json.dumps(success)
 
@@ -299,7 +302,8 @@ class UserController(BaseController):
         else:
             data_dict['flag'] = 'declined'
 
-        get_action('requestdata_increment_request_data_counters')({}, data_dict)
+        get_action('requestdata_increment_request_data_counters')
+        ({}, data_dict)
         try:
             _get_action('requestdata_request_patch', data)
         except NotAuthorized:
