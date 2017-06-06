@@ -304,7 +304,7 @@ class UserController(BaseController):
             data_dict['flag'] = 'declined'
 
         action_name = 'requestdata_increment_request_data_counters'
-        _get_action(action_name)(data_dict)
+        _get_action(action_name, data_dict)
 
         try:
             _get_action('requestdata_request_patch', data)
