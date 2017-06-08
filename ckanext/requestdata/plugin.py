@@ -233,7 +233,10 @@ class RequestdataPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
     def before_search(self, search_params):
         fq = search_params.get('fq', '')
 
-        if '+dataset_type' in fq:
-            search_params.update({'fq': fq + ' OR requestdata-metadata-only'})
+        if 'dataset_type:dataset' in fq:
+            fq = fq.replace('dataset_type:dataset',
+                            'dataset_type: (dataset OR '
+                            'requestdata-metadata-only)')
+            search_params.update({'fq': fq})
 
         return search_params
