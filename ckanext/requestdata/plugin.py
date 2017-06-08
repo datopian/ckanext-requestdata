@@ -234,7 +234,9 @@ class RequestdataPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
         fq = search_params.get('fq', '')
 
         if 'dataset_type:dataset' in fq:
-            fq = fq.replace('dataset_type:dataset', 'dataset_type: (dataset OR requestdata-metadata-only)')
+            fq = fq.replace('dataset_type:dataset',
+                            'dataset_type: (dataset OR '
+                            'requestdata-metadata-only)')
             search_params.update({'fq': fq})
 
         return search_params
