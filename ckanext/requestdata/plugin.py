@@ -75,7 +75,7 @@ class RequestdataPlugin(plugins.SingletonPlugin, toolkit.DefaultDatasetForm):
                     controller=user_controller,
                     action='handle_open_request_action')
 
-        map.connect('requestdata_send_request', '/dataset/send_request',
+        map.connect('requestdata_send_request', '/request_data',
                     controller=request_data_controller,
                     action='send_request')
 
