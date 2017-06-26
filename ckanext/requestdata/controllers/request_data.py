@@ -102,8 +102,9 @@ def _get_email_configuration(
         url = \
             toolkit.url_for('requestdata_my_requests',
                             id=data_owner, qualified=True)
-        email_body += '<br><br> Go to your <a href="' + url + '">\
-                        My Requests</a> page to see the new request.'
+        email_body += '<br><br><strong> Please accept or decline the request\
+         as soon as you can by visiting the \
+         <a href="' + url + '">My Requests</a> page.</strong>'
 
     organizations =\
         _get_action('organization_list_for_user', {'id': data_owner})
@@ -128,15 +129,18 @@ def _get_email_configuration(
     contact_email = config.get('ckanext.requestdata.contact_email', '')
 
     email_footer += """
-        <br><br>
-        <div style="text-align: center;">
-            <a href=" """ + site_url + """ ">""" + site_title + """</a><br><br>
+        <br/><br/>
+        <small>
+          <p>
+            <a href=" """ + site_url + """ ">""" + site_title + """</a>
+          </p>
+          <p>
             <a href=" """ + newsletter_url + """ ">\
-            Sign up for our newsletter</a><br><br>
-            <span>Follow us on <a href=" """ + twitter_url + """ ">Twitter</a>\
-            </span> | <span>Contact us <a href="mailto:""" + contact_email\
-                    + """ ">""" + contact_email + """</a></span>
-        </div>
+            Sign up for our newsletter</a> | \
+            <a href=" """ + twitter_url + """ ">Follow us on Twitter</a>\
+             | <a href="mailto:""" + contact_email + """ ">Contact us</a>
+          </p>
+        </small>
 
     """
 
