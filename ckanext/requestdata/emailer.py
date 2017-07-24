@@ -47,7 +47,7 @@ def send_email(content, to, subject, file=None):
         <html>
           <head></head>
           <body>
-            <p>""" + content + """</p>
+            <span>""" + content + """</span>
           </body>
         </html>
     """

@@ -427,7 +427,7 @@ h3 {
 
 .requested-data-container__content-item--requested-by-message {
   color: #757575;
-  word-break: break-word;
+  word-wrap: break-word;
   width: 125%;
 }
 
