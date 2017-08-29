@@ -94,9 +94,13 @@ class UserController(BaseController):
                 item['requests'] = count.requests
 
         for item in requests:
-            package = _get_action('package_show', {'id': item['package_id']})
-            package_maintainers_ids = package['maintainer'].split(',')
-            item['title'] = package['title']
+            try:
+                package = _get_action('package_show', {'id': item['package_id']})
+                package_maintainers_ids = package['maintainer'].split(',')
+                item['title'] = package['title']
+            except NotFound, e:
+                # package was not found, possibly deleted
+                continue
             maintainers = []
             for i in package_maintainers_ids:
                 try:
