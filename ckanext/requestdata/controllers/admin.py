@@ -177,7 +177,7 @@ class AdminController(AdminController):
             except NotFound, e:
                 # package was not found, possibly deleted
                 continue
-                
+
             if org['id'] in organizations_for_filters:
                 organizations_for_filters[org['id']]['requests'] += 1
             else:

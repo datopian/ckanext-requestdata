@@ -95,7 +95,8 @@ class UserController(BaseController):
 
         for item in requests:
             try:
-                package = _get_action('package_show', {'id': item['package_id']})
+                package =\
+                    _get_action('package_show', {'id': item['package_id']})
                 package_maintainers_ids = package['maintainer'].split(',')
                 item['title'] = package['title']
             except NotFound, e:
