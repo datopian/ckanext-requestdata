@@ -167,12 +167,17 @@ class AdminController(AdminController):
 
         # Group requests by organization
         for item in requests:
-            package = \
-                _get_action('package_show', {'id': item['package_id']})
-            package_maintainer_ids = package['maintainer'].split(',')
-            data_dict = {'id': package['owner_org']}
-            org = _get_action('organization_show', data_dict)
-            item['title'] = package['title']
+            try:
+                package = \
+                    _get_action('package_show', {'id': item['package_id']})
+                package_maintainer_ids = package['maintainer'].split(',')
+                data_dict = {'id': package['owner_org']}
+                org = _get_action('organization_show', data_dict)
+                item['title'] = package['title']
+            except NotFound, e:
+                # package was not found, possibly deleted
+                continue
+                
             if org['id'] in organizations_for_filters:
                 organizations_for_filters[org['id']]['requests'] += 1
             else:
