@@ -13,4 +13,4 @@ script:
  - ./bin/travis-run-tests
  - pycodestyle --count ./ckanext/requestdata
 after_success:
-  coveralls
+ - coveralls
