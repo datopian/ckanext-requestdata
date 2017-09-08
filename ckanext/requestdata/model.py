@@ -173,7 +173,7 @@ def define_request_data_table():
                                Column('package_id', types.UnicodeText,
                                       nullable=False),
                                Column('state', types.UnicodeText,
-                                      default='new'),
+                                      default=u'new'),
                                Column('data_shared', types.Boolean,
                                       default=False),
                                Column('rejected', types.Boolean,
