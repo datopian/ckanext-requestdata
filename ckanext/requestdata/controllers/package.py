@@ -12,7 +12,12 @@ get_action = logic.get_action
 NotAuthorized = logic.NotAuthorized
 ValidationError = logic.ValidationError
 clean_dict = logic.clean_dict
-redirect = base.redirect
+try:
+    # Support CKAN 2.6
+    redirect = base.redirect
+except ImportError:
+    # Redirect is not redirect_to in CKAN 2.7
+    redirect = h.redirect_to
 abort = base.abort
 tuplize_dict = logic.tuplize_dict
 parse_params = logic.parse_params
