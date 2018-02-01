@@ -5,6 +5,7 @@ from ckanext.requestdata import helpers as h
 import ckan.plugins as p
 from ckan.tests import helpers, factories
 from ckan import logic
+from ckan.common import request
 
 ok_ = nose.tools.ok_
 eq_ = nose.tools.eq_
@@ -51,3 +52,8 @@ class TestHelpers(ActionBase):
         response = h.convert_id_to_email(ids)
         email = 'test_user_05@ckan.org'
         assert email not in response
+
+    def test_convert_str_to_json_valid(self):
+        str = "test: 123"
+        res = h.convert_str_to_json(str)
+        assert "string cannot be parsed" == res
