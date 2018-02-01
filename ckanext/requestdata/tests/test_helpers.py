@@ -48,8 +48,8 @@ class TestHelpers(ActionBase):
         users = [{'name': user['name']}]
         ids = user['id']
         response = h.convert_id_to_email(ids)
-        email = 'test_user_05@ckan.org'
-        assert_equals(email, response)
+        email = '@ckan.org'
+        assert email in response
 
     def test_convert_id_to_emails_invalid(self):
         ids = '231'
