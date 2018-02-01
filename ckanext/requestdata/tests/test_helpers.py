@@ -46,3 +46,8 @@ class TestHelpers(ActionBase):
         email = 'test_user_05@ckan.org'
         assert email == response
 
+    def test_convert_id_to_emails_invalid(self):
+        ids = '231'
+        response = h.convert_id_to_email(ids)
+        email = 'test_user_05@ckan.org'
+        assert email not in response
