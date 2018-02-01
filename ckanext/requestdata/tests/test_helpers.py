@@ -12,8 +12,7 @@ ok_ = nose.tools.ok_
 eq_ = nose.tools.eq_
 raises = nose.tools.raises
 assert_equals = nose.tools.assert_equals
-assert_not_equal =  nose.tools.assert_not_equal
-
+assert_not_equal = nose.tools.assert_not_equal
 
 
 class ActionBase(object):
@@ -78,14 +77,14 @@ class TestHelpers(ActionBase):
             'requests_archived': 'r',
             'shared': '',
             'requests': 'r'
-        },{
+        }, {
             'package_id': id3,
             'title': 'test3',
             'maintainers': '',
             'requests_archived': '',
             'shared': '',
             'requests': ''
-        },{
+        }, {
             'package_id': id2,
             'title': 'test2',
             'maintainers': 't',
@@ -98,5 +97,3 @@ class TestHelpers(ActionBase):
         assert_equals(res[0]['package_id'], id2)
         assert_equals(res[1]['package_id'], id3)
         assert_equals(res[2]['package_id'], id55)
-
-
