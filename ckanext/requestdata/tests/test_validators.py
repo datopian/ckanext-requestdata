@@ -95,7 +95,18 @@ class TestAuth(ActionBase):
         else:
             assert False
 
-    def test_boolean_validator_is_instance(self):
+    def test_boolean_validator_wrong_value(self):
+        key = 'state'
+        data = {'state': '3'}
+        errors = {key: []}
+        error_msg = "String is not true/false"
+        try:
+            boolean_validator(key, data, errors, None)
+            assert False
+        except ValueError as e:
+            assert error_msg in e.message
+
+    def test_boolean_validator_string_value(self):
         key = ('state')
         data = {('state'): 'Test'}
         errors = {key: []}
