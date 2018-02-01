@@ -37,3 +37,12 @@ class TestHelpers(ActionBase):
     def test_time_ago_from_datetime_valid_string_result(self):
         d = datetime.today() - timedelta(days=2)
         assert isinstance(h.time_ago_from_datetime(d), str)
+
+    def test_convert_id_to_emails_valid(self):
+        user = factories.User()
+        users = [{'name': user['name']}]
+        ids = user['id']
+        response = h.convert_id_to_email(ids)
+        email = 'test_user_05@ckan.org'
+        assert email == response
+
