@@ -66,3 +66,37 @@ class TestHelpers(ActionBase):
         str = "{'test': 2}"
         res = h.convert_str_to_json(json.dumps(str))
         assert_not_equal(res, "string cannot be parsed")
+
+    def test_group_archived_requests_valid(self):
+        id2 = 2
+        id3 = 3
+        id55 = 55
+        requests = [{
+            'package_id': id55,
+            'title': 'test5',
+            'maintainers': 'm',
+            'requests_archived': 'r',
+            'shared': '',
+            'requests': 'r'
+        },{
+            'package_id': id3,
+            'title': 'test3',
+            'maintainers': '',
+            'requests_archived': '',
+            'shared': '',
+            'requests': ''
+        },{
+            'package_id': id2,
+            'title': 'test2',
+            'maintainers': 't',
+            'requests_archived': 'r',
+            'shared': 't',
+            'requests': 'r'
+        }]
+
+        res = h.group_archived_requests_by_dataset(requests)
+        assert_equals(res[0]['package_id'], id2)
+        assert_equals(res[1]['package_id'], id3)
+        assert_equals(res[2]['package_id'], id55)
+
+
