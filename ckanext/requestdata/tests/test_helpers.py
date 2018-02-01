@@ -1,5 +1,6 @@
 # encoding: utf-8
 import nose
+import json
 from datetime import datetime, timedelta
 from ckanext.requestdata import helpers as h
 import ckan.plugins as p
@@ -10,6 +11,9 @@ from ckan.common import request
 ok_ = nose.tools.ok_
 eq_ = nose.tools.eq_
 raises = nose.tools.raises
+assert_equals = nose.tools.assert_equals
+assert_not_equal =  nose.tools.assert_not_equal
+
 
 
 class ActionBase(object):
@@ -45,15 +49,20 @@ class TestHelpers(ActionBase):
         ids = user['id']
         response = h.convert_id_to_email(ids)
         email = 'test_user_05@ckan.org'
-        assert email == response
+        assert_equals(email, response)
 
     def test_convert_id_to_emails_invalid(self):
         ids = '231'
         response = h.convert_id_to_email(ids)
         email = 'test_user_05@ckan.org'
-        assert email not in response
+        assert_not_equal(email, response)
 
-    def test_convert_str_to_json_valid(self):
+    def test_convert_str_to_json_invalid(self):
         str = "test: 123"
         res = h.convert_str_to_json(str)
-        assert "string cannot be parsed" == res
+        assert_equals("string cannot be parsed", res)
+
+    def test_convert_str_to_json_valid(self):
+        str = "{'test': 2}"
+        res = h.convert_str_to_json(json.dumps(str))
+        assert_not_equal(res, "string cannot be parsed")
