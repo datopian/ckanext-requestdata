@@ -18,7 +18,7 @@ To install ckanext-requestdata:
 2. Install the ckanext-requestdata Python package into your virtual environment:
 
 ```
-pip install ckanext-requestdata
+pip install pip install https://github.com/ViderumGlobal/ckanext-requestdata/archive/master.zip
 ```
 
 3. Add ``requestdata`` to the ``ckan.plugins`` setting in your CKAN
